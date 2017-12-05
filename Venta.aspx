@@ -6,18 +6,19 @@
     <meta charset="utf-8">
     <meta name='viewport' content='width=device-width initial-scale=1'>
     <meta name='mobile-web-app-capable' content='yes'>
-    <link rel='stylesheet' href='css/bootstrap.css'>
     <link rel='stylesheet' href='css/estilos.css'>
     <link href="css/venta.css" rel="stylesheet" />
-    <link href="css/datepicker.css" rel="stylesheet" />
-    <title>Blog De Música</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <title>Demo</title>
 </head>
 <body class="blog-body">
+
 
     <div class="container">
         <div class="row header">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <img src="img/logo.jpg" class="logo-img">
+                <%--<img src="img/logo.jpg" class="logo-img">--%>
             </div>
 
 
@@ -120,7 +121,7 @@
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                             </div>
                         </div>
-                       
+
 
 
                         <div class="col-lg-6 form-group">
@@ -408,17 +409,20 @@
                             </div>
 
                             <div role="tabpanel" class="tab-pane" id="creditoSimpleTab">
-                               <div class="row">
-                                  <div class=" col-lg-4">
-                                         <div class="form-group">
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
                                             <label for="dp4">Fecha</label>
-                                            <div class="input-group date" id="dp4" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
-                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="Text1" placeholder="12-02-2017" name="txtFechaTransferencia" readonly="true">
-                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            <div class='input-group date' id='dp4'>
+                                                <input type='text' class="form-control" />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                               </div>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -433,21 +437,27 @@
     </div>
 
 
+    <%--<script src="js/Venta.js"></script>--%>
+    <script src="Scripts/jquery-1.9.1.min.js"></script>
+    <script src="Scripts/moment.min.js"></script>
+    <script src="Scripts/bootstrap.min.js"></script>
+ <   <script src="js/bootstrap-datetimepicker.js"></script>
+  %--  <script src="js/bootstrap-datetimepicker.es.js"></script>--%>
+    <script type="text/javascript">
+    
+        $(function () {
+            //$('.input-group.date').datetimepicker('show');
+            $('#dp4').datetimepicker({ 
+                format: "dd-mm-yyyy",
+            //    lang: 'es',
+            //    scrollMonth: true,
 
+            });
+           
 
+           
+        });
+    </script>
 
-
-    <script src="js/Venta.js"></script>
-    <script src="js/jquery-3.2.1.js"></script>
-    <script src="js/moment.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/prettify.js"></script>
-    <script src="js/knockout-2.3.0.js"></script>
-
-
-    <script src="js/moment-datepicker.js"></script>
-    <script src="js/moment-datepicker-ko.js"></script>
-
-    <script src="js/site.js"></script>
 </body>
 </html>
