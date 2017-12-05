@@ -23,7 +23,7 @@ $(function () {
     $('#dp1').datepicker();
     $('#dp2').datepicker();
     $('#dp3').datepicker();
-
+    $('#dp4').datepicker();
     var startDate = moment([2017, 1, 20]);
     var endDate = moment([2012, 1, 25]);
     //var $dp4 = $('#dp4').datepicker();

@@ -1,0 +1,11 @@
+﻿.tabContent {
+    padding: 20px;
+}
+
+.modal-body {
+    height: 400px;
+    overflow-y: auto;
+}
+.modal-dialog{
+    overflow-y: initial !important
+}
