@@ -18,7 +18,7 @@
     <div class="container">
         <div class="row header">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <%--<img src="img/logo.jpg" class="logo-img">--%>
+                <img src="img/logo.jpg" class="logo-img">
             </div>
 
 
@@ -32,9 +32,6 @@
                         <li class="active"><a href="Venta.aspx">Venta</a></li>
                         <li><a href="Cliente.aspx">Cliente</a></li>
                         <li><a href="Producto.aspx">Producto</a></li>
-
-
-
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="login.aspx">Salir</a></li>
@@ -43,216 +40,230 @@
             </nav>
 
         </div>
+        <form id="form" data-toggle="validator">
+            <div class="row contenedor-principal container-fluid">
 
-        <div class="row contenedor-principal container-fluid">
+                <fieldset>
+                    <legend>Nota de Venta</legend>
+                    <div class="col-lg-4 contenedor1">
 
-            <fieldset>
-                <legend>Nota de Venta</legend>
-                <div class="col-lg-4 contenedor1">
+                        <div class="row">
 
-                    <div class="row">
+                            <div class="col-lg-12 form-group">
 
-                        <div class="col-lg-12 form-group">
+                                <label for="txtRut">Rut</label>
+                                <input type="text" id="txtRut" name="txtRut" class="form-control" required="required" placeholder="19234231-4" data-error="Ingrese Rut" />
 
-                            <label for="txtRut">Rut</label>
-                            <input type="text" id="txtRut" name="txtRut" class="form-control" required="required" placeholder="19234231-4" />
-                            <button class="pull-right  btn btn-success" type="button">
-                                <i class="glyphicon glyphicon-search"></i>
-                            </button>
+                                <button class="pull-right  btn btn-success" type="button">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
+                                <div class="help-block with-errors"></div>
 
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12  form-group">
+                                <label for="txtNombre">Nombre</label>
+                                <input type="text" class="form-control" id="txtNombre" name="txtNombre" placeholder="Fabial Oliva.." readonly="true">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 form-group">
 
+                                <label for="txtGiro">Giro</label>
+                                <input type="text" class="form-control" id="txtGiro" name="txtGiro" placeholder="Particular" readonly="true">
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-lg-12  form-group">
-                            <label for="txtNombre">Nombre</label>
-                            <input type="text" class="form-control" id="txtNombre" name="txtNombre" placeholder="Fabial Oliva.." readonly="true">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-12 form-group">
-
-                            <label for="txtGiro">Giro</label>
-                            <input type="text" class="form-control" id="txtGiro" name="txtGiro" placeholder="Particular" readonly="true">
-                        </div>
-                    </div>
-                </div>
 
 
 
 
-                <div class="col-lg-offset-2 col-lg-6 contenedor1">
+                    <div class="col-lg-offset-2 col-lg-6 contenedor1">
 
-                    <div class="row col-lg-12 radio">
+                        <div class="row col-lg-12 radio">
 
-                        <div class="form-check form-check-inline">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
+                            <p></p>
+                            <label class="radio-inline">
+                                <input class="form-check-input " type="radio" name="cmbTipoDocto" id="cmbFactura" value="optFactura">
                                 Factura
                             </label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <label class="form-check-label">
-                                <input class="form-check-input" type="radio" name="cmbEstado" id="cmbInactivo" value="optInactivo">
+
+                            <label class="radio-inline">
+                                <input class="form-check-input" type="radio" name="cmbTipoDocto" id="cmbBoleta" value="optBoleta">
                                 Boleta
                             </label>
-                        </div>
-                    </div>
-                    <div class="row">
 
-                        <div class="col-lg-6 form-group">
-                            <label for="txtCalle">N° Interno</label>
-                            <input type="text" class="form-control" id="txtCalle" name="txtCalle" placeholder="22312" required="required">
                         </div>
-                        <div class="col-lg-6 form-group">
-                            <label for="cmbEstado">Estado</label>
-                            <select id="cmbEstado" class="form-control" name="cmbEstado">
-                                <option selected>Abierto</option>
-                                <option>Cerrado</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
+                        <div class="row">
 
-                        <div class="col-lg-6 form-group">
-                            <label for="dp2">Fecha Documento</label>
-                            <div class="input-group date" id="dp2" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
-                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFecVencimiento" name="txtFecVencimiento" readonly>
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            <div class="col-lg-6 form-group">
+                                <label for="txtCalle">N° Interno</label>
+                                <input type="text" class="form-control" id="txtCalle" name="txtCalle" placeholder="22312" readonly="true">
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label for="cmbEstado">Estado</label>
+                                <select id="cmbEstado" class="form-control" name="cmbEstado">
+                                    <option selected>Abierto</option>
+                                    <option>Cerrado</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-lg-6 form-group">
+                                <label for="dp2">Fecha Documento</label>
+                                <div class="input-group date" id="dp2" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
+                                    <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFecVencimiento" name="txtFecVencimiento" readonly>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-lg-6 form-group">
+
+                                <label for="txtDepto">N° Folio</label>
+                                <input type="text" class="form-control" id="txtFolio" name="txtFolio" placeholder="22134" required="required" data-error="Ingrese N° Folio">
+                                <div class="help-block with-errors"></div>
                             </div>
                         </div>
 
-
-
-                        <div class="col-lg-6 form-group">
-
-                            <label for="txtDepto">N° Folio</label>
-                            <input type="text" class="form-control" id="txtFolio" name="txtFolio" placeholder="22134" required="required">
-                        </div>
                     </div>
 
-                </div>
-
-            </fieldset>
-
-        </div>
-
-        <div class="row contenedor-principal container-fluid">
-
-
-            <div class="col-lg-12 contenedor1">
-
-                <div class="row">
-                    <div class="col-lg-6">
-                        <input type="button" class="btn btn-success" value="Agregar" />
-                    </div>
-                </div>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>N° Producto</th>
-                            <th>Descripcion</th>
-                            <th>Cantidad</th>
-                            <th>Precio por Unidad</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>101010</td>
-                            <td>Silla</td>
-                            <td>1</td>
-                            <td>10000</td>
-                            <td>10000</td>
-                        </tr>
-                        <tr>
-                            <td>101010</td>
-                            <td>Silla</td>
-                            <td>1</td>
-                            <td>10000</td>
-                            <td>10000</td>
-                        </tr>
-                        <tr>
-                            <td>101010</td>
-                            <td>Silla</td>
-                            <td>1</td>
-                            <td>10000</td>
-                            <td>10000</td>
-                        </tr>
-                    </tbody>
-                </table>
+                </fieldset>
 
             </div>
-        </div>
 
-        <div class="row contenedor-principal container-fluid">
+            <div class="row contenedor-principal container-fluid">
 
 
-            <div class="col-lg-12 contenedor1">
+                <div class="col-lg-12 contenedor1">
 
-                <div class="col-lg-4">
                     <div class="row">
-                        <div class="col-lg-12  form-group">
+                        <div class="col-lg-6">
 
-                            <label for="txtEmpleado">Empleado de Ventas</label>
-                            <input id="txtEmpleado" name="txtEmpleado" class="form-control" required="required" />
+                            <button type="button" class="btn btn-success">
+                                <span class="glyphicon glyphicon-plus-sign"></span>Agregar 
+                            </button>
                         </div>
+                    </div>
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>N° Producto</th>
+                                <th>Descripcion</th>
+                                <th>Cantidad</th>
+                                <th>Precio por Unidad</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>101010</td>
+                                <td>Silla</td>
+                                <td>1</td>
+                                <td>10000</td>
+                                <td>10000</td>
+                            </tr>
+                            <tr>
+                                <td>101010</td>
+                                <td>Silla</td>
+                                <td>1</td>
+                                <td>10000</td>
+                                <td>10000</td>
+                            </tr>
+                            <tr>
+                                <td>101010</td>
+                                <td>Silla</td>
+                                <td>1</td>
+                                <td>10000</td>
+                                <td>10000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="row contenedor-principal container-fluid">
+
+
+                <div class="col-lg-12 contenedor1">
+
+                    <div class="col-lg-4">
+                        <div class="row">
+                            <div class="col-lg-12  form-group">
+
+                                <label for="txtEmpleado">Empleado de Ventas</label>
+                                <input id="txtEmpleado" name="txtEmpleado" class="form-control" readonly="true" />
+                            </div>
+                            <div class="col-lg-12 form-group">
+
+                                <label for="txtComentario">Comentarios</label>
+                                <textarea id="txtComentario" name="txtComentario" class="form-control" rows="5"></textarea>
+
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-offset-4 col-lg-4">
+
+                        <div class="row col-lg-12  form-group">
+
+                            <label for="txtTotalAntesDescuento">Total antes del descuento</label>
+                            <input id="txtTotalAntesDescuento" name="txtTotalAntesDescuento" class="form-control" readonly="true" />
+                        </div>
+
+
+                        <div class="row col-lg-12 form-group">
+
+                            <label for="txtImpuesto">Impuesto</label>
+                            <input id="txtImpuesto" name="txtImpuesto" class="form-control" readonly="true" />
+                        </div>
+                        <div class="row col-lg-12 form-group">
+
+                            <label for="txtTotal">Total</label>
+                            <input id="txtTotal" name="txtTotal" class="form-control" readonly="true" />
+                        </div>
+
+
+                    </div>
+
+                    <div class="row">
                         <div class="col-lg-12 form-group">
 
-                            <label for="txtComentario">Comentarios</label>
-                            <textarea id="txtComentario" name="txtComentario" class="form-control" required="required" rows="5"></textarea>
+                            <button type="submit" class="btn btn-success">
+                                <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
+                            </button>
 
 
+                            <button type="reset" class="btn btn-success">
+                                <span class="glyphicon glyphicon-trash"></span>Limpiar 
+                            </button>
 
+
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#MedioDePagoModal">
+                                <span class="glyphicon glyphicon-credit-card"></span>Medio de Pago
+                            </button>
                         </div>
-
-                    </div>
-                </div>
-                <div class="col-lg-offset-4 col-lg-4">
-
-                    <div class="row col-lg-12  form-group">
-
-                        <label for="txtTotalAntesDescuento">Total antes del descuento</label>
-                        <input id="txtTotalAntesDescuento" name="txtTotalAntesDescuento" class="form-control" readonly="true" />
-                    </div>
-
-
-                    <div class="row col-lg-12 form-group">
-
-                        <label for="txtImpuesto">Impuesto</label>
-                        <input id="txtImpuesto" name="txtImpuesto" class="form-control" readonly="true" />
-                    </div>
-                    <div class="row col-lg-12 form-group">
-
-                        <label for="txtTotal">Total</label>
-                        <input id="txtTotal" name="txtTotal" class="form-control" readonly="true" />
                     </div>
 
 
                 </div>
-                <div class="row">
-                    <div class="col-lg-12 form-group">
-                        <%--<input type="button" class="btn btn-success" value="Registrar" />--%>
-                        <button type="button" class="btn btn-success">
-                            <span class="glyphicon glyphicon-floppy-disk"></span>Crear 
-                        </button>
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#MedioDePagoModal">
-                            <span class="glyphicon glyphicon-credit-card"></span>Medio de Pago
-                        </button>
-                    </div>
-                </div>
+
 
             </div>
-
-
-        </div>
+        </form>
     </div>
 
 
     <div class="modal" id="MedioDePagoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" aria-hidden="true">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
 
@@ -271,6 +282,15 @@
 
                             </li>
                             <li role="presentation"><a href="#creditoSimpleTab" aria-controls="creditoSimpleTab" role="tab" data-toggle="tab">Credito Simple</a>
+
+                            </li>
+                            <li role="presentation"><a href="#efectivoTab" aria-controls="efectivoTab" role="tab" data-toggle="tab">Efectivo</a>
+
+                            </li>
+                            <li role="presentation"><a href="#tarjetaCreditoTab" aria-controls="tarjetaCreditoTab" role="tab" data-toggle="tab">Tarjeta Credito</a>
+
+                            </li>
+                            <li role="presentation"><a href="#tarjetaDebitoTab" aria-controls="tarjetaDebitoTab" role="tab" data-toggle="tab">Tarjeta Debito</a>
 
                             </li>
                         </ul>
@@ -322,6 +342,7 @@
                                 <table class="table table-hover form-group">
                                     <thead>
                                         <tr>
+                                            <th>#</th>
                                             <th>Fecha Vencimiento</th>
                                             <th>Importe</th>
                                             <th>Banco</th>
@@ -331,6 +352,7 @@
                                     </thead>
                                     <tbody>
                                         <tr>
+                                            <td>1</td>
                                             <td>10-12-2017</td>
                                             <td>200000</td>
                                             <td>Banco Chile</td>
@@ -338,6 +360,7 @@
 
                                         </tr>
                                         <tr>
+                                            <td>2</td>
                                             <td>10-01-2018</td>
                                             <td>200000</td>
                                             <td>Banco Chile</td>
@@ -345,6 +368,55 @@
 
                                         </tr>
                                         <tr>
+                                            <td>3</td>
+                                            <td>10-02-2018</td>
+                                            <td>200000</td>
+                                            <td>Banco Chile</td>
+                                            <td>20010211</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>4</td>
+                                            <td>10-02-2018</td>
+                                            <td>200000</td>
+                                            <td>Banco Chile</td>
+                                            <td>20010211</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>5</td>
+                                            <td>10-02-2018</td>
+                                            <td>200000</td>
+                                            <td>Banco Chile</td>
+                                            <td>20010211</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>6</td>
+                                            <td>10-02-2018</td>
+                                            <td>200000</td>
+                                            <td>Banco Chile</td>
+                                            <td>20010211</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>7</td>
+                                            <td>10-02-2018</td>
+                                            <td>200000</td>
+                                            <td>Banco Chile</td>
+                                            <td>20010211</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>8</td>
+                                            <td>10-02-2018</td>
+                                            <td>200000</td>
+                                            <td>Banco Chile</td>
+                                            <td>20010211</td>
+
+                                        </tr>
+                                        <tr>
+                                            <td>9</td>
                                             <td>10-02-2018</td>
                                             <td>200000</td>
                                             <td>Banco Chile</td>
@@ -366,11 +438,11 @@
 
                             <div role="tabpanel" class="tab-pane" id="transferenciaTab">
                                 <div class="row">
-                                    <div class=" col-lg-6">
+                                    <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="dp1">Fecha</label>
-                                            <div class="input-group date" id="dp1" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
-                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTransferencia" placeholder="12-02-2017" name="txtFechaTransferencia" readonly="true">
+                                            <label for="dpFechaTR">Fecha</label>
+                                            <div class="input-group date" id="dpFechaTR" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
+                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTR" placeholder="12-02-2017" name="txtFechaTR" readonly="true">
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
                                         </div>
@@ -379,16 +451,16 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="txtImporteTra">Importe</label>
-                                            <input type="number" class="form-control" id="txtImporteTra" name="txtImporteTra" placeholder="20000" required="required">
+                                            <label for="txtImporteTR">Importe</label>
+                                            <input type="number" class="form-control" id="txtImporteTR" name="txtImporteTR" placeholder="20000" required="required">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="form-group">
-                                            <label for="cmbBancoTra">Banco</label>
-                                            <select id="cmbBancoTra" class="form-control" name="cmbBancoTra" required="required">
+                                            <label for="cmbBancoTR">Banco</label>
+                                            <select id="cmbBancoTR" class="form-control" name="cmbBancoTR" required="required">
                                                 <option selected>Seleccione...</option>
                                                 <option>Banco de Chile</option>
                                                 <option>Banco Santander</option>
@@ -401,8 +473,8 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="txtNumTransaccion">N° Transaccion</label>
-                                            <input type="number" class="form-control" id="txtNumTransaccion" name="txtNumTransaccion" placeholder="120000" required="required">
+                                            <label for="txtNumTransaccionTR">N° Transaccion</label>
+                                            <input type="number" class="form-control" id="txtNumTransaccionTR" name="txtNumTransaccionTR" placeholder="120000" required="required">
                                         </div>
                                     </div>
                                 </div>
@@ -412,9 +484,46 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="dp4">Fecha</label>
-                                            <div class='input-group date' id='dp4'>
-                                                <input type='text' class="form-control" />
+                                            <label for="dpFechaCS">Fecha</label>
+                                            <div class='input-group date' id='dpFechaCS'>
+                                                <input type='text' class="form-control" readonly="true" id="txtFechaCS" name="txtFechaCS" />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtNumeroCuota">N° Cuotas</label>
+                                            <input type="number" class="form-control" id="txtNumeroCuota" name="txtNumeroCuota" max="2" placeholder="12" required="required">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtImporteCS">Importe</label>
+                                            <input type="number" class="form-control" id="txtImporteCS" name="txtImporteCS" placeholder="120000" required="required">
+                                        </div>
+                                    </div>
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtCuotaPagadaCS">N° Cuotas Pagadas</label>
+                                            <input type="number" class="form-control" id="txtCuotaPagadaCS" name="txtCuotaPagadaCS" max="2" placeholder="2" required="required">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="efectivoTab">
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="dpFechaEF">Fecha</label>
+                                            <div class='input-group date' id='dpFechaEF'>
+                                                <input type='text' class="form-control" readonly="true" id="txtFechaEF" name="txtFechaEF" />
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>
@@ -423,41 +532,140 @@
                                     </div>
 
                                 </div>
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtImporteEF">Importe</label>
+                                            <input type="number" class="form-control" id="txtImporteEF" name="txtImporteEF" placeholder="120000" required="required">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tarjetaCreditoTab">
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="dpFechaTC">Fecha</label>
+                                            <div class="input-group date" id="dpFechaTC" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
+                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTC" placeholder="12-02-2017" name="txtFechaTC" readonly="true">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtNumCuotasTC">N° Cuotas</label>
+                                            <input type="number" class="form-control" id="txtNumCuotaTC" name="txtNumCuotaTC" placeholder="12345678" required="required">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtImporteTC">Importe</label>
+                                            <input type="number" class="form-control" id="txtImporteTC" name="txtImporteTC" placeholder="20000" required="required">
+                                        </div>
+                                    </div>
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtNumTransaccionTC">N° Transaccion</label>
+                                            <input type="number" class="form-control" id="txtNumTransaccionTC" name="txtNumTransaccionTC" placeholder="12345678" required="required">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label for="cmbBancoTC">Banco</label>
+                                            <select id="cmbBancoTC" class="form-control" name="cmbBancoTC" required="required">
+                                                <option selected>Seleccione...</option>
+                                                <option>Banco de Chile</option>
+                                                <option>Banco Santander</option>
+                                                <option>Banco Estado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="tarjetaDebitoTab">
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="dpFechaTD">Fecha</label>
+                                            <div class="input-group date" id="dpFechaTD" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
+                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTD" placeholder="12-02-2017" name="txtFechaTD" readonly="true">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+
+                                            <div class="form-group">
+                                                <label for="txtNumTransaccionTD">N° Transaccion</label>
+                                                <input type="number" class="form-control" id="txtNumTransaccionTD" name="txtNumTransaccionTD" placeholder="12345678" required="required">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class=" col-lg-4">
+                                        <div class="form-group">
+                                            <label for="txtImporteTD">Importe</label>
+                                            <input type="number" class="form-control" id="txtImporteTD" name="txtImporteTD" placeholder="20000" required="required">
+                                        </div>
+                                    </div>
+                                    <div class=" col-lg-4">
+                                        <label for="cmbBancoTD">Banco</label>
+                                        <select id="cmbBancoTD" class="form-control" name="cmbBancoTD" required="required">
+                                            <option selected>Seleccione...</option>
+                                            <option>Banco de Chile</option>
+                                            <option>Banco Santander</option>
+                                            <option>Banco Estado</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
-                    <button type="button" class="btn btn-success save">Registrar</button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
+                        <button type="button" class="btn btn-success save">Registrar</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-
     <%--<script src="js/Venta.js"></script>--%>
     <script src="Scripts/jquery-1.9.1.min.js"></script>
     <script src="Scripts/moment.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
- <   <script src="js/bootstrap-datetimepicker.js"></script>
-  %--  <script src="js/bootstrap-datetimepicker.es.js"></script>--%>
-    <script type="text/javascript">
-    
-        $(function () {
-            //$('.input-group.date').datetimepicker('show');
-            $('#dp4').datetimepicker({ 
-                format: "dd-mm-yyyy",
-            //    lang: 'es',
-            //    scrollMonth: true,
+    <script src="js/bootstrap-datetimepicker.js"></script>
+    <script src="js/bootstrap-datetimepicker.es.js"></script>
+    <script src="js/Validator.js"></script>
 
-            });
-           
-
-           
-        });
-    </script>
 
 </body>
+<%--<script type="text/javascript">
+
+        $(function () {
+            $('.input-group.date').datetimepicker();
+            //$('#dp4').datetimepicker({ 
+            //    format: "dd-mm-yyyy",
+            ////    lang: 'es',
+            ////    scrollMonth: true,
+
+            //});
+
+
+
+        });
+    </script>--%>
 </html>
