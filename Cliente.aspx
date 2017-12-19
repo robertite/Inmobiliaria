@@ -2,7 +2,7 @@
 
 
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="utf-8">
     <meta name='viewport' content='width=device-width initial-scale=1'>
@@ -18,7 +18,6 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <img src="img/logo.jpg" class="logo-img">
             </div>
-
 
         </div>
         <div class="row menu">
@@ -51,9 +50,9 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="txtRut">Rut</label>
-                                    <input type="text" id="txtRut" name="txtRut" class="form-control" placeholder="19234231-4" required="required"
+                                    <input type="text" id="txtRut" name="txtRut" class="form-control" placeholder="19234231-4" required="required" oninput="checkRut(this)"
                                         data-error="Ingrese Rut" />
-                                    <button class="pull-right  btn btn-success" type="button">
+                                    <button class="pull-right  btn btn-success" type="button" onclick="GetByRut()">
                                         <i class="glyphicon glyphicon-search"></i>
                                     </button>
                                     <div class="help-block with-errors"></div>
@@ -102,7 +101,7 @@
                             <div class=" col-lg-6 radio">
                                 <p></p>
                                 <label class="radio-inline">
-                                    <input class="form-check-input" checked="checked" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
+                                    <input class="form-check-input" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
                                     Activo
                                 </label>
 
@@ -169,7 +168,7 @@
                     </fieldset>
                 </div>
                 <div class="row col-lg-12">
-                    <button type="button" class="btn btn-success" onclick="insert();">
+                    <button type="submit" class="btn btn-success" onclick="insert();">
                         <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                     </button>
                     <button type="reset" class="btn btn-success">
@@ -188,13 +187,15 @@
 
 
     <script src="js/Cliente.js"></script>
-    <script src="Scripts/jquery-1.9.1.min.js"></script>
+    <script src="js/jquery-3.2.1.min.js"></script>
     <script src="Scripts/moment.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
     <script src="js/bootstrap-datetimepicker.es.js"></script>
-    <%--<script src="js/Validator.js"></script>--%>
+    <script src="js/Validator.js"></script>
     <script src="js/Login.js"></script>
+    <script src="js/jquery.serializejson.js"></script>
+    <script src="js/jquery.json-2.2.min.js"></script>
 
 </body>
 </html>

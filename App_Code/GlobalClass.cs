@@ -11,7 +11,7 @@ using System.Web;
 /// </summary>
 public class GlobalClass
 {
-    public static string conexion = ConfigurationManager.ConnectionStrings["conexion"].ToString();
+    public static string conexion = ConfigurationManager.ConnectionStrings["conn"].ToString();
     public GlobalClass() { }
 
     public static void SaveLog(string clase, string metodo, string error, DateTime fecha)

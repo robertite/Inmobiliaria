@@ -634,14 +634,15 @@
         </div>
     </div>
 
-    <%--<script src="js/Venta.js"></script>--%>
-    <script src="Scripts/jquery-1.9.1.min.js"></script>
+    <script src="js/Venta.js"></script>
+    <script src="js/jquery-3.2.1.js"></script>
     <script src="Scripts/moment.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
     <script src="js/bootstrap-datetimepicker.es.js"></script>
     <script src="js/Validator.js"></script>
-
+    <script src="js/jquery.serializejson.js"></script>
+    <script src="js/jquery.json-2.2.min.js"></script>
 
 </body>
 <%--<script type="text/javascript">

@@ -14,9 +14,11 @@ public partial class Cliente : System.Web.UI.Page
 
     }
     [WebMethod()]
-    public string GetById(string rut)
+    public static string GetByRut(string rut)
     {
-        return "";
+        csCliente cliente = new csCliente();
+        cliente.GetByRut(JsonConvert.DeserializeObject(rut).ToString());
+        return JsonConvert.SerializeObject(cliente);
     }
     [WebMethod()]
     public string Insert(string rut)
