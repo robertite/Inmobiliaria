@@ -1,27 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
-using System.Configuration;
-using System.Web.Configuration;
-using System.Web.SessionState;
 
-public class login : SessionIDManager
+/// <summary>
+/// Descripción breve de Login
+/// </summary>
+public class Login
 {
-    public override string CreateSessionID(HttpContext context)
-    {
-        return Guid.NewGuid().ToString();
-    }
-    public override bool Validate(string id)
-    {
-        try
-        {
-            Guid testGuid = new Guid(id);
-            if(id == testGuid.ToString())
-            return true;
-        }
-        catch { }
+    public string email { get; set; }
+    public string pass { get; set; }
+    public Perfil perfil { get; set; }
 
-        return false;
+    public Login validaLogin(Login login) {
+
+        DataTable dt = new DataTable();
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conn"].ToString());
+        SqlCommand cmd = new SqlCommand();
+        cmd.Connection = con;
+        cmd.CommandText = "LoadPerfilByUser";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+        con.Open();
+        int ret = cmd.ExecuteNonQuery();
+        con.Close();
+        if (ret == 0)
+        {
+            return login;
+        }
+
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+
+        con.Open();
+        da.Fill(dt);
+        con.Close();
+
+
+
+        return null;
     }
+
+	public Login()	
+    {
+        //
+		// TODO: Agregar aquí la lógica del constructor
+		//
+	}
 }
