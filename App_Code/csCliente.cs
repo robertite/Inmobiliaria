@@ -105,9 +105,10 @@ public class csCliente
             telefono = int.Parse(dr[4].ToString());
             estado = dr[5].ToString();
             comuna = int.Parse(dr[6].ToString());
-            calle = dr[7].ToString();
-            numero = int.Parse(dr[8].ToString());
-            departamento = dr[9].ToString();
+            region = int.Parse(dr[7].ToString());
+            calle = dr[8].ToString();
+            numero = int.Parse(dr[9].ToString());
+            departamento = dr[10].ToString();
 
         }
 

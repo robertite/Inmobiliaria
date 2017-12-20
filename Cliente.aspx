@@ -39,7 +39,7 @@
             </nav>
 
         </div>
-        <form id="form" data-toggle="validator">
+        <form id="form" data-toggle="validator" method="post">
             <div class="row contenedor-principal container-fluid">
 
 
@@ -116,7 +116,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="cmbRegion">Region</label>
-                                    <select id="cmbRegion" class="form-control" name="cmbRegion" required="required" data-error="Seleccione Región">
+                                    <select id="cmbRegion" onchange="loadComunaByRegionId(this)" class="form-control" name="cmbRegion" required="required" data-error="Seleccione Región">
                                         <option>Seleccione...</option>
                                         <option>...</option>
                                     </select>
@@ -168,7 +168,7 @@
                     </fieldset>
                 </div>
                 <div class="row col-lg-12">
-                    <button type="submit" class="btn btn-success" onclick="insert();">
+                    <button type="button" class="btn btn-success" onclick="Insert();">
                         <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                     </button>
                     <button type="reset" class="btn btn-success">

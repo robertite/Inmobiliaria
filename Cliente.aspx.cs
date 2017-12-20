@@ -21,7 +21,7 @@ public partial class Cliente : System.Web.UI.Page
         return JsonConvert.SerializeObject(cliente);
     }
     [WebMethod()]
-    public string Insert(string rut)
+    public static string Insert(string cliente)
     {
         return JsonConvert.SerializeObject("roberto");
     }

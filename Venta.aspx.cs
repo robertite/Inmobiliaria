@@ -22,4 +22,14 @@ public partial class Venta : System.Web.UI.Page
         return JsonConvert.SerializeObject(lstRegion);
 
     }
+    [WebMethod()]
+    public static string GetAllComuna()
+    {
+
+        csComuna comuna = new csComuna();
+        List<csComuna> lstComuna = comuna.GetAllComuna();
+
+        return JsonConvert.SerializeObject(lstComuna);
+
+    }
 }

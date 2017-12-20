@@ -1,36 +1,65 @@
 ﻿var path = window.location.pathname;
 
 
-window.onload = function() {
+window.onload = function () {
     loadCmbRegion();
 };
 
 function loadCmbRegion() {
 
     var datos = $.parseJSON(localStorage.getItem("Region"));
-    var len, index;
-    for (index = 0, len = datos.length; index < len; ++index) {
-        console.log(datos[index].descripcion);
-    }
+
+    $("#cmbRegion").html('');
+    $("#cmbRegion").append("<option>Seleccionar...</option>");
+    $.each(datos, function (key, value) {
+        $("#cmbRegion").append("<option value=" + datos[key].id + ">" + datos[key].descripcion + "</option>");
+
+    });
 }
-function validaLogin (){ 
-   
+
+function loadComunaByRegionId(sel) {
+    var datos = $.parseJSON(localStorage.getItem("Comuna"));
+    $("#cmbComuna").html('');
+    $("#cmbComuna").append("<option>Seleccionar...</option>");
+    for (var i = 0; i < datos.length; i++) {
+        if (datos[i].reg_id == parseInt(sel.value)) {
+
+            $("#cmbComuna").append("<option value=" + datos[i].id + ">" + datos[i].descripcion + "</option>");
+            console.log(datos[i].id + ' ' + datos[i].descripcion);
+
+        }
+    }
+
+}
+
+function validaLogin() {
+
     //if (sessionStorage.getItem("session") == null) {
     //    window.location.href = "http://localhost:9128/Login.aspx";
     //}
     //else { alert("No");}
 }
-function insert() {
-   
-    alert(sessionStorage.getItem("Email"));
+function Insert() {
+
+    alert(0);
+    var item = {
+        rut: $('#txtRut').val(),
+        nombre: $('#txtNombre').val(),
+        email: $('#txtEmail').val(),
+        giro: $('#txtGiro').val(),
+        telefono: $('#txtTelefono').val(),
+        estado: $('#txtEstado').val(),
+        direccion: $('#txtDireccion').val(),
+        calle: $('#txtCalle').val(),
+        numero: $('#txtNumero').val(),
+        departamento: $('#txtDepartamento').val(),
+        comuna: $('#txtComuna').value,
+    }
+    console.log(item);
     $.ajax({
         type: "POST",
-        url: '',
-        data: $.toJSON({
-            //npag: npag,
-            //Id: $("#txtFolio").val(),
-            rut: $('#txtRut').val()
-        }),
+        url: 'http://localhost:9128/Cliente.aspx/Insert',
+        data: $.toJSON({ cliente: JSON.stringify(item) }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
@@ -45,40 +74,9 @@ function insert() {
     return false;
 }
 
-//var path_url = window.location.pathname;
-
-////Inicializamos Combo Empresa
-//$(document).ready(function () {
-
-//    LoadCmbProveedor();
-
-//});
 
 
-//function LoadCmbProveedor() {
 
-//    //cargar sucursales de SAP en control CMBSucursal
-//    $.ajax({
-//        type: "POST",
-//        url: path_url + '/GetAllProveedor',
-//        data: {},
-//        contentType: "application/json; charset=utf-8",
-//        dataType: "json",
-//        success: function (response) {
-
-//            var data = eval(response.d);
-
-//            armaCmbProveedor(data.array);
-
-//        },
-//        error: function (response) {
-//            alert(response.responseText);
-
-//        }
-//    });
-//    return false;
-
-//}
 function checkRut(txtRut) {
     // Despejar Puntos
     var valor = txtRut.value.replace('.', '');
@@ -126,11 +124,11 @@ function checkRut(txtRut) {
     // Si todo sale bien, eliminar errores (decretar que es válido)
     txtRut.setCustomValidity('');
 }
-function GetByRut(){
+function GetByRut() {
 
     $.ajax({
         type: "POST",
-        url: 'http://localhost:58910/Cliente.aspx/GetByRut',
+        url: 'http://localhost:9128/Cliente.aspx/GetByRut',
         data: $.toJSON({ rut: JSON.stringify($('#txtRut').val()) }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -138,26 +136,29 @@ function GetByRut(){
 
             var data = $.parseJSON(response.d);
 
-            
 
             $('#txtRut').val(data.rut);
             $('#txtNombre').val(data.nombre);
             $('#txtEmail').val(data.email);
             $('#txtGiro').val(data.giro);
             $('#txtTelefono').val(data.telefono);
-         
+
             if (data.estado == 'A') {
                 $('#cmbActivo').prop("checked", true);
-                
+
             }
             else {
-                
+
                 $('#cmbInactivo').prop("checked", true);
             }
             $('#txtDireccion').val(data.direccion);
             $('#txtCalle').val(data.calle);
             $('#txtNumero').val(data.numero);
             $('#txtDepto').val(data.departamento);
+            $('#cmbRegion').val(data.region);
+            setComunaById(data.comuna, data.region);
+            $('#cmbComuna').value = data.comuna;
+
         },
         error: function (response) {
             alert(response.responseText);
