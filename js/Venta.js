@@ -9,7 +9,7 @@ function GetAllRegion() {
 
     $.ajax({
         type: "POST",
-        url: 'http://localhost:9128/Venta.aspx/GetAllRegion',
+        url: 'http://localhost:58910/Venta.aspx/GetAllRegion',
         data: '{}',
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -37,7 +37,7 @@ function GetAllComuna() {
 
     $.ajax({
         type: "POST",
-        url: 'http://localhost:9128/Venta.aspx/GetAllComuna',
+        url: 'http://localhost:58910/Venta.aspx/GetAllComuna',
         data: '{}',
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -45,8 +45,6 @@ function GetAllComuna() {
             var data = $.parseJSON(response.d);
 
             localStorage.setItem("Comuna", JSON.stringify(data));
-
-            
             
            
         },

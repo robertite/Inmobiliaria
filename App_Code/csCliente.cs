@@ -33,17 +33,26 @@ public class csCliente
         cmd.CommandText = "Cliente_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
-
+        cmd.Parameters.AddWithValue("@cli_rut",SqlDbType.NVarChar).Value = rut;
+        cmd.Parameters.AddWithValue("@cli_nombre", SqlDbType.NVarChar).Value = nombre;
+        cmd.Parameters.AddWithValue("@cli_giro", SqlDbType.NVarChar).Value = giro;
+        cmd.Parameters.AddWithValue("@cli_email", SqlDbType.NVarChar).Value = email;
+        cmd.Parameters.AddWithValue("@cli_telefono", SqlDbType.Int).Value = telefono;
+        cmd.Parameters.AddWithValue("@cli_departamento", SqlDbType.NVarChar).Value = departamento;
+        cmd.Parameters.AddWithValue("@cli_calle", SqlDbType.NVarChar).Value = calle;
+        cmd.Parameters.AddWithValue("@cli_numero", SqlDbType.NVarChar).Value = numero;
+        cmd.Parameters.AddWithValue("@cli_est_id", SqlDbType.Char).Value = estado;
+        cmd.Parameters.AddWithValue("@cli_com_id", SqlDbType.NVarChar).Value = comuna;
         try { 
         con.Open();
         int ret = cmd.ExecuteNonQuery();
         con.Close();
 
-        if (ret == 0)
+        if (ret != 0)
         {
-                estado_transaccion = "No Existe Cliente";
+                estado_transaccion = "Registrado Exitosamente";
         }
-        else { estado_transaccion = ""; }
+        
 
         }
         catch (Exception ex) { 
@@ -69,20 +78,12 @@ public class csCliente
         da.SelectCommand = cmd;
         try
         {
-            con.Open();
-            int ret = cmd.ExecuteNonQuery();
-            con.Close();
-
-            if (ret == 0)
-            {
-                return "No Existe Cliente";
-            }
-            else {
+          
                 con.Open();
                 da.Fill(dt);
                 con.Close();
                 armaObjeto(dt);
-            }
+            
 
         }
         catch (Exception ex)

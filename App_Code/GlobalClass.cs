@@ -18,7 +18,7 @@ public class GlobalClass
     {
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
-        cmd.CommandText = "Cliente_Insert";
+        cmd.CommandText = "Log_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
         cmd.Parameters.AddWithValue("@clase", SqlDbType.NVarChar).Value = clase;

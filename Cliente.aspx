@@ -116,9 +116,9 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="cmbRegion">Region</label>
-                                    <select id="cmbRegion" onchange="loadComunaByRegionId(this)" class="form-control" name="cmbRegion" required="required" data-error="Seleccione Región">
-                                        <option>Seleccione...</option>
-                                        <option>...</option>
+                                    <select id="cmbRegion"  class="form-control" name="cmbRegion" required="required" data-error="Seleccione Región">
+                                        <option value="0">Seleccione...</option>
+                                        
                                     </select>
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -127,8 +127,8 @@
                                 <div class="form-group">
                                     <label for="cmbComuna">Comuna</label>
                                     <select id="cmbComuna" name="cmbComuna" class="form-control" required="required">
-                                        <option selected>Seleccione...</option>
-                                        <option>...</option>
+                                        <option value="0" selected>Seleccione...</option>
+                                        
                                     </select>
                                 </div>
                             </div>

@@ -21,8 +21,14 @@ public partial class Cliente : System.Web.UI.Page
         return JsonConvert.SerializeObject(cliente);
     }
     [WebMethod()]
-    public static string Insert(string cliente)
+    public static string Insert(string objCliente)
     {
-        return JsonConvert.SerializeObject("roberto");
+        csCliente cliente = JsonConvert.DeserializeObject<csCliente>(objCliente);
+        cliente.Insert();
+        return JsonConvert.SerializeObject(cliente.estado_transaccion);
     }
 }
+
+
+
+
