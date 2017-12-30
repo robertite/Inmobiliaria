@@ -66,12 +66,12 @@
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                            
+
 
                         </div>
 
                         <div class="row">
-                            
+
                             <div class="col-lg-6">
 
                                 <div class="form-group">
@@ -116,9 +116,9 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="cmbRegion">Region</label>
-                                    <select id="cmbRegion"  class="form-control" name="cmbRegion" required="required" data-error="Seleccione Región">
+                                    <select id="cmbRegion" class="form-control" name="cmbRegion" required="required" data-error="Seleccione Región">
                                         <option value="0">Seleccione...</option>
-                                        
+
                                     </select>
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -128,7 +128,7 @@
                                     <label for="cmbComuna">Comuna</label>
                                     <select id="cmbComuna" name="cmbComuna" class="form-control" required="required">
                                         <option value="0" selected>Seleccione...</option>
-                                        
+
                                     </select>
                                 </div>
                             </div>
@@ -183,7 +183,26 @@
     </div>
 
 
-
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Validacion de Formulario</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensaje"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
 
 
     <script src="js/Cliente.js"></script>

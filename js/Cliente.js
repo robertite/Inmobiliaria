@@ -1,4 +1,4 @@
-﻿var path = window.location.pathname;
+﻿var path_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 var reg_id;
 
 window.onload = function () {
@@ -53,7 +53,7 @@ function Insert() {
     if ($('#txtRut').val() == "" || $('#txtNombre').val() == "" || $('#txtEmail').val() == "" || $('#txtGiro').val() == ""
         || $('#txtTelefono').val() == "" || $('#txtCalle').val() == "" || $('#txtNumero').val() == "" || $('#txtDepto').val() == ""
         || $('#cmbComuna').val() == "0") {
-        alert("Ingrese Datos");
+        mensajeModal("Ingrese Datos");
         return;
     }
     var estado;
@@ -77,20 +77,20 @@ function Insert() {
         departamento: $('#txtDepto').val(),
         comuna: $('#cmbComuna').val(),
     }
-    console.log(item);
+
     $.ajax({
         type: "POST",
-        url: 'http://localhost:58910/Cliente.aspx/Insert',
+        url: path_url+'/Insert',
         data: $.toJSON({ objCliente: JSON.stringify(item) }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
         success: function (response) {
             var data = $.parseJSON(response.d);
-            alert(data);
+            mensajeModal(data);
             limpiar();
         },
-        error: function (response) { alert("Error"); }
+        error: function (response) { mensajeModal("Error"); }
     });
     return false;
 }
@@ -144,9 +144,17 @@ function checkRut(txtRut) {
 }
 function GetByRut() {
 
+    if ($('#txtRut').val() == "")
+    {
+        mensajeModal("Ingrese Rut", "txtRut");
+        return;
+       
+    }
+
     $.ajax({
         type: "POST",
-        url: 'http://localhost:58910/Cliente.aspx/GetByRut',
+
+        url: path_url+'/GetByRut',
         data: $.toJSON({ rut: JSON.stringify($('#txtRut').val()) }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -154,6 +162,7 @@ function GetByRut() {
 
             var data = $.parseJSON(response.d);
 
+            if (data.estado_transaccion == null) { mensajeModal("No Existe Cliente"); limpiar(); return; }
 
             $('#txtRut').val(data.rut);
             $('#txtNombre').val(data.nombre);
@@ -207,10 +216,18 @@ function limpiar() {
    $('#txtEmail').val('');
    $('#txtGiro').val('');
    $('#txtTelefono').val('');
-   $('#cmbActivo').prop("checked", true);
+   $('#cmbActivo').prop("checked", false);
+   $('#cmbInactivo').prop("checked", false);
    $('#txtCalle').val('');
    $('#txtNumero').val('');
    $('#txtDepto').val('');
    $('#cmbRegion').val(0);
    $('#cmbComuna').val(0);
+}
+function mensajeModal(mensaje, focus)
+{
+    $('#mensaje').html('<p>'+mensaje+'</p>');
+    $('#myModal').modal('show');
+    $('#'+focus).focus();
+    
 }

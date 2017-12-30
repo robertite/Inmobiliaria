@@ -60,11 +60,6 @@ public class csCliente
             estado_transaccion = "Error BD";
         }
     }
-    public string SetInactive(string rut)
-    {
-
-        return "";
-    }
     public string GetByRut(string rut)
     {
         DataTable dt = new DataTable("Cliente");
@@ -82,6 +77,7 @@ public class csCliente
                 con.Open();
                 da.Fill(dt);
                 con.Close();
+
                 armaObjeto(dt);
             
 
@@ -110,7 +106,8 @@ public class csCliente
             calle = dr[8].ToString();
             numero = int.Parse(dr[9].ToString());
             departamento = dr[10].ToString();
-
+            estado_transaccion = "cargado";
+           
         }
 
     

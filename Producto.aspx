@@ -48,10 +48,10 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label for="txtCodigo">Codigo</label>
-                                    <input type="text" id="txtCodigo" name="txtCodigo" class="form-control" placeholder="102938" required="required"
+                                    <label for="txtId">Codigo</label>
+                                    <input type="text" id="txtId" name="txtId" class="form-control" placeholder="102938" required="required"
                                         data-error="Ingrese Codigo Producto" />
-                                    <button class="pull-right  btn btn-success" type="button">
+                                    <button class="pull-right  btn btn-success" type="button" onclick="GetById()">
                                         <i class="glyphicon glyphicon-search"></i>
                                     </button>
                                     <div class="help-block with-errors"></div>
@@ -73,15 +73,27 @@
                             <div class="col-lg-6 ">
 
                                 <div class="form-group">
-                                    <label for="txtPrecioUnitario">Precio Unitario </label>
-                                    <input type="number" class="form-control" id="txtPrecioUnitario" name="txtPrecioUnitario" placeholder="400000" required="required" data-error="Ingrese Precio Unitario">
+                                    <label for="txtPrecio">Precio Unitario </label>
+                                    <input type="number" class="form-control" id="txtPrecio" name="txtPrecio" placeholder="400000" required="required" data-error="Ingrese Precio Unitario">
                                     <div class="help-block with-errors"></div>
                                 </div>
+                            </div>
+                             <div class=" col-lg-6 radio">
+                                <p></p>
+                                <label class="radio-inline">
+                                    <input class="form-check-input" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
+                                    Activo
+                                </label>
+
+                                <label class="radio-inline">
+                                    <input class="form-check-input" type="radio" name="cmbEstado" id="cmbInactivo" value="optInactivo">
+                                    Inactivo
+                                </label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
-                                <button type="submit" class="btn btn-success">
+                                <button type="button" class="btn btn-success" onclick="Insert()">
                                     <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                                 </button>
                                 <button type="reset" class="btn btn-success">
@@ -96,11 +108,35 @@
     </form>
     </div>
 
+     <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Validacion de Formulario</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensaje"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="Scripts/jquery-1.9.1.min.js"></script>
     <script src="Scripts/moment.min.js"></script>
     <script src="Scripts/bootstrap.min.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
     <script src="js/bootstrap-datetimepicker.es.js"></script>
     <script src="js/Validator.js"></script>
+     <script src="js/jquery.serializejson.js"></script>
+    <script src="js/jquery.json-2.2.min.js"></script>
+    <script src="js/Producto.js"></script>
 </body>
 </html>

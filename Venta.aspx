@@ -52,9 +52,9 @@
                             <div class="col-lg-12 form-group">
 
                                 <label for="txtRut">Rut</label>
-                                <input type="text" id="txtRut" name="txtRut" class="form-control" required="required" placeholder="19234231-4" data-error="Ingrese Rut" />
+                                <input type="text" id="txtRut" name="txtRut" class="form-control" required="required" oninput="checkRut(this)" placeholder="19234231-4" data-error="Ingrese Rut" />
 
-                                <button class="pull-right  btn btn-success" type="button">
+                                <button class="pull-right  btn btn-success" type="button" onclick="GetByRut()">
                                     <i class="glyphicon glyphicon-search"></i>
                                 </button>
                                 <div class="help-block with-errors"></div>
@@ -85,21 +85,25 @@
 
                             <p></p>
                             <label class="radio-inline">
-                                <input class="form-check-input " type="radio" name="cmbTipoDocto" id="cmbFactura" value="optFactura">
+                                <input class="form-check-input " type="radio" name="cmbTipoDocto" id="cmbFactura" value="optFactura" onchange="updateDocTotal()">
                                 Factura
                             </label>
 
                             <label class="radio-inline">
-                                <input class="form-check-input" type="radio" name="cmbTipoDocto" id="cmbBoleta" value="optBoleta">
+                                <input class="form-check-input" checked="checked" type="radio" name="cmbTipoDocto" id="cmbBoleta" value="optBoleta" onchange="updateDocTotal()">
                                 Boleta
                             </label>
 
                         </div>
+
                         <div class="row">
 
                             <div class="col-lg-6 form-group">
                                 <label for="txtCalle">N° Interno</label>
-                                <input type="text" class="form-control" id="txtCalle" name="txtCalle" placeholder="22312" readonly="true">
+                                <input type="text" class="form-control" id="txtNumInterno" name="txtNumInterno" placeholder="22312">
+                                <button class="pull-right  btn btn-success" type="button">
+                                    <i class="glyphicon glyphicon-search"></i>
+                                </button>
                             </div>
                             <div class="col-lg-6 form-group">
                                 <label for="cmbEstado">Estado</label>
@@ -143,44 +147,24 @@
                     <div class="row">
                         <div class="col-lg-6">
 
-                            <button type="button" class="btn btn-success">
+                            <button type="button" class="btn btn-success" onclick="CargarProductos();">
                                 <span class="glyphicon glyphicon-plus-sign"></span>Agregar 
                             </button>
                         </div>
                     </div>
                     <div class="row">
-                        <table class="table table-hover">
+                        <table class="table table-hover" id="tblProductoVenta">
                             <thead>
                                 <tr>
                                     <th>N° Producto</th>
                                     <th>Desc</th>
-                                    <th>Cantidad</th>
+                                    <th class="col-lg-2">Cantidad</th>
                                     <th>Precio</th>
                                     <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>101010</td>
-                                    <td>Silla</td>
-                                    <td>1</td>
-                                    <td>10000</td>
-                                    <td>10000</td>
-                                </tr>
-                                <tr>
-                                    <td>101010</td>
-                                    <td>Silla</td>
-                                    <td>1</td>
-                                    <td>10000</td>
-                                    <td>10000</td>
-                                </tr>
-                                <tr>
-                                    <td>101010</td>
-                                    <td>Silla</td>
-                                    <td>1</td>
-                                    <td>10000</td>
-                                    <td>10000</td>
-                                </tr>
+
                             </tbody>
                         </table>
                     </div>
@@ -214,20 +198,20 @@
 
                         <div class="row col-lg-12  form-group">
 
-                            <label for="txtTotalAntesDescuento">Total antes del descuento</label>
-                            <input id="txtTotalAntesDescuento" name="txtTotalAntesDescuento" class="form-control" readonly="true" />
+                            <label for="txtTotalAntesImpuesto">Total antes de Impuesto</label>
+                            <input id="txtTotalAntesImpuesto" name="txtTotalAntesImpuesto" class="form-control" readonly="true" value="0"/>
                         </div>
 
 
                         <div class="row col-lg-12 form-group">
 
                             <label for="txtImpuesto">Impuesto</label>
-                            <input id="txtImpuesto" name="txtImpuesto" class="form-control" readonly="true" />
+                            <input id="txtImpuesto" name="txtImpuesto" class="form-control" readonly="true" value="0"/>
                         </div>
                         <div class="row col-lg-12 form-group">
 
                             <label for="txtTotal">Total</label>
-                            <input id="txtTotal" name="txtTotal" class="form-control" readonly="true" />
+                            <input id="txtTotal" name="txtTotal" class="form-control" readonly="true" value="0"/>
                         </div>
 
                         <div class="row col-lg-12 form-group">
@@ -236,7 +220,7 @@
                                 <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                             </button>
 
-                            <button type="reset" class="btn btn-success">
+                            <button type="reset" class="btn btn-success" onclick="limpiar();">
                                 <span class="glyphicon glyphicon-trash"></span>Limpiar 
                             </button>
 
@@ -634,6 +618,71 @@
         </div>
     </div>
 
+    <div class="modal fade" id="modalProductos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="H1">Lista de Productos</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="lista-productos">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="input-group">
+                                    <span class="input-group-addon">Buscar</span>
+                                    <input id="filtrar" type="text" class="form-control" placeholder="Ingrese el producto que desea Buscar...">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <table id="tblProductoLista" class="table table-hover form-group">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Precio</th>
+                                            <th>Seleccionar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="buscar"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                    <button type="button" class="btn btn-success save">Agregar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="exampleModalLabel">Validacion de Formulario</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="mensaje"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/Venta.js"></script>
     <script src="js/jquery-3.2.1.js"></script>
     <script src="Scripts/moment.min.js"></script>
@@ -645,6 +694,19 @@
     <script src="js/jquery.json-2.2.min.js"></script>
 
 </body>
+<script type="text/javascript">
+    $(document).ready(function () {
+        (function ($) {
+            $('#filtrar').keyup(function () {
+                var rex = new RegExp($(this).val(), 'i');
+                $('.buscar tr').hide();
+                $('.buscar tr').filter(function () {
+                    return rex.test($(this).text());
+                }).show();
+            })
+        }(jQuery));
+    });
+</script>
 <%--<script type="text/javascript">
 
         $(function () {
