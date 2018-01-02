@@ -13,23 +13,13 @@ public partial class Venta : System.Web.UI.Page
     {
 
     }
+
     [WebMethod()]
-    public static string GetAllRegion() {
-
-        csRegion region = new csRegion();
-        List<csRegion> lstRegion = region.GetAllRegion();
-
-        return JsonConvert.SerializeObject(lstRegion);
-
-    }
-    [WebMethod()]
-    public static string GetAllComuna()
+    public static string GetAllSucursal()
     {
 
-        csComuna comuna = new csComuna();
-        List<csComuna> lstComuna = comuna.GetAllComuna();
-
-        return JsonConvert.SerializeObject(lstComuna);
+        csSucursal sucursal = new csSucursal();
+        return JsonConvert.SerializeObject(sucursal.GetAll());
 
     }
 }

@@ -101,7 +101,7 @@
                             <div class=" col-lg-6 radio">
                                 <p></p>
                                 <label class="radio-inline">
-                                    <input class="form-check-input" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
+                                    <input class="form-check-input" checked="checked" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
                                     Activo
                                 </label>
 
@@ -207,8 +207,8 @@
 
     <script src="js/Cliente.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="Scripts/moment.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
     <script src="js/bootstrap-datetimepicker.es.js"></script>
     <script src="js/Validator.js"></script>

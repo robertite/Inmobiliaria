@@ -3,60 +3,66 @@ var path_url_small = window.location.protocol + '//' + window.location.host;
 var pro_sel;
 window.onload = function () {
 
-    GetAllRegion();
-    GetAllComuna();
+    loadCmbSucursal($('#cmbSucursal'), function (datos) {
+        $("#cmbSucursal").html('');
+        $("#cmbSucursal").append("<option value = 0>Seleccionar...</option>");
+        $.each(datos, function (key, value) {
+            $("#cmbSucursal").append("<option value=" + datos[key].id + ">" + datos[key].descripcion + "</option>");
 
-    //localStorage.setItem("Comuna", GetAllComuna());
+        });
+    });
+   
+
+    $('.datepicker').datepicker({
+        format: 'dd-mm-yyyy',
+        language: 'es'
+        
+    });
+ 
 };
-function GetAllRegion() {
 
-    $.ajax({
-        type: "POST",
-        url: path_url + '/GetAllRegion',    
-        data: '{}',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            var data = $.parseJSON(response.d);
+//window.onbeforeunload = function () {
 
-            localStorage.setItem("Region", JSON.stringify(data));
+//    limpiarCookies();
+//}
+//function limpiarCookies() {
 
-            //var datos = $.parseJSON(localStorage.getItem("Region"));
-            //var len, index;
-            //for (index = 0, len = datos.length; index < len; ++index) {
-            //    console.log(datos[index].descripcion);
-            //}
+//    localStorage.clear();
+//}
+function loadCmbSucursal(cmbSucursal, callback) {
 
-        },
-        error: function (response) {
-            return "error";
-        }
-    });
-    return false;
+    if (localStorage.getItem("Sucursal") === null) {
+        $.ajax({
+            type: "POST",
+            url: path_url + '/GetAllSucursal',
+            data: '{}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var data = $.parseJSON(response.d);
 
+                localStorage.setItem("Sucursal", JSON.stringify(data));
+                if (typeof callback === 'function') {
+                    callback($.parseJSON(localStorage.getItem("Sucursal")));
+                }
+            },
+            error: function (response) {
+                return "error";
+            }
+        });
+        return false;
+    }
+    else {
+        callback($.parseJSON(localStorage.getItem("Sucursal")));
+    }
+
+
+
+
+    
 }
 
-function GetAllComuna() {
 
-    $.ajax({
-        type: "POST",
-        url: path_url+'/GetAllComuna',
-        data: '{}',
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (response) {
-            var data = $.parseJSON(response.d);
-
-            localStorage.setItem("Comuna", JSON.stringify(data));
-            
-           
-        },
-        error: function (response) {
-            return "error";
-        }
-    });
-    return false;
-}
 
 function GetByRut() {
 
@@ -161,8 +167,6 @@ function CargarProductos()
             $("#tblProductoLista tbody").html('');
             $.each(data, function (key, value) {
                 
-                
-
                 $("#tblProductoLista tbody").append("<tr><td>" + value.id + '</td><td>' + value.descripcion + '</td><td>' + value.precio + "</td>" + "</td><td><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + "})\">Agregar</button></td></tr>");
                
             });
@@ -178,8 +182,15 @@ function CargarProductos()
 
 function AddProduct(value)
 {  
-    if ($('#' + value.id)[0] != undefined) { mensajeModal("Usted Ya registró este Producto"); $('#modalProductos').modal('hide'); return; }
-    $("#tblProductoVenta tbody").append("<tr id="+value.id+"><td>" + value.id + '</td><td>' + value.descripcion + "</td><td contenteditable=\"true\" onblur=\"updateLineTableProduct("+value.id+");\">1</td><td>" + value.precio + "</td><td id=\"lineTotal\" class="+value.id+">" + value.precio + "</td></tr>");
+    if ($('#' + value.id)[0] != undefined) { mensajeModal("Usted Ya registró este Producto"); $('#modalProductos').modal('show'); return; }
+    $("#tblProductoVenta tbody").append("<tr id="+value.id+">"+
+                                        "<td>" + value.id + "</td>" +
+                                        "<td>" + value.descripcion + "</td>"+
+                                        "<td contenteditable=\"true\" onblur=\"updateLineTableProduct("+value.id+");\">1</td>"+
+                                        "<td>" + value.precio + "</td>"+
+                                        "<td id=\"lineTotal\" class="+value.id+">" + value.precio + "</td>"+
+                                        "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableProduct(" + value.id + ");\">" +
+                                        "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
     $('#modalProductos').modal('hide');
 
     updateDocTotal();
@@ -190,6 +201,11 @@ function updateLineTableProduct(value)
    
     $('#' + value)[0].cells[4].innerHTML = parseInt($('#' + value)[0].cells[2].innerHTML) * parseInt($('#' + value)[0].cells[3].innerHTML);
 
+    updateDocTotal();
+}
+function deleteLineTableProduct(value)
+{
+    $('#' + value)[0].remove();
     updateDocTotal();
 }
 function updateDocTotal() {
@@ -206,14 +222,14 @@ function updateDocTotal() {
 function Total(cont)
 {
     if ($("#cmbFactura").is(':checked') == true) {
-        $('#txtTotalAntesImpuesto').val(cont)
-        $('#txtImpuesto').val(parseInt(cont) * 0.19)
-        $('#txtTotal').val(cont * 1.19);
+        $('#txtTotalAntesImpuesto').val(Math.round(cont,1));
+        $('#txtImpuesto').val(Math.round(parseInt(cont) * 0.19),1);
+        $('#txtTotal').val(Math.round(cont * 1.19),1);
     }
     else {
-        $('#txtTotalAntesImpuesto').val(cont)
+        $('#txtTotalAntesImpuesto').val(Math.round(cont,1))
         $('#txtImpuesto').val(0)
-        $('#txtTotal').val(cont);
+        $('#txtTotal').val(Math.round(cont,1));
     }
     
 }

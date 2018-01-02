@@ -9,7 +9,7 @@
     <link rel='stylesheet' href='css/estilos.css'>
     <link href="css/venta.css" rel="stylesheet" />
     <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-datepicker3.min.css" rel="stylesheet" />
     <title>Demo</title>
 </head>
 <body class="blog-body">
@@ -116,10 +116,13 @@
                         <div class="row">
 
                             <div class="col-lg-6 form-group">
-                                <label for="dp2">Fecha Documento</label>
-                                <div class="input-group date" id="dp2" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
-                                    <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFecVencimiento" name="txtFecVencimiento" readonly>
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                <label for="txtFechaDocto">Fecha Documento</label>
+                                <div class="input-group date datepicker" data-provide="datepicker">
+
+                                    <input type="text" id="txtFechaDocto" name="txtFechaDocto" class="form-control">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
                                 </div>
                             </div>
 
@@ -156,15 +159,15 @@
                         <table class="table table-hover" id="tblProductoVenta">
                             <thead>
                                 <tr>
-                                    <th>N° Producto</th>
-                                    <th>Desc</th>
-                                    <th class="col-lg-2">Cantidad</th>
-                                    <th>Precio</th>
-                                    <th>Total</th>
+                                    <th>ID</th>
+                                    <th>DESC</th>
+                                    <th class="col-lg-2">CANTIDAD</th>
+                                    <th>PRECIO</th>
+                                    <th>TOTAL</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-
                             </tbody>
                         </table>
                     </div>
@@ -180,8 +183,14 @@
                         <div class="row">
                             <div class="col-lg-12  form-group">
 
-                                <label for="txtEmpleado">Empleado de Ventas</label>
-                                <input id="txtEmpleado" name="txtEmpleado" class="form-control" readonly="true" />
+                                <div class="form-group">
+                                    <label for="cmbSucursal">Sucursal</label>
+                                    <select id="cmbSucursal" class="form-control" name="cmbSucursal" required="required" data-error="Seleccione Sucursal">
+                                        <option value="0">Seleccione...</option>
+
+                                    </select>
+                                    <div class="help-block with-errors"></div>
+                                </div>
                             </div>
                             <div class="col-lg-12 form-group">
 
@@ -199,19 +208,19 @@
                         <div class="row col-lg-12  form-group">
 
                             <label for="txtTotalAntesImpuesto">Total antes de Impuesto</label>
-                            <input id="txtTotalAntesImpuesto" name="txtTotalAntesImpuesto" class="form-control" readonly="true" value="0"/>
+                            <input id="txtTotalAntesImpuesto" name="txtTotalAntesImpuesto" class="form-control" readonly="true" value="0" />
                         </div>
 
 
                         <div class="row col-lg-12 form-group">
 
                             <label for="txtImpuesto">Impuesto</label>
-                            <input id="txtImpuesto" name="txtImpuesto" class="form-control" readonly="true" value="0"/>
+                            <input id="txtImpuesto" name="txtImpuesto" class="form-control" readonly="true" value="0" />
                         </div>
                         <div class="row col-lg-12 form-group">
 
                             <label for="txtTotal">Total</label>
-                            <input id="txtTotal" name="txtTotal" class="form-control" readonly="true" value="0"/>
+                            <input id="txtTotal" name="txtTotal" class="form-control" readonly="true" value="0" />
                         </div>
 
                         <div class="row col-lg-12 form-group">
@@ -276,9 +285,9 @@
                                     <div class="col-lg-3 ">
 
                                         <div class="form-group">
-                                            <label for="dp3">Fecha Documento</label>
-                                            <div class="input-group date" id="dp3" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
-                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaDocumentoMP" placeholder="12-02-2017" name="txtFechaDocumentoMP" readonly="true">
+                                            <label for="txtFechaDocumentoCH">Fecha Documento</label>
+                                            <div class="input-group date datepicker" data-provide="datepicker">
+                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaDocumentoCH" placeholder="12-02-2017" name="txtFechaDocumentoCH" readonly="true">
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
                                         </div>
@@ -415,8 +424,8 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="dpFechaTR">Fecha</label>
-                                            <div class="input-group date" id="dpFechaTR" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
+                                            <label for="txtFechaTR">Fecha</label>
+                                            <div class="input-group date datepicker" data-provide="datepicker">
                                                 <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTR" placeholder="12-02-2017" name="txtFechaTR" readonly="true">
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
@@ -459,8 +468,8 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="dpFechaCS">Fecha</label>
-                                            <div class='input-group date' id='dpFechaCS'>
+                                            <label for="txtFechaCS">Fecha</label>
+                                            <div class="input-group date datepicker" data-provide="datepicker">
                                                 <input type='text' class="form-control" readonly="true" id="txtFechaCS" name="txtFechaCS" />
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -496,8 +505,8 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="dpFechaEF">Fecha</label>
-                                            <div class='input-group date' id='dpFechaEF'>
+                                            <label for="txtFechaEF">Fecha</label>
+                                           <div class="input-group date datepicker" data-provide="datepicker">
                                                 <input type='text' class="form-control" readonly="true" id="txtFechaEF" name="txtFechaEF" />
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -520,8 +529,8 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="dpFechaTC">Fecha</label>
-                                            <div class="input-group date" id="dpFechaTC" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
+                                            <label for="txtFechaTC">Fecha</label>
+                                           <div class="input-group date datepicker" data-provide="datepicker">
                                                 <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTC" placeholder="12-02-2017" name="txtFechaTC" readonly="true">
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
@@ -568,8 +577,8 @@
                                 <div class="row">
                                     <div class=" col-lg-4">
                                         <div class="form-group">
-                                            <label for="dpFechaTD">Fecha</label>
-                                            <div class="input-group date" id="dpFechaTD" data-date="25-11-2017" data-datepicker-format="DD-MM-YYYY">
+                                            <label for="txtFechaTD">Fecha</label>
+                                            <div class="input-group date datepicker" data-provide="datepicker">
                                                 <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTD" placeholder="12-02-2017" name="txtFechaTD" readonly="true">
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
@@ -644,9 +653,9 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Nombre</th>
-                                            <th>Precio</th>
-                                            <th>Seleccionar</th>
+                                            <th>NOMBRE</th>
+                                            <th>PRECIO</th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody class="buscar"></tbody>
@@ -657,7 +666,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
-                    <button type="button" class="btn btn-success save">Agregar</button>
+                    <%--  <button type="button" class="btn btn-success save">Agregar</button>--%>
                 </div>
             </div>
         </div>
@@ -685,14 +694,13 @@
 
     <script src="js/Venta.js"></script>
     <script src="js/jquery-3.2.1.js"></script>
-    <script src="Scripts/moment.min.js"></script>
-    <script src="Scripts/bootstrap.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.js"></script>
-    <script src="js/bootstrap-datetimepicker.es.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/Validator.js"></script>
     <script src="js/jquery.serializejson.js"></script>
     <script src="js/jquery.json-2.2.min.js"></script>
-
+    <script src="js/bootstrap-datepicker.min.js"></script>
+    <script src="js/locales/bootstrap-datepicker.es.min.js"></script>
 </body>
 <script type="text/javascript">
     $(document).ready(function () {
