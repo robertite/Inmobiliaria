@@ -22,4 +22,12 @@ public partial class Venta : System.Web.UI.Page
         return JsonConvert.SerializeObject(sucursal.GetAll());
 
     }
+    [WebMethod()]
+    public static string Insert()
+    {
+
+        csSucursal sucursal = new csSucursal();
+        return JsonConvert.SerializeObject(sucursal.GetAll());
+
+    }
 }
