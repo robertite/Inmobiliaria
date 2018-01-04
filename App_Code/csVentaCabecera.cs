@@ -10,10 +10,10 @@ using System.Web;
 /// </summary>
 public class csVentaCabecera
 {
-    public double vca_id { get; set; }
+    public int vca_id { get; set; }
     public int vca_folio { get; set; }
     public string vca_cli_rut { get; set; }
-    public DateTime vca_fecha_docto { get; set; }
+    public string vca_fecha_docto { get; set; }
     public int vca_suc_id { get; set; }
     public string vca_comentario { get; set; }
     public string vca_tipo_doc { get; set; }
@@ -23,11 +23,12 @@ public class csVentaCabecera
     public string vca_estado_docto { get; set; }
     public string vca_emp_rut { get; set; }
     public string estado_transaccion { get; set; }
+    public List<csVentaDetalle> lstVentaDetalle { get; set; }
 
    
 	public csVentaCabecera(){}
 
-    public csVentaCabecera(double _vca_id, int _vca_folio, string _vca_cli_rut,DateTime _vca_fecha_docto,
+    public csVentaCabecera(int _vca_id, int _vca_folio, string _vca_cli_rut, string _vca_fecha_docto,
                            int _vca_suc_id, string _vca_comentario,string _vca_tipo_doc,
                            double _vca_impuesto, double _vca_total, string _vca_est_id,
                            string _vca_estado_docto, string _vca_emp_rut) {
@@ -47,17 +48,47 @@ public class csVentaCabecera
 
     }
 
+    public static int GetMaxDocNum() {
+
+        DataTable dt = new DataTable("VentaCabecera");
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "VentaCabecera_GetMaxDocNum";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        try
+        {
+
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+
+            return int.Parse(dt.Rows[0][0].ToString()) + 1;
+
+
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("csVentaCabecera.cs", "GetById", ex.ToString(), DateTime.Now);
+            return 0;
+        }
+    }
     public void Insert()
     {
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
+        SqlParameter param = new SqlParameter("@retorno", SqlDbType.NVarChar, 50);
+        param.Direction = ParameterDirection.Output;
+
         cmd.CommandText = "VentaCabecera_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
         cmd.Parameters.AddWithValue("@vca_id", SqlDbType.BigInt).Value = vca_id;
         cmd.Parameters.AddWithValue("@vca_folio", SqlDbType.Int).Value = vca_folio;
         cmd.Parameters.AddWithValue("@vca_cli_rut", SqlDbType.NVarChar).Value = vca_cli_rut;
-        cmd.Parameters.AddWithValue("@vca_fecha_docto", SqlDbType.DateTime).Value = vca_fecha_docto.ToString("dd-mm-yyyy");
+        cmd.Parameters.AddWithValue("@vca_fecha_docto", SqlDbType.DateTime).Value = vca_fecha_docto;
         cmd.Parameters.AddWithValue("@vca_suc_id", SqlDbType.Int).Value = vca_suc_id;
         cmd.Parameters.AddWithValue("@vca_comentario", SqlDbType.Text).Value = vca_comentario;
         cmd.Parameters.AddWithValue("@vca_tipo_docto", SqlDbType.NVarChar).Value = vca_tipo_doc;
@@ -66,18 +97,35 @@ public class csVentaCabecera
         cmd.Parameters.AddWithValue("@vca_est_id", SqlDbType.Char).Value = vca_est_id;
         cmd.Parameters.AddWithValue("@vca_estado_docto", SqlDbType.Char).Value = vca_estado_docto;
         cmd.Parameters.AddWithValue("@vca_emp_rut", SqlDbType.NVarChar).Value = vca_emp_rut;
+        cmd.Parameters.Add(param);
 
         try
         {
             con.Open();
-            int ret = cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
             con.Close();
 
-            if (ret != 0)
+            if (int.Parse(param.Value.ToString()) == -1)
             {
-                estado_transaccion = "Registrado Exitosamente";
-            }
+                estado_transaccion = param.Value.ToString();
+                vca_id = int.Parse(param.Value.ToString());
+                DeleteByVcaId();
+                VentaDetalle_Insert();
 
+                return;
+            }
+            else if (int.Parse(param.Value.ToString()) == -2)
+            {
+                estado_transaccion = param.Value.ToString();
+                return;
+            }
+            else if (int.Parse(param.Value.ToString()) > 0)
+            {
+                estado_transaccion = param.Value.ToString();
+                vca_id = int.Parse(param.Value.ToString());
+                VentaDetalle_Insert();
+                return;
+            }
 
         }
         catch (Exception ex)
@@ -85,6 +133,45 @@ public class csVentaCabecera
             GlobalClass.SaveLog("csVentaCabecera.cs", "Insert", ex.ToString(), DateTime.Now);
             estado_transaccion = "Error BD";
         }
+    }
+
+    private void DeleteByVcaId() {
+        DataTable dt = new DataTable("VentaCabecera");
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "VentaDetalle_DeleteByVcaId";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
+       
+       
+        try
+        {
+
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+         
+
+
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("csVentaCabecera.cs", "DeleteByVcaId", ex.ToString(), DateTime.Now);
+
+        }
+    }
+    private void VentaDetalle_Insert()
+    {
+        try
+        {
+            foreach (csVentaDetalle item in lstVentaDetalle)
+            {
+                item.Insert();
+            }
+        }
+        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "VentaDetalle_Insert", ex.ToString(), DateTime.Now); }
     }
     public void GetById(int _vca_id)
     {
@@ -124,7 +211,7 @@ public class csVentaCabecera
             vca_id = int.Parse(dr[0].ToString());
             vca_folio = int.Parse(dr[1].ToString());
             vca_cli_rut = dr[1].ToString();
-            vca_fecha_docto = Convert.ToDateTime(dr[2].ToString());
+            vca_fecha_docto = dr[2].ToString();
             vca_suc_id = int.Parse(dr[3].ToString());
             vca_comentario = dr[1].ToString();
             vca_tipo_doc = dr[1].ToString();

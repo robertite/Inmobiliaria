@@ -12,6 +12,16 @@ public partial class Venta : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
 
+        //csVentaDetalle ventaDetalle = new csVentaDetalle();
+        //ventaDetalle.vde_vca_id = 1;
+        //ventaDetalle.vde_id = 0;
+        //ventaDetalle.vde_pro_id = "200001";
+        //ventaDetalle.vde_cantidad = 2;
+        //ventaDetalle.vde_precio_unitario = 10000;
+        //ventaDetalle.vde_total = 20000;
+
+
+
     }
 
     [WebMethod()]
@@ -23,11 +33,19 @@ public partial class Venta : System.Web.UI.Page
 
     }
     [WebMethod()]
-    public static string Insert()
+    public static string GetMaxDocNum()
+    {
+       
+        return JsonConvert.SerializeObject(csVentaCabecera.GetMaxDocNum());
+
+    }
+    [WebMethod()]
+    public static string Insert(string objVenta)
     {
 
-        csSucursal sucursal = new csSucursal();
-        return JsonConvert.SerializeObject(sucursal.GetAll());
+        csVentaCabecera ventaCabecera = JsonConvert.DeserializeObject<csVentaCabecera>(objVenta);
+        ventaCabecera.Insert();
+        return JsonConvert.SerializeObject(ventaCabecera.estado_transaccion);        
 
     }
 }

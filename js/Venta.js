@@ -1,7 +1,9 @@
 ﻿var path_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 var path_url_small = window.location.protocol + '//' + window.location.host;
-var pro_sel;
+
 window.onload = function () {
+
+    GetMaxDocNum();
 
     loadCmbSucursal($('#cmbSucursal'), function (datos) {
         $("#cmbSucursal").html('');
@@ -55,16 +57,122 @@ function loadCmbSucursal(cmbSucursal, callback) {
     else {
         callback($.parseJSON(localStorage.getItem("Sucursal")));
     }
-
-
-
-
     
 }
 
 
+function GetMaxDocNum() {
+
+    $.ajax({
+        type: "POST",
+        url: path_url +'/GetMaxDocNum',
+        data: {},
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+
+            var data = $.parseJSON(response.d);
+
+            if (data == 0) { $('#txtNumInterno').val("Error en BBDD"); }
+            else {
+
+                $('#txtNumInterno').val(data);
+               
+            }
+        },
+        error: function (response) {
+            alert(response.responseText);
+        }
+    });
+    return false;
+}
+
+function Insert() {
+    if ($('#txtRut').val() == "" || $('#txtNombre').val() == "" || $('#txtGiro').val() == "") { mensajeModal("Debe Cargar Un Cliente"); return; }
+
+    if ($('#txtFolio').val() == "" || $('#txtFechaDocto').val() == "" || $('#cmbSucursal').val() == "0" ) {mensajeModal("Ingrese Datos"); return;}
+
+    if ($('#txtTotal').val() == "0") { mensajeModal("Debe Agregar Productos a la Venta"); return;}
+
+    if ($('#tblProductoVenta > tbody  > tr').length == 0) { mensajeModal("Debe Agregar Productos a la Venta"); return; }
+
+    var _vca_tipo_doc;
+    if ($("#cmbFactura").is(':checked') == true) {
+        _vca_tipo_doc = 'Factura';
+    }
+    else {
+        _vca_tipo_doc = 'Boleta';
+    }
+    var _lstVentaDetalle = [];
+    var item;
+    $('#tblProductoVenta > tbody  > tr').each(function (tr) {
+
+       var producto = {
+
+            vde_id: 0,
+            vde_vca_id: $('#txtNumInterno').val(),
+            vde_pro_id: $(this).find("td")[0].innerHTML,
+            vde_cantidad: parseInt($(this).find("td")[2].innerHTML),
+            vde_total: parseInt($(this).find("td")[4].innerHTML),
+            vde_est_id: 'A',
+            vde_precio_unitario: parseInt($(this).find("td")[3].innerHTML)
+
+        }
+        _lstVentaDetalle.push(producto)
+
+    });
+
+        item = {
+        vca_id : $('#txtNumInterno').val(),
+        vca_folio : $('#txtFolio').val(),
+        vca_cli_rut : $('#txtRut').val(),
+        vca_fecha_docto : $('#txtFechaDocto').val(),
+        vca_suc_id : $('#cmbSucursal').val(),
+        vca_comentario : $('#txtComentario').val(),
+        vca_tipo_doc : _vca_tipo_doc,
+        vca_impuesto : $('#txtImpuesto').val(),
+        vca_total : $('#txtTotal').val(),
+        vca_est_id : 'A',
+        vca_estado_docto : $('#cmbEstado').val(), 
+        vca_emp_rut: 'Empleado 1',
+        lstVentaDetalle: _lstVentaDetalle
+    }
+
+        
+
+$.ajax({
+    type: "POST",
+    url: path_url + '/Insert',
+    data: $.toJSON({ objVenta: JSON.stringify(item) }),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+
+    success: function (response) {
+        var data = $.parseJSON(response.d);
+
+        if (parseInt(data) == -1)
+        {
+            mensajeModal("Registro Actualizado Exitosamente");
+        }
+        else if (parseInt(data) == -2) {
+            mensajeModal("Ya existe este folio y rut en otra Venta");
+        }
+        else if (parseInt(data) > 0) {
+           $('#txtNumInterno').val(data);
+            mensajeModal("Registro Ingresado Exitosamente");
+        }
+        else { mensajeModal("Error BBDD"); }
+        
+
+    },
+    error: function (response) { mensajeModal("Error BBDD"); }
+});
+return false;
+}
 
 function GetByRut() {
+
+    //  vca_id = $('#txtNumInterno').val();
 
     if ($('#txtRut').val() == "") {
         mensajeModal("Ingrese Rut", "txtRut");
@@ -88,7 +196,7 @@ function GetByRut() {
             $('#txtRut').val(data.rut);
             $('#txtNombre').val(data.nombre);         
             $('#txtGiro').val(data.giro);
-
+            //     $('#txtNumInterno').val(vca_id);
         },
         error: function (response) {
             alert(response.responseText);
@@ -199,9 +307,15 @@ function AddProduct(value)
 function updateLineTableProduct(value)
 {
    
-    $('#' + value)[0].cells[4].innerHTML = parseInt($('#' + value)[0].cells[2].innerHTML) * parseInt($('#' + value)[0].cells[3].innerHTML);
+    if (!$.isNumeric(parseInt($('#' + value)[0].cells[2].innerHTML))) {
+        mensajeModal("Ingrese Números, no letras en la columna cantidad");
+        $('#' + value)[0].cells[2].innerHTML = 1;
+        return;
+    } else {
+        $('#' + value)[0].cells[4].innerHTML = parseInt($('#' + value)[0].cells[2].innerHTML) * parseInt($('#' + value)[0].cells[3].innerHTML);
 
-    updateDocTotal();
+        updateDocTotal();
+    }
 }
 function deleteLineTableProduct(value)
 {

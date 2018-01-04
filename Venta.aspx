@@ -52,7 +52,7 @@
                             <div class="col-lg-12 form-group">
 
                                 <label for="txtRut">Rut</label>
-                                <input type="text" id="txtRut" name="txtRut" class="form-control" required="required" oninput="checkRut(this)" placeholder="19234231-4" data-error="Ingrese Rut" />
+                                <input type="text" id="txtRut" name="txtRut" class="form-control" required="required" oninput="checkRut(this)" onblur="GetByRut()" placeholder="19234231-4" data-error="Ingrese Rut" />
 
                                 <button class="pull-right  btn btn-success" type="button" onclick="GetByRut()">
                                     <i class="glyphicon glyphicon-search"></i>
@@ -83,7 +83,7 @@
 
                         <div class="row col-lg-12 radio">
 
-                            <p></p>
+                         
                             <label class="radio-inline">
                                 <input class="form-check-input " type="radio" name="cmbTipoDocto" id="cmbFactura" value="optFactura" onchange="updateDocTotal()">
                                 Factura
@@ -108,8 +108,8 @@
                             <div class="col-lg-6 form-group">
                                 <label for="cmbEstado">Estado</label>
                                 <select id="cmbEstado" class="form-control" name="cmbEstado">
-                                    <option selected>Abierto</option>
-                                    <option>Cerrado</option>
+                                    <option selected value="O">Abierto</option>
+                                    <option value="C">Cerrado</option>
                                 </select>
                             </div>
                         </div>
@@ -130,7 +130,7 @@
 
                             <div class="col-lg-6 form-group">
 
-                                <label for="txtDepto">N° Folio</label>
+                                <label for="txtFolio">N° Folio</label>
                                 <input type="text" class="form-control" id="txtFolio" name="txtFolio" placeholder="22134" required="required" data-error="Ingrese N° Folio">
                                 <div class="help-block with-errors"></div>
                             </div>
@@ -225,7 +225,7 @@
 
                         <div class="row col-lg-12 form-group">
 
-                            <button type="submit" class="btn btn-success">
+                            <button type="button" class="btn btn-success" onclick="Insert()">
                                 <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                             </button>
 

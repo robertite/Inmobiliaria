@@ -32,6 +32,7 @@ public class GlobalClass
         
     }
 
+
     public string absoluteUrl(string Url)
     {
         string strUrl;

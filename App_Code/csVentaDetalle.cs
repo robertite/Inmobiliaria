@@ -16,12 +16,14 @@ public class csVentaDetalle
    public int vde_cantidad {get;set;}
    public double vde_total {get;set;}
    public string vde_est_id { get; set; }
-   public string estado_transaccion { get; set; }
+   public int vde_precio_unitario { get; set; }
+    public string estado_transaccion { get; set; }
+   
    
    public csVentaDetalle()	{}
 
    public csVentaDetalle(int _vde_id, int _vde_vca_id, string _vde_pro_id,
-                         int _vde_cantidad, double _vde_total, string _vde_est_id) {
+                         int _vde_cantidad, double _vde_total, string _vde_est_id,int _vde_precio_unitario) {
 
        vde_id = _vde_id;
        vde_vca_id = _vde_vca_id;
@@ -29,7 +31,7 @@ public class csVentaDetalle
        vde_cantidad = _vde_cantidad;
        vde_total = _vde_total;
        vde_est_id = _vde_est_id;
-
+       vde_precio_unitario = _vde_precio_unitario;
    }
    public void Insert()
    {
@@ -44,6 +46,7 @@ public class csVentaDetalle
        cmd.Parameters.AddWithValue("@vde_cantidad", SqlDbType.DateTime).Value = vde_cantidad;
        cmd.Parameters.AddWithValue("@vde_total", SqlDbType.Int).Value = vde_total;
        cmd.Parameters.AddWithValue("@vde_est_id", SqlDbType.Text).Value = vde_est_id;
+       cmd.Parameters.AddWithValue("@vde_precio_unitario", SqlDbType.Text).Value = vde_precio_unitario;
 
        try
        {
@@ -134,8 +137,9 @@ public class csVentaDetalle
            vde_vca_id = int.Parse(dr[1].ToString());
            vde_pro_id = dr[2].ToString();
            vde_cantidad = int.Parse(dr[3].ToString());
-           vde_total = double.Parse(dr[3].ToString());
-           vde_est_id = dr[3].ToString();
+           vde_total = double.Parse(dr[4].ToString());
+           vde_est_id = dr[5].ToString();
+           vde_precio_unitario = int.Parse(dr[6].ToString());
            estado_transaccion = "cargado";
        }
 
