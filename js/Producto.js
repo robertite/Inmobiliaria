@@ -1,4 +1,6 @@
-﻿var path_url = window.location.protocol +'//'+ window.location.host + window.location.pathname;
+﻿var path_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+
+
 function Insert() {
     if ($('#txtId').val() == "" || $('#txtDesripcion').val() == "" || $('#txtPrecio').val() == "" )
     {
@@ -37,7 +39,7 @@ function Insert() {
 }
 
 function GetById() {
-
+    
     $.ajax({
         type: "POST",
         url: path_url + '/GetById',
@@ -45,7 +47,7 @@ function GetById() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-
+        
             var data = $.parseJSON(response.d);
 
             if (data.estado_transaccion == null) { mensajeModal("No Existe Producto"); limpiar(); return; }
@@ -66,7 +68,7 @@ function GetById() {
 
         },
         error: function (response) {
-            alert(response.responseText);
+            alert('Error');
         }
     });
     return false;

@@ -22,7 +22,10 @@ public class csVentaCabecera
     public string vca_est_id { get; set; }
     public string vca_estado_docto { get; set; }
     public string vca_emp_rut { get; set; }
+    public double vca_totalDescuento { get; set; }
+    public int vca_porcDescuento { get; set; }
     public string estado_transaccion { get; set; }
+
     public List<csVentaDetalle> lstVentaDetalle { get; set; }
 
    
@@ -31,7 +34,8 @@ public class csVentaCabecera
     public csVentaCabecera(int _vca_id, int _vca_folio, string _vca_cli_rut, string _vca_fecha_docto,
                            int _vca_suc_id, string _vca_comentario,string _vca_tipo_doc,
                            double _vca_impuesto, double _vca_total, string _vca_est_id,
-                           string _vca_estado_docto, string _vca_emp_rut) {
+                           string _vca_estado_docto, string _vca_emp_rut, double _vca_totalDescuento, int _vca_porcDescuento)
+    {
     
         vca_id = _vca_id;
         vca_folio = _vca_folio;
@@ -45,7 +49,8 @@ public class csVentaCabecera
         vca_est_id = _vca_est_id;
         vca_estado_docto = _vca_estado_docto;
         vca_emp_rut = _vca_emp_rut;
-
+        vca_totalDescuento = _vca_totalDescuento;
+        vca_porcDescuento = _vca_porcDescuento;
     }
 
     public static int GetMaxDocNum() {
@@ -97,6 +102,8 @@ public class csVentaCabecera
         cmd.Parameters.AddWithValue("@vca_est_id", SqlDbType.Char).Value = vca_est_id;
         cmd.Parameters.AddWithValue("@vca_estado_docto", SqlDbType.Char).Value = vca_estado_docto;
         cmd.Parameters.AddWithValue("@vca_emp_rut", SqlDbType.NVarChar).Value = vca_emp_rut;
+        cmd.Parameters.AddWithValue("@vca_totalDescuento", SqlDbType.Decimal).Value = vca_totalDescuento;
+        cmd.Parameters.AddWithValue("@vca_porcDescuento", SqlDbType.Int).Value = vca_porcDescuento;
         cmd.Parameters.Add(param);
 
         try
@@ -108,7 +115,7 @@ public class csVentaCabecera
             if (int.Parse(param.Value.ToString()) == -1)
             {
                 estado_transaccion = param.Value.ToString();
-                vca_id = int.Parse(param.Value.ToString());
+                
                 DeleteByVcaId();
                 VentaDetalle_Insert();
 

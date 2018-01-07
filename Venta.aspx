@@ -83,7 +83,7 @@
 
                         <div class="row col-lg-12 radio">
 
-                         
+
                             <label class="radio-inline">
                                 <input class="form-check-input " type="radio" name="cmbTipoDocto" id="cmbFactura" value="optFactura" onchange="updateDocTotal()">
                                 Factura
@@ -159,12 +159,12 @@
                         <table class="table table-hover" id="tblProductoVenta">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>DESC</th>
-                                    <th class="col-lg-2">CANTIDAD</th>
-                                    <th>PRECIO</th>
-                                    <th>TOTAL</th>
-                                    <th></th>
+                                    <th class="col-lg-2">ID</th>
+                                    <th class="col-lg-4">DESC</th>
+                                    <th class="col-lg-1">CANT</th>
+                                    <th class="col-lg-2">$</th>
+                                    <th class="col-lg-2">TOTAL</th>
+                                    <th class="col-lg-1"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -207,10 +207,20 @@
 
                         <div class="row col-lg-12  form-group">
 
-                            <label for="txtTotalAntesImpuesto">Total antes de Impuesto</label>
-                            <input id="txtTotalAntesImpuesto" name="txtTotalAntesImpuesto" class="form-control" readonly="true" value="0" />
+                            <label for="txtTotalAntesDescuento">Total antes del descuento</label>
+                            <input id="txtTotalAntesDescuento" name="txtTotalAntesDescuento" class="form-control" readonly="true" value="0" />
                         </div>
 
+                        <div class="row">
+                            <div class="col-lg-5 form-group">
+                                <label for="txtPorcDescuento">% desc</label>
+                                <input id="txtPorcDescuento" type="number" name="txtPorcDescuento" class="form-control" onblur="totalDescuento();" value="0" />
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label for="txtDescuento">Descuento</label>
+                                <input id="txtDescuento" type="number" name="txtDescuento" readonly="true" class="form-control" value="0" />
+                            </div>
+                        </div>
 
                         <div class="row col-lg-12 form-group">
 
@@ -282,37 +292,6 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="chequeTab">
                                 <div class="row">
-                                    <div class="col-lg-3 ">
-
-                                        <div class="form-group">
-                                            <label for="txtFechaDocumentoCH">Fecha Documento</label>
-                                            <div class="input-group date datepicker" data-provide="datepicker">
-                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaDocumentoCH" placeholder="12-02-2017" name="txtFechaDocumentoCH" readonly="true">
-                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-
-                                        <div class="form-group">
-                                            <label for="txtImporte">Importe</label>
-                                            <input type="number" class="form-control" id="txtImporte" name="txtImporte" placeholder="20000" required="required">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-
-
-                                        <div class="form-group">
-                                            <label for="cmbBancoChe">Banco</label>
-                                            <select id="cmbBancoChe" class="form-control" name="cmbBancoChe" required="required">
-                                                <option selected>Seleccione...</option>
-                                                <option>Banco de Chile</option>
-                                                <option>Banco Santander</option>
-                                                <option>Banco Estado</option>
-                                            </select>
-                                        </div>
-
-                                    </div>
                                     <div class="col-lg-3">
 
                                         <div class="form-group">
@@ -320,101 +299,58 @@
                                             <input type="number" class="form-control" id="txtNumeroCheque" name="txtNumeroCheque" placeholder="223024" required="required">
                                         </div>
                                     </div>
+                                    <div class="col-lg-3 ">
+
+                                        <div class="form-group">
+                                            <label for="txtFechaDocumentoCH">Fecha Documento</label>
+                                            <div class="input-group date datepicker" data-provide="datepicker">
+                                                <input class="form-control" type="text" size="16" id="txtFechaDocumentoCH" name="txtFechaDocumentoCH" readonly="true">
+                                                <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+
+                                        <div class="form-group">
+                                            <label for="txtImporteCH">Importe</label>
+                                            <input type="number" class="form-control" id="txtImporteCH" name="txtImporteCH" placeholder="20000" required="required">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3">
+
+
+                                        <div class="form-group">
+                                            <label for="cmbBancoCH">Banco</label>
+                                            <select id="cmbBancoCH" class="form-control cmbBanco" name="cmbBancoCH" required="required">
+                                                
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    
                                 </div>
 
-                                <button type="button" class="btn btn-success save">Agregar Cheque</button>
-                                <table class="table table-hover form-group">
+                                <button type="button" class="btn btn-success save" onclick="AddCheque();">Agregar Cheque</button>
+                                <table class="table table-hover form-group" id="tblCheque">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>N° Cheque</th>
                                             <th>Fecha Venc.</th>
                                             <th>Importe</th>
-                                            <th>Banco</th>
-                                            <th>N° Cheque</th>
+                                            <th>Banco</th>                              
+                                            <th></th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>10-12-2017</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010209</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>2</td>
-                                            <td>10-01-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010210</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>3</td>
-                                            <td>10-02-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010211</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>4</td>
-                                            <td>10-02-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010211</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>5</td>
-                                            <td>10-02-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010211</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>6</td>
-                                            <td>10-02-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010211</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>7</td>
-                                            <td>10-02-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010211</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>8</td>
-                                            <td>10-02-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010211</td>
-
-                                        </tr>
-                                        <tr>
-                                            <td>9</td>
-                                            <td>10-02-2018</td>
-                                            <td>200000</td>
-                                            <td>Banco Chile</td>
-                                            <td>20010211</td>
-
-                                        </tr>
                                     </tbody>
                                 </table>
 
                                 <div class="col-lg-4">
 
                                     <div class="form-group">
-                                        <label for="txtImporteTotal">Importe Total</label>
-                                        <input type="text" class="form-control" id="txtImporteTotal" name="txtImporteTotal" placeholder="600000" readonly="true">
+                                        <label for="txtImporteTotalCH">Importe Total</label>
+                                        <input type="text" class="form-control" id="txtImporteTotalCH" name="txtImporteTotalCH" value="0" readonly="true">
                                     </div>
                                 </div>
 
@@ -426,7 +362,7 @@
                                         <div class="form-group">
                                             <label for="txtFechaTR">Fecha</label>
                                             <div class="input-group date datepicker" data-provide="datepicker">
-                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTR" placeholder="12-02-2017" name="txtFechaTR" readonly="true">
+                                                <input class="form-control" type="text" size="16" id="txtFechaTR" name="txtFechaTR" readonly="true">
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
                                         </div>
@@ -444,11 +380,8 @@
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label for="cmbBancoTR">Banco</label>
-                                            <select id="cmbBancoTR" class="form-control" name="cmbBancoTR" required="required">
+                                            <select id="cmbBancoTR" class="form-control cmbBanco" name="cmbBancoTR" required="required">
                                                 <option selected>Seleccione...</option>
-                                                <option>Banco de Chile</option>
-                                                <option>Banco Santander</option>
-                                                <option>Banco Estado</option>
                                             </select>
                                         </div>
                                     </div>
@@ -506,7 +439,7 @@
                                     <div class=" col-lg-4">
                                         <div class="form-group">
                                             <label for="txtFechaEF">Fecha</label>
-                                           <div class="input-group date datepicker" data-provide="datepicker">
+                                            <div class="input-group date datepicker" data-provide="datepicker">
                                                 <input type='text' class="form-control" readonly="true" id="txtFechaEF" name="txtFechaEF" />
                                                 <span class="input-group-addon">
                                                     <span class="glyphicon glyphicon-calendar"></span>
@@ -530,8 +463,8 @@
                                     <div class=" col-lg-4">
                                         <div class="form-group">
                                             <label for="txtFechaTC">Fecha</label>
-                                           <div class="input-group date datepicker" data-provide="datepicker">
-                                                <input class="form-control" type="text" size="16" value="25-11-2017" id="txtFechaTC" placeholder="12-02-2017" name="txtFechaTC" readonly="true">
+                                            <div class="input-group date datepicker" data-provide="datepicker">
+                                                <input class="form-control" type="text" size="16" id="txtFechaTC" name="txtFechaTC" readonly="true">
                                                 <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                             </div>
                                         </div>
@@ -561,11 +494,8 @@
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label for="cmbBancoTC">Banco</label>
-                                            <select id="cmbBancoTC" class="form-control" name="cmbBancoTC" required="required">
-                                                <option selected>Seleccione...</option>
-                                                <option>Banco de Chile</option>
-                                                <option>Banco Santander</option>
-                                                <option>Banco Estado</option>
+                                            <select id="cmbBancoTC" class="form-control cmbBanco" name="cmbBancoTC" required="required">
+                                                
                                             </select>
                                         </div>
                                     </div>
@@ -603,11 +533,7 @@
                                     </div>
                                     <div class=" col-lg-4">
                                         <label for="cmbBancoTD">Banco</label>
-                                        <select id="cmbBancoTD" class="form-control" name="cmbBancoTD" required="required">
-                                            <option selected>Seleccione...</option>
-                                            <option>Banco de Chile</option>
-                                            <option>Banco Santander</option>
-                                            <option>Banco Estado</option>
+                                        <select id="cmbBancoTD" class="form-control cmbBanco" name="cmbBancoTD" required="required">
                                         </select>
                                     </div>
                                 </div>
@@ -618,11 +544,11 @@
                         </div>
                     </div>
 
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Salir</button>
-                        <button type="button" class="btn btn-success save">Registrar</button>
-                    </div>
+                   
                 </div>
+                 <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
+                    </div>
             </div>
         </div>
     </div>
@@ -652,10 +578,10 @@
                                 <table id="tblProductoLista" class="table table-hover form-group">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>NOMBRE</th>
-                                            <th>PRECIO</th>
-                                            <th></th>
+                                            <th class="col-lg-3">ID</th>
+                                            <th class="col-lg-4">NOMBRE</th>
+                                            <th class="col-lg-3">$</th>
+                                            <th class="col-lg-2"></th>
                                         </tr>
                                     </thead>
                                     <tbody class="buscar"></tbody>

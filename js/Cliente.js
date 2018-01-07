@@ -217,7 +217,6 @@ function GetByRut() {
 
     $.ajax({
         type: "POST",
-
         url: path_url+'/GetByRut',
         data: $.toJSON({ rut: JSON.stringify($('#txtRut').val()) }),
         contentType: "application/json; charset=utf-8",

@@ -1,6 +1,6 @@
 ﻿var path_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 var path_url_small = window.location.protocol + '//' + window.location.host;
-
+var totalMedioPago = 0;
 window.onload = function () {
 
     GetMaxDocNum();
@@ -13,39 +13,41 @@ window.onload = function () {
 
         });
     });
-   
+    var cmbBanco = $('.cmbBanco');
+
+
+    loadCmbBanco(cmbBanco, function (datos) {
+        cmbBanco.html('');
+        cmbBanco.append("<option value = 0>Seleccionar...</option>");
+        $.each(datos, function (key, value) {
+            cmbBanco.append("<option value=" + datos[key].id + ">" + datos[key].descripcion + "</option>");
+
+        });
+    });
 
     $('.datepicker').datepicker({
         format: 'dd-mm-yyyy',
         language: 'es'
-        
+
     });
- 
+    limpiar();
 };
 
-//window.onbeforeunload = function () {
+function loadCmbBanco(cmbBanco, callback) {
 
-//    limpiarCookies();
-//}
-//function limpiarCookies() {
-
-//    localStorage.clear();
-//}
-function loadCmbSucursal(cmbSucursal, callback) {
-
-    if (localStorage.getItem("Sucursal") === null) {
+    if (sessionStorage.getItem("Banco") === null) {
         $.ajax({
             type: "POST",
-            url: path_url + '/GetAllSucursal',
+            url: path_url + '/GetAllBanco',
             data: '{}',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (response) {
                 var data = $.parseJSON(response.d);
 
-                localStorage.setItem("Sucursal", JSON.stringify(data));
+                sessionStorage.setItem("Banco", JSON.stringify(data));
                 if (typeof callback === 'function') {
-                    callback($.parseJSON(localStorage.getItem("Sucursal")));
+                    callback($.parseJSON(sessionStorage.getItem("Banco")));
                 }
             },
             error: function (response) {
@@ -55,9 +57,37 @@ function loadCmbSucursal(cmbSucursal, callback) {
         return false;
     }
     else {
-        callback($.parseJSON(localStorage.getItem("Sucursal")));
+        callback($.parseJSON(sessionStorage.getItem("Banco")));
     }
-    
+
+}
+function loadCmbSucursal(cmbSucursal, callback) {
+
+    if (sessionStorage.getItem("Sucursal") === null) {
+        $.ajax({
+            type: "POST",
+            url: path_url + '/GetAllSucursal',
+            data: '{}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                var data = $.parseJSON(response.d);
+
+                sessionStorage.setItem("Sucursal", JSON.stringify(data));
+                if (typeof callback === 'function') {
+                    callback($.parseJSON(sessionStorage.getItem("Sucursal")));
+                }
+            },
+            error: function (response) {
+                return "error";
+            }
+        });
+        return false;
+    }
+    else {
+        callback($.parseJSON(sessionStorage.getItem("Sucursal")));
+    }
+
 }
 
 
@@ -65,7 +95,7 @@ function GetMaxDocNum() {
 
     $.ajax({
         type: "POST",
-        url: path_url +'/GetMaxDocNum',
+        url: path_url + '/GetMaxDocNum',
         data: {},
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -77,7 +107,7 @@ function GetMaxDocNum() {
             else {
 
                 $('#txtNumInterno').val(data);
-               
+
             }
         },
         error: function (response) {
@@ -90,9 +120,9 @@ function GetMaxDocNum() {
 function Insert() {
     if ($('#txtRut').val() == "" || $('#txtNombre').val() == "" || $('#txtGiro').val() == "") { mensajeModal("Debe Cargar Un Cliente"); return; }
 
-    if ($('#txtFolio').val() == "" || $('#txtFechaDocto').val() == "" || $('#cmbSucursal').val() == "0" ) {mensajeModal("Ingrese Datos"); return;}
+    if ($('#txtFolio').val() == "" || $('#txtFechaDocto').val() == "" || $('#cmbSucursal').val() == "0") { mensajeModal("Ingrese Datos"); return; }
 
-    if ($('#txtTotal').val() == "0") { mensajeModal("Debe Agregar Productos a la Venta"); return;}
+    if ($('#txtTotal').val() == "0") { mensajeModal("Debe Agregar Productos a la Venta"); return; }
 
     if ($('#tblProductoVenta > tbody  > tr').length == 0) { mensajeModal("Debe Agregar Productos a la Venta"); return; }
 
@@ -103,11 +133,102 @@ function Insert() {
     else {
         _vca_tipo_doc = 'Boleta';
     }
+
+    //validar que el monto de los medio de pago sea >= al total de la venta
+
+
+
+    item = {
+        vca_id: $('#txtNumInterno').val(),
+        vca_folio: $('#txtFolio').val(),
+        vca_cli_rut: $('#txtRut').val(),
+        vca_fecha_docto: $('#txtFechaDocto').val(),
+        vca_suc_id: $('#cmbSucursal').val(),
+        vca_comentario: $('#txtComentario').val(),
+        vca_tipo_doc: _vca_tipo_doc,
+        vca_impuesto: $('#txtImpuesto').val(),
+        vca_total: $('#txtTotal').val(),
+        vca_est_id: 'A',
+        vca_estado_docto: $('#cmbEstado').val(),
+        vca_emp_rut: 'Empleado 1',
+        vca_totalDescuento: $('#txtDescuento').val(),
+        vca_porcDescuento: $('#txtPorcDescuento').val(),
+        lstVentaDetalle: GetProductFromTable(),
+        lstMedioPagoCH: GetMedioPagoCH(),
+        objMedioPagoTR: GetMedioPagoTR()
+    }
+
+    
+
+
+    $.ajax({
+        type: "POST",
+        url: path_url + '/Insert',
+        data: $.toJSON({ objVenta: JSON.stringify(item) }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+
+        success: function (response) {
+            var data = $.parseJSON(response.d);
+
+            if (parseInt(data) == -1) {
+                mensajeModal("Registro Actualizado Exitosamente");
+            }
+            else if (parseInt(data) == -2) {
+                mensajeModal("Ya existe este folio y rut en otra Venta");
+                return;
+            }
+            else if (parseInt(data) > 0) {
+                $('#txtNumInterno').val(data);
+                mensajeModal("Registro Ingresado Exitosamente");
+
+            }
+            else { mensajeModal("Error BBDD"); }
+
+            limpiar();
+
+        },
+        error: function (response) { mensajeModal("Error BBDD"); }
+    });
+    return false;
+}
+
+function GetMedioPagoTR(){
+
+    objMedioPagoTR = {
+        fecha: $('#txtFechaTR').val(),
+        importe: $('#txtImporteTR').val(),
+        banco: $('#cmbBancoTR').val(),
+        numTransaccion: $('#txtNumTransaccionTR').val(),
+    }
+}
+function GetMedioPagoCH() {
+
+    var _lstMedioPagoCH = [];
+    var item;
+    $('#tblCheque > tbody  > tr').each(function (tr) {
+
+        var cheque = {
+
+            numero: $(this).find("td")[0].innerHTML,
+            fecha: $(this).find("td")[1].innerHTML,
+            importe: $(this).find("td")[2].innerHTML,
+            banco: $(this).find("td")[3].innerHTML,
+
+        }
+        _lstMedioPagoCH.push(cheque)
+
+    });
+    return _lstMedioPagoCH;
+}
+
+function GetProductFromTable() {
+
     var _lstVentaDetalle = [];
     var item;
     $('#tblProductoVenta > tbody  > tr').each(function (tr) {
 
-       var producto = {
+        var producto = {
 
             vde_id: 0,
             vde_vca_id: $('#txtNumInterno').val(),
@@ -121,55 +242,8 @@ function Insert() {
         _lstVentaDetalle.push(producto)
 
     });
-
-        item = {
-        vca_id : $('#txtNumInterno').val(),
-        vca_folio : $('#txtFolio').val(),
-        vca_cli_rut : $('#txtRut').val(),
-        vca_fecha_docto : $('#txtFechaDocto').val(),
-        vca_suc_id : $('#cmbSucursal').val(),
-        vca_comentario : $('#txtComentario').val(),
-        vca_tipo_doc : _vca_tipo_doc,
-        vca_impuesto : $('#txtImpuesto').val(),
-        vca_total : $('#txtTotal').val(),
-        vca_est_id : 'A',
-        vca_estado_docto : $('#cmbEstado').val(), 
-        vca_emp_rut: 'Empleado 1',
-        lstVentaDetalle: _lstVentaDetalle
-    }
-
-        
-
-$.ajax({
-    type: "POST",
-    url: path_url + '/Insert',
-    data: $.toJSON({ objVenta: JSON.stringify(item) }),
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-
-    success: function (response) {
-        var data = $.parseJSON(response.d);
-
-        if (parseInt(data) == -1)
-        {
-            mensajeModal("Registro Actualizado Exitosamente");
-        }
-        else if (parseInt(data) == -2) {
-            mensajeModal("Ya existe este folio y rut en otra Venta");
-        }
-        else if (parseInt(data) > 0) {
-           $('#txtNumInterno').val(data);
-            mensajeModal("Registro Ingresado Exitosamente");
-        }
-        else { mensajeModal("Error BBDD"); }
-        
-
-    },
-    error: function (response) { mensajeModal("Error BBDD"); }
-});
-return false;
+    return _lstVentaDetalle;
 }
-
 function GetByRut() {
 
     //  vca_id = $('#txtNumInterno').val();
@@ -194,7 +268,7 @@ function GetByRut() {
             if (data.estado_transaccion == null) { mensajeModal("No Existe Cliente", "txtRut"); limpiar(); return; }
 
             $('#txtRut').val(data.rut);
-            $('#txtNombre').val(data.nombre);         
+            $('#txtNombre').val(data.nombre);
             $('#txtGiro').val(data.giro);
             //     $('#txtNumInterno').val(vca_id);
         },
@@ -208,7 +282,17 @@ function limpiar() {
     $('#txtRut').val('');
     $('#txtNombre').val('');
     $('#txtGiro').val('');
+    $('#txtFechaDocto').val('');
+    $('#txtFolio').val('');
     $('#tblProductoVenta > tbody ').html('');
+    $('#txtSucursal').val('0');
+    $('#txtTotalAntesDescuento').val('0');
+    $('#txtPorcDescuento').val('0');
+    $('#txtDescuento').val('0');
+    $('#txtImpuesto').val('0');
+    $('#txtTotal').val('0');
+
+    GetMaxDocNum();
 }
 function checkRut(txtRut) {
     // Despejar Puntos
@@ -257,8 +341,7 @@ function checkRut(txtRut) {
     // Si todo sale bien, eliminar errores (decretar que es válido)
     txtRut.setCustomValidity('');
 }
-function CargarProductos()
-{
+function CargarProductos() {
     $.ajax({
         type: "POST",
 
@@ -274,9 +357,9 @@ function CargarProductos()
 
             $("#tblProductoLista tbody").html('');
             $.each(data, function (key, value) {
-                
+
                 $("#tblProductoLista tbody").append("<tr><td>" + value.id + '</td><td>' + value.descripcion + '</td><td>' + value.precio + "</td>" + "</td><td><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + "})\">Agregar</button></td></tr>");
-               
+
             });
             $('#modalProductos').modal('show');
         },
@@ -285,18 +368,55 @@ function CargarProductos()
         }
     });
     return false;
-  
+
 }
 
-function AddProduct(value)
-{  
+
+function AddCheque() {
+
+    if ($('#cmbBancoCH').val() == '0' || $('#txtNumeroCheque').val() == '' || $('#txtFechaDocumentoCH').val() == '' || $('#txtImporteCH').val() == '') {
+        mensajeModal('Ingrese Información del cheque');
+        return;
+    }
+
+    $("#tblCheque tbody").append("<tr id=" + $('#txtNumeroCheque').val() + ">" +
+                                        "<td>" + $('#txtNumeroCheque').val() + "</td>" +
+                                        "<td>" + $('#txtFechaDocumentoCH').val() + "</td>" +
+                                        "<td>" + $('#txtImporteCH').val() + "</td>" +
+                                        "<td>" + $('#cmbBancoCH option:selected').text() + "</td>" +
+                                        "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + $('#txtNumeroCheque').val() + ");\">" +
+                                        "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
+
+
+    updateChequeDocTotal();
+}
+
+function deleteLineTableCheque(value) {
+    $('#tblCheque tbody #' + value)[0].remove();
+    updateChequeDocTotal();
+}
+function updateChequeDocTotal() {
+    var cont = 0;
+    $('#tblCheque > tbody  > tr').each(function (tr) {
+
+
+        cont += parseInt($(this).find("td")[2].innerHTML);
+    });
+
+    TotalCheque(cont);
+
+}
+function TotalCheque(cont) {
+    $('#txtImporteTotalCH').val(cont);
+}
+function AddProduct(value) {
     if ($('#' + value.id)[0] != undefined) { mensajeModal("Usted Ya registró este Producto"); $('#modalProductos').modal('show'); return; }
-    $("#tblProductoVenta tbody").append("<tr id="+value.id+">"+
+    $("#tblProductoVenta tbody").append("<tr id=" + value.id + ">" +
                                         "<td>" + value.id + "</td>" +
-                                        "<td>" + value.descripcion + "</td>"+
-                                        "<td contenteditable=\"true\" onblur=\"updateLineTableProduct("+value.id+");\">1</td>"+
-                                        "<td>" + value.precio + "</td>"+
-                                        "<td id=\"lineTotal\" class="+value.id+">" + value.precio + "</td>"+
+                                        "<td>" + value.descripcion + "</td>" +
+                                        "<td contenteditable=\"true\" onblur=\"updateLineTableProduct(" + value.id + ");\">1</td>" +
+                                        "<td>" + value.precio + "</td>" +
+                                        "<td id=\"lineTotal\" class=" + value.id + ">" + value.precio + "</td>" +
                                         "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableProduct(" + value.id + ");\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
     $('#modalProductos').modal('hide');
@@ -304,9 +424,8 @@ function AddProduct(value)
     updateDocTotal();
     return;
 }
-function updateLineTableProduct(value)
-{
-   
+function updateLineTableProduct(value) {
+
     if (!$.isNumeric(parseInt($('#' + value)[0].cells[2].innerHTML))) {
         mensajeModal("Ingrese Números, no letras en la columna cantidad");
         $('#' + value)[0].cells[2].innerHTML = 1;
@@ -317,36 +436,57 @@ function updateLineTableProduct(value)
         updateDocTotal();
     }
 }
-function deleteLineTableProduct(value)
-{
-    $('#' + value)[0].remove();
+function deleteLineTableProduct(value) {
+    $('#tblProductoVenta tbody #' + value)[0].remove();
     updateDocTotal();
 }
+
 function updateDocTotal() {
     var cont = 0;
     $('#tblProductoVenta > tbody  > tr').each(function (tr) {
-       
-        
+
+
         cont += parseInt($(this).find("td")[4].innerHTML);
     });
 
     Total(cont);
 
 }
-function Total(cont)
-{
+function Total(cont) {
     if ($("#cmbFactura").is(':checked') == true) {
-        $('#txtTotalAntesImpuesto').val(Math.round(cont,1));
-        $('#txtImpuesto').val(Math.round(parseInt(cont) * 0.19),1);
-        $('#txtTotal').val(Math.round(cont * 1.19),1);
+
+        $('#txtTotalAntesDescuento').val(Math.round(cont, 1));
+        totalDescuento();
+        $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())) * 1.19), 1);
     }
     else {
-        $('#txtTotalAntesImpuesto').val(Math.round(cont,1))
-        $('#txtImpuesto').val(0)
-        $('#txtTotal').val(Math.round(cont,1));
+        $('#txtTotalAntesDescuento').val(Math.round(cont, 1));
+        totalDescuento();
+        $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())), 1));
     }
-    
+
 }
+
+function totalImpuesto() {
+
+    if ($("#cmbFactura").is(':checked') == true) {
+        $('#txtImpuesto').val(Math.round((parseInt($('#txtTotalAntesDescuento').val()) - parseInt($('#txtDescuento').val())) * 0.19), 1);
+        $('#txtTotal').val(Math.round((parseInt($('#txtTotalAntesDescuento').val()) - parseInt($('#txtDescuento').val())) * 1.19), 1);
+    }
+    else {
+        $('#txtImpuesto').val(0);
+        $('#txtTotal').val(Math.round(parseInt($('#txtTotalAntesDescuento').val()) - parseInt($('#txtDescuento').val())), 1);
+    }
+
+
+}
+function totalDescuento() {
+
+    $('#txtDescuento').val(Math.round((parseInt($('#txtPorcDescuento').val()) * parseInt($('#txtTotalAntesDescuento').val())) / 100), 1);
+    totalImpuesto();
+
+}
+
 function mensajeModal(mensaje, focus) {
     $('#mensaje').html('<p>' + mensaje + '</p>');
     $('#myModal').modal('show');

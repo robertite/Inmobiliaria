@@ -33,6 +33,15 @@ public partial class Venta : System.Web.UI.Page
 
     }
     [WebMethod()]
+    public static string GetAllBanco()
+    {
+
+        csBanco banco = new csBanco();
+        return JsonConvert.SerializeObject(banco.GetAll());
+
+    }
+    
+    [WebMethod()]
     public static string GetMaxDocNum()
     {
        
