@@ -3,6 +3,7 @@ var path_url_small = window.location.protocol + '//' + window.location.host;
 var totalMedioPago = 0;
 window.onload = function () {
 
+    document.getElementById("formMedioPago").reset();
     GetMaxDocNum();
 
     loadCmbSucursal($('#cmbSucursal'), function (datos) {
@@ -126,6 +127,12 @@ function Insert() {
 
     if ($('#tblProductoVenta > tbody  > tr').length == 0) { mensajeModal("Debe Agregar Productos a la Venta"); return; }
 
+    var importech = parseInt($('#txtImporteTotalCH').val());
+    var importeTR = parseInt($('#txtImporteTR').val());
+    var total = parseInt($('#txtTotal').val());
+
+    if ( (parseInt($('#txtImporteTotalCH').val()) + parseInt($('#txtImporteTR').val())) != parseInt($('#txtTotal').val()) ) { mensajeModal('El medio de Pago no corresponde al total de la Venta'); return; }
+
     var _vca_tipo_doc;
     if ($("#cmbFactura").is(':checked') == true) {
         _vca_tipo_doc = 'Factura';
@@ -157,8 +164,6 @@ function Insert() {
         lstMedioPagoCH: GetMedioPagoCH(),
         objMedioPagoTR: GetMedioPagoTR()
     }
-
-    
 
 
     $.ajax({

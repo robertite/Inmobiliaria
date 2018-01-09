@@ -25,6 +25,7 @@ public class csVentaCabecera
     public double vca_totalDescuento { get; set; }
     public int vca_porcDescuento { get; set; }
     public string estado_transaccion { get; set; }
+    
 
     public List<csVentaDetalle> lstVentaDetalle { get; set; }
 
@@ -69,6 +70,10 @@ public class csVentaCabecera
             con.Open();
             da.Fill(dt);
             con.Close();
+
+           
+
+            if (dt.Rows[0][0].ToString().Equals("")) { return 1; }
 
             return int.Parse(dt.Rows[0][0].ToString()) + 1;
 

@@ -161,8 +161,8 @@
                                 <tr>
                                     <th class="col-lg-2">ID</th>
                                     <th class="col-lg-4">DESC</th>
-                                    <th class="col-lg-1">CANT</th>
-                                    <th class="col-lg-2">$</th>
+                                    <th class="col-lg-1">CANTIDAD</th>
+                                    <th class="col-lg-2">PRECIO</th>
                                     <th class="col-lg-2">TOTAL</th>
                                     <th class="col-lg-1"></th>
                                 </tr>
@@ -289,6 +289,7 @@
                             </li>
                         </ul>
                         <!-- Tab panes -->
+                        <form id="formMedioPago">
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="chequeTab">
                                 <div class="row">
@@ -542,6 +543,7 @@
 
                             </div>
                         </div>
+                            </form>
                     </div>
 
                    
