@@ -26,9 +26,8 @@ public class csVentaCabecera
     public int vca_porcDescuento { get; set; }
     public string estado_transaccion { get; set; }
     
-
     public List<csVentaDetalle> lstVentaDetalle { get; set; }
-
+    public List<csMedioPagoCH> lstMedioPagoCH { get; set; }
    
 	public csVentaCabecera(){}
 
@@ -136,6 +135,8 @@ public class csVentaCabecera
                 estado_transaccion = param.Value.ToString();
                 vca_id = int.Parse(param.Value.ToString());
                 VentaDetalle_Insert();
+                MedioPagoCH_Insert();
+
                 return;
             }
 
@@ -184,6 +185,17 @@ public class csVentaCabecera
             }
         }
         catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "VentaDetalle_Insert", ex.ToString(), DateTime.Now); }
+    }
+    private void MedioPagoCH_Insert() {
+        try
+        {
+            foreach (csMedioPagoCH item in lstMedioPagoCH)
+            {
+                item.Insert();
+            }
+        }
+        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_Insert", ex.ToString(), DateTime.Now); }
+
     }
     public void GetById(int _vca_id)
     {

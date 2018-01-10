@@ -47,7 +47,7 @@ public class csVentaDetalle
        cmd.Parameters.AddWithValue("@vde_total", SqlDbType.Int).Value = vde_total;
        cmd.Parameters.AddWithValue("@vde_est_id", SqlDbType.Text).Value = vde_est_id;
        cmd.Parameters.AddWithValue("@vde_precio_unitario", SqlDbType.Text).Value = vde_precio_unitario;
-
+       
        try
        {
            con.Open();

@@ -74,6 +74,10 @@ fieldset {
 
     }
 }
+#loading_image img{
+
+    margin-top:5px;
+}
 /*div {
 border:1px solid white;
 }*/

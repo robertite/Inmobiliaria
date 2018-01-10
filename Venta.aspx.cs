@@ -58,3 +58,5 @@ public partial class Venta : System.Web.UI.Page
 
     }
 }
+
+

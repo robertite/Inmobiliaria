@@ -127,11 +127,17 @@ function Insert() {
 
     if ($('#tblProductoVenta > tbody  > tr').length == 0) { mensajeModal("Debe Agregar Productos a la Venta"); return; }
 
+    
+
     var importech = parseInt($('#txtImporteTotalCH').val());
     var importeTR = parseInt($('#txtImporteTR').val());
     var total = parseInt($('#txtTotal').val());
 
-    if ( (parseInt($('#txtImporteTotalCH').val()) + parseInt($('#txtImporteTR').val())) != parseInt($('#txtTotal').val()) ) { mensajeModal('El medio de Pago no corresponde al total de la Venta'); return; }
+    if (importech == "") { importech = 0; }
+    if (importeTR == "") { importeTR = 0; }
+
+    if ( (importech + importeTR) != total ) { mensajeModal('El medio de Pago no corresponde al total de la Venta'); return; }
+
 
     var _vca_tipo_doc;
     if ($("#cmbFactura").is(':checked') == true) {
@@ -161,8 +167,8 @@ function Insert() {
         vca_totalDescuento: $('#txtDescuento').val(),
         vca_porcDescuento: $('#txtPorcDescuento').val(),
         lstVentaDetalle: GetProductFromTable(),
-        lstMedioPagoCH: GetMedioPagoCH(),
-        objMedioPagoTR: GetMedioPagoTR()
+        lstMedioPagoCH: GetMedioPagoCHFromHtml(),
+        objMedioPagoTR: GetMedioPagoTRFromHtml()
     }
 
 
@@ -198,7 +204,7 @@ function Insert() {
     return false;
 }
 
-function GetMedioPagoTR(){
+function GetMedioPagoTRFromHtml(){
 
     objMedioPagoTR = {
         fecha: $('#txtFechaTR').val(),
@@ -207,7 +213,7 @@ function GetMedioPagoTR(){
         numTransaccion: $('#txtNumTransaccionTR').val(),
     }
 }
-function GetMedioPagoCH() {
+function GetMedioPagoCHFromHtml() {
 
     var _lstMedioPagoCH = [];
     var item;
@@ -215,10 +221,12 @@ function GetMedioPagoCH() {
 
         var cheque = {
 
-            numero: $(this).find("td")[0].innerHTML,
-            fecha: $(this).find("td")[1].innerHTML,
+            numeroCheque: $(this).find("td")[0].innerHTML,
+            fechaDocto: $(this).find("td")[1].innerHTML,
             importe: $(this).find("td")[2].innerHTML,
-            banco: $(this).find("td")[3].innerHTML,
+            banco: $(this).find("td")[3].id,
+
+            vca_id:$('#txtNumInterno').val()
 
         }
         _lstMedioPagoCH.push(cheque)
@@ -388,7 +396,7 @@ function AddCheque() {
                                         "<td>" + $('#txtNumeroCheque').val() + "</td>" +
                                         "<td>" + $('#txtFechaDocumentoCH').val() + "</td>" +
                                         "<td>" + $('#txtImporteCH').val() + "</td>" +
-                                        "<td>" + $('#cmbBancoCH option:selected').text() + "</td>" +
+                                        "<td id="+$('#cmbBancoCH').val()+">" + $('#cmbBancoCH option:selected').text() + "</td>" +
                                         "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + $('#txtNumeroCheque').val() + ");\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
 
