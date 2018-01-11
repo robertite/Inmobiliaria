@@ -28,6 +28,7 @@ public class csVentaCabecera
     
     public List<csVentaDetalle> lstVentaDetalle { get; set; }
     public List<csMedioPagoCH> lstMedioPagoCH { get; set; }
+    public csMedioPagoTR objMedioPagoTR { get; set; }
    
 	public csVentaCabecera(){}
 
@@ -122,6 +123,8 @@ public class csVentaCabecera
                 
                 DeleteByVcaId();
                 VentaDetalle_Insert();
+                MedioPagoCH_Insert();
+                MedioPagoTR_Insert();
 
                 return;
             }
@@ -136,7 +139,8 @@ public class csVentaCabecera
                 vca_id = int.Parse(param.Value.ToString());
                 VentaDetalle_Insert();
                 MedioPagoCH_Insert();
-
+                MedioPagoTR_Insert();
+                
                 return;
             }
 
@@ -147,6 +151,8 @@ public class csVentaCabecera
             estado_transaccion = "Error BD";
         }
     }
+
+   
 
     private void DeleteByVcaId() {
         DataTable dt = new DataTable("VentaCabecera");
@@ -195,6 +201,16 @@ public class csVentaCabecera
             }
         }
         catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_Insert", ex.ToString(), DateTime.Now); }
+
+    }
+    private void MedioPagoTR_Insert()
+    {
+        try
+        {         
+                objMedioPagoTR.Insert();
+           
+        }
+        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTR_Insert", ex.ToString(), DateTime.Now); }
 
     }
     public void GetById(int _vca_id)

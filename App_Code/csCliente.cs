@@ -78,7 +78,7 @@ public class csCliente
                 da.Fill(dt);
                 con.Close();
 
-                armaObjeto(dt);
+                armaObjetoCliente(dt);
             
 
         }
@@ -91,7 +91,38 @@ public class csCliente
         return "";
 
     }
-    public void armaObjeto(DataTable dt)
+    public string GetByRutActive(string rut)
+    {
+        DataTable dt = new DataTable("Cliente");
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "Cliente_GetByRutActive";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@rut", SqlDbType.NVarChar).Value = rut;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        try
+        {
+
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+
+            armaObjetoCliente(dt);
+
+
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("Cliente.cs", "GetByRut", ex.ToString(), DateTime.Now);
+            return "Error de BBDD";
+        }
+
+        return "";
+
+    }
+    public void armaObjetoCliente(DataTable dt)
     {
         foreach(DataRow dr in dt.Rows)
         {

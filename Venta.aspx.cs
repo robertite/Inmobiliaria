@@ -48,6 +48,7 @@ public partial class Venta : System.Web.UI.Page
         return JsonConvert.SerializeObject(csVentaCabecera.GetMaxDocNum());
 
     }
+   
     [WebMethod()]
     public static string Insert(string objVenta)
     {

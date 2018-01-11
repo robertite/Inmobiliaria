@@ -21,6 +21,13 @@ public partial class Cliente : System.Web.UI.Page
         return JsonConvert.SerializeObject(cliente);
     }
     [WebMethod()]
+    public static string GetByRutActive(string rut)
+    {
+        csCliente cliente = new csCliente();
+        cliente.GetByRutActive(JsonConvert.DeserializeObject(rut).ToString());
+        return JsonConvert.SerializeObject(cliente);
+    }
+    [WebMethod()]
     public static string Insert(string objCliente)
     {
         csCliente cliente = JsonConvert.DeserializeObject<csCliente>(objCliente);

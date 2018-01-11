@@ -3,7 +3,8 @@ var path_url_small = window.location.protocol + '//' + window.location.host;
 var totalMedioPago = 0;
 window.onload = function () {
 
-    document.getElementById("formMedioPago").reset();
+    
+    limpiar();
     GetMaxDocNum();
 
     loadCmbSucursal($('#cmbSucursal'), function (datos) {
@@ -207,11 +208,13 @@ function Insert() {
 function GetMedioPagoTRFromHtml(){
 
     objMedioPagoTR = {
-        fecha: $('#txtFechaTR').val(),
+        fechaDocto: $('#txtFechaTR').val(),
         importe: $('#txtImporteTR').val(),
         banco: $('#cmbBancoTR').val(),
-        numTransaccion: $('#txtNumTransaccionTR').val(),
+        numero_transaccion: $('#txtNumTransaccionTR').val(),
+        vca_id: $('#txtNumInterno').val()
     }
+    return objMedioPagoTR;
 }
 function GetMedioPagoCHFromHtml() {
 
@@ -269,8 +272,7 @@ function GetByRut() {
 
     $.ajax({
         type: "POST",
-
-        url: path_url_small + '/Cliente.aspx/GetByRut',
+        url: path_url_small + '/Cliente.aspx/GetByRutActive',
         data: $.toJSON({ rut: JSON.stringify($('#txtRut').val()) }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
@@ -278,7 +280,7 @@ function GetByRut() {
 
             var data = $.parseJSON(response.d);
 
-            if (data.estado_transaccion == null) { mensajeModal("No Existe Cliente", "txtRut"); limpiar(); return; }
+            if (data.estado_transaccion == null) { mensajeModal("No Existe Cliente o Esta Inactivo en Sistema"); limpiar(); return; }
 
             $('#txtRut').val(data.rut);
             $('#txtNombre').val(data.nombre);
@@ -292,18 +294,22 @@ function GetByRut() {
     return false;
 }
 function limpiar() {
-    $('#txtRut').val('');
-    $('#txtNombre').val('');
-    $('#txtGiro').val('');
-    $('#txtFechaDocto').val('');
-    $('#txtFolio').val('');
+
+    document.getElementById("formMedioPago").reset();
+    document.getElementById("form").reset();
+    //$('#txtRut').val('');
+    //$('#txtNombre').val('');
+    //$('#txtGiro').val('');
+    //$('#txtFechaDocto').val('');
+    //$('#txtFolio').val('');
     $('#tblProductoVenta > tbody ').html('');
-    $('#txtSucursal').val('0');
-    $('#txtTotalAntesDescuento').val('0');
-    $('#txtPorcDescuento').val('0');
-    $('#txtDescuento').val('0');
-    $('#txtImpuesto').val('0');
-    $('#txtTotal').val('0');
+    $('#tblCheque > tbody ').html('');
+    //$('#txtSucursal').val('0');
+    //$('#txtTotalAntesDescuento').val('0');
+    //$('#txtPorcDescuento').val('0');
+    //$('#txtDescuento').val('0');
+    //$('#txtImpuesto').val('0');
+    //$('#txtTotal').val('0');
 
     GetMaxDocNum();
 }
@@ -400,6 +406,10 @@ function AddCheque() {
                                         "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + $('#txtNumeroCheque').val() + ");\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
 
+    $('#txtNumeroCheque').val('');
+    $('#txtFechaDocumentoCH').val();
+    $('#txtImporteCH').val();
+    $('#cmbBancoCH').val(0);
 
     updateChequeDocTotal();
 }
