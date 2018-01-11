@@ -1,6 +1,14 @@
 ﻿var path_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
-
-
+var path_url_small = window.location.protocol + '//' + window.location.host;
+function Initialize() {
+    console.log(sessionStorage.getItem("Login"));
+    if (sessionStorage.getItem("Login") == undefined) {
+        location.href = path_url_small + '/Login.aspx';
+    }
+}
+window.onload = function () {
+    Initialize();
+}
 function Insert() {
     if ($('#txtId').val() == "" || $('#txtDesripcion').val() == "" || $('#txtPrecio').val() == "" )
     {

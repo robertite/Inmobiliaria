@@ -234,7 +234,6 @@
     <script src="js/bootstrap-datetimepicker.js"></script>
     <script src="js/bootstrap-datetimepicker.es.js"></script>
     <script src="js/Validator.js"></script>
-    <script src="js/Login.js"></script>
     <script src="js/jquery.serializejson.js"></script>
     <script src="js/jquery.json-2.2.min.js"></script>
     <script src="js/loading.js"></script>

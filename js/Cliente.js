@@ -1,8 +1,20 @@
 ﻿var path_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+var path_url_small = window.location.protocol + '//' + window.location.host;
 var reg_id;
+
+function Initialize() {
+  
+    if (sessionStorage.getItem("Login") == undefined) {
+        location.href = path_url_small + '/Login.aspx';
+    }
+
+    console.log($.parseJSON(sessionStorage.getItem("Login")).email);
+
+}
 
 window.onload = function () {
 
+    Initialize();
     if (localStorage.getItem("Region") === null) {
         GetAllRegion();
     }
@@ -31,14 +43,7 @@ window.onload = function () {
         });
     });
     }
-//window.onbeforeunload = function () {
 
-//    limpiarCookies();
-//}
-//function limpiarCookies() {
-
-//    localStorage.clear();
-//}
 function loadCmbRegion() {
 
     var datos = $.parseJSON(localStorage.getItem("Region"));

@@ -1,9 +1,18 @@
 ﻿var path_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
 var path_url_small = window.location.protocol + '//' + window.location.host;
 var totalMedioPago = 0;
-window.onload = function () {
 
-    
+function Initialize(){
+
+    if (sessionStorage.getItem("Login") == undefined)
+    {
+        location.href = path_url_small + '/Login.aspx';
+    }
+}
+
+window.onload = function () {
+  
+    Initialize();
     limpiar();
     GetMaxDocNum();
 

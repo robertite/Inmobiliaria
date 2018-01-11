@@ -6,23 +6,20 @@ using System.Web;
 /// <summary>
 /// Descripción breve de Perfil
 /// </summary>
-public class Perfil
+public class csPerfil
 {
-    public string email { get; set; }
     public string formulario { get; set; }
     public string lectura { get; set; }
     public string escritura { get; set; }
 
-    public Perfil GetByEmailUser(Login login) {
-        return null;
+
+    public csPerfil()
+    { }
+    public csPerfil(string _formulario, string _lectura, string _escritura)
+    {
+   
+        formulario = _formulario;
+        lectura = _lectura;
+        escritura = _escritura;
     }
-            
-
-	public Perfil()
-	{
-		//
-		// TODO: Agregar aquí la lógica del constructor
-		//
-	}
-
 }

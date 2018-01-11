@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Services;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Newtonsoft.Json;
 
 public partial class login : System.Web.UI.Page
 {
@@ -13,9 +14,11 @@ public partial class login : System.Web.UI.Page
 
     }
     [WebMethod]
-    public static Login ValidaLogin(string valform)
+    public static string GetLogin(string valform)
     {
+        csLogin login = JsonConvert.DeserializeObject<csLogin>(valform);
+        login.GetLogin();
 
-        return null;
+        return JsonConvert.SerializeObject(login);
     }
 }
