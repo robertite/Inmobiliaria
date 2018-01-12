@@ -6,7 +6,11 @@ window.onload = function(){
 }
 function GetLogin()
 {
-    
+    if ($('#txtEmail').val() == "" || $('#txtPassword').val() == "")
+    {
+        mensajeModal("Ingrese Datos", "txtEmail");
+        return;
+    }
     var Login = { email: $('#txtEmail').val(), 
                    pass: $('#txtPassword').val() };
     

@@ -8,12 +8,49 @@ function Initialize(){
     {
         location.href = path_url_small + '/Login.aspx';
     }
+    var Login = $.parseJSON(sessionStorage.getItem("Login"))
+    
+    console.log(Login);
+
+    for (var i = 0; i <= Login.lstPerfil.length; i++)
+    {
+        if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
+
+            if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E")
+            {
+                InitializeLectura();
+            }       
+        }
+    }
+}
+function InitializeLectura() {
+
+    
+    $('#txtRut').prop("disabled", true);
+    $('#txtNombre').prop("disabled", true);
+    $('#txtGiro').prop("disabled", true);
+    $('#txtFechaDocto').prop("disabled", true);
+    $('#txtFolio').prop("disabled", true);
+    $('#cmbSucursal').prop('disabled', 'disabled');
+    $('#cmbFactura').prop("disabled", true);
+    $('#cmbBoleta').prop("disabled", true);
+    $('#cmbEstado').prop('disabled', 'disabled');
+    $('#btnAddProduct').prop("disabled", true);
+    $('#btnInsert').prop("disabled", true);
+    $('#txtComentario').prop("disabled", true);
+    $('#txtTotalAntesDescuento').prop("disabled", true);
+    $('#txtPorcDescuento').prop("disabled", true);
+    $('#txtDescuento').prop("disabled", true);
+    $('#txtImpuesto').prop("disabled", true);
+    $('#txtTotal').prop("disabled", true);
+
 }
 
 window.onload = function () {
   
-    Initialize();
+  
     limpiar();
+
     GetMaxDocNum();
 
     loadCmbSucursal($('#cmbSucursal'), function (datos) {
@@ -41,7 +78,8 @@ window.onload = function () {
         language: 'es'
 
     });
-    limpiar();
+
+    Initialize();
 };
 
 function loadCmbBanco(cmbBanco, callback) {

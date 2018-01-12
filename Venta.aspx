@@ -153,7 +153,7 @@
                     <div class="row">
                         <div class="col-lg-6">
 
-                            <button type="button" class="btn btn-success" onclick="CargarProductos();">
+                            <button type="button" class="btn btn-success" onclick="CargarProductos();" id="btnAddProduct">
                                 <span class="glyphicon glyphicon-plus-sign"></span>Agregar 
                             </button>
                         </div>
@@ -238,7 +238,7 @@
 
                         <div class="row col-lg-12 form-group">
 
-                            <button type="button" class="btn btn-success" onclick="Insert()">
+                            <button type="button" class="btn btn-success" onclick="Insert()" id="btnInsert">
                                 <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                             </button>
 
