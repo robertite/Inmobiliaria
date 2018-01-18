@@ -29,6 +29,9 @@ public class csVentaCabecera
     public List<csVentaDetalle> lstVentaDetalle { get; set; }
     public List<csMedioPagoCH> lstMedioPagoCH { get; set; }
     public csMedioPagoTR objMedioPagoTR { get; set; }
+    public csMedioPagoEF objMedioPagoEF { get; set; }
+    public csMedioPagoTC objMedioPagoTC { get; set; }
+    public csMedioPagoTD objMedioPagoTD { get; set; }
    
 	public csVentaCabecera(){}
 
@@ -52,6 +55,12 @@ public class csVentaCabecera
         vca_emp_rut = _vca_emp_rut;
         vca_totalDescuento = _vca_totalDescuento;
         vca_porcDescuento = _vca_porcDescuento;
+        lstVentaDetalle = csVentaDetalle.GetByVcaId(vca_id);
+        lstMedioPagoCH = csMedioPagoCH.GetByVcaId(vca_id);
+        objMedioPagoTR = csMedioPagoTR.GetByVcaId(vca_id);
+        objMedioPagoEF = csMedioPagoEF.GetByVcaId(vca_id);
+        objMedioPagoTC = csMedioPagoTC.GetByVcaId(vca_id);
+        objMedioPagoTD = csMedioPagoTD.GetByVcaId(vca_id);
     }
 
     public static int GetMaxDocNum() {
@@ -125,6 +134,11 @@ public class csVentaCabecera
                 VentaDetalle_Insert();
                 MedioPagoCH_Insert();
                 MedioPagoTR_Insert();
+                MedioPagoEF_Insert();
+                MedioPagoTC_Insert();
+                MedioPagoTD_Insert();
+               
+                
 
                 return;
             }
@@ -140,7 +154,9 @@ public class csVentaCabecera
                 VentaDetalle_Insert();
                 MedioPagoCH_Insert();
                 MedioPagoTR_Insert();
-                
+                MedioPagoEF_Insert();
+                MedioPagoTC_Insert();
+                MedioPagoTD_Insert();
                 return;
             }
 
@@ -171,9 +187,6 @@ public class csVentaCabecera
             cmd.ExecuteNonQuery();
             con.Close();
 
-         
-
-
         }
         catch (Exception ex)
         {
@@ -203,6 +216,7 @@ public class csVentaCabecera
         catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_Insert", ex.ToString(), DateTime.Now); }
 
     }
+   
     private void MedioPagoTR_Insert()
     {
         try
@@ -213,16 +227,52 @@ public class csVentaCabecera
         catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTR_Insert", ex.ToString(), DateTime.Now); }
 
     }
-    public void GetById(int _vca_id)
+    private void MedioPagoEF_Insert()
+    {
+        try
+        {
+            objMedioPagoEF.Insert();
+
+        }
+        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoEF_Insert", ex.ToString(), DateTime.Now); }
+
+    }
+    private void MedioPagoTC_Insert()
+    {
+        try
+        {
+            objMedioPagoTC.Insert();
+
+        }
+        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTC_Insert", ex.ToString(), DateTime.Now); }
+
+    }
+    private void MedioPagoTD_Insert()
+    {
+        try
+        {
+            objMedioPagoTD.Insert();
+
+        }
+        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTD_Insert", ex.ToString(), DateTime.Now); }
+
+    }
+
+    public List<csVentaCabecera> GetByParams()
     {
         DataTable dt = new DataTable("VentaCabecera");
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
-        cmd.CommandText = "VentaCabecera_GetById";
+        cmd.CommandText = "VentaCabecera_GetByParams";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = _vca_id;
+        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
+        cmd.Parameters.AddWithValue("@vca_folio", SqlDbType.Int).Value = vca_folio;
+        cmd.Parameters.AddWithValue("@vca_cli_rut", SqlDbType.Int).Value = vca_cli_rut;
         SqlDataAdapter da = new SqlDataAdapter();
+        List<csVentaCabecera> lstVentaCabecera = new List<csVentaCabecera>();
+
+        
         da.SelectCommand = cmd;
         try
         {
@@ -231,40 +281,121 @@ public class csVentaCabecera
             da.Fill(dt);
             con.Close();
 
-            armaObjeto(dt);
+
+           lstVentaCabecera = armaObjeto(dt);
+           return lstVentaCabecera;
+           
+
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("csVentaCabecera.cs", "GetByParams", ex.ToString(), DateTime.Now);
+            return null;
+        }
+
+    }
+
+    public void GetMedioPagoCHByVcaId()
+    {
+        DataTable dt = new DataTable("MedioPagoCH");
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "MedioPagoCH_GetByVcaId";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
+        SqlDataAdapter da = new SqlDataAdapter();
+        lstMedioPagoCH = new List<csMedioPagoCH>(); 
+
+        da.SelectCommand = cmd;
+        try
+        {
+
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+
+
+            foreach (DataRow dr in dt.Rows)
+            {
+
+                lstMedioPagoCH.Add(new csMedioPagoCH(int.Parse(dr[0].ToString()),dr[1].ToString(),double.Parse(dr[2].ToString()),int.Parse(dr[3].ToString()),int.Parse(dr[4].ToString())));
+             
+            }
+
 
 
         }
         catch (Exception ex)
         {
-            GlobalClass.SaveLog("csVentaCabecera.cs", "GetById", ex.ToString(), DateTime.Now);
+            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_GetByVcaId", ex.ToString(), DateTime.Now);
+        }
+    }
+
+    public void GetObjMedioPagoTRByVcaId()
+    {
+        DataTable dt = new DataTable("MedioPagoTR");
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "MedioPagoTR_GetByVcaId";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
+        SqlDataAdapter da = new SqlDataAdapter();
+       
+
+        da.SelectCommand = cmd;
+        try
+        {
+
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                objMedioPagoTR = new csMedioPagoTR(dr[0].ToString(), double.Parse(dr[1].ToString()), int.Parse(dr[2].ToString()), vca_id, int.Parse(dr[3].ToString()), dr[4].ToString());
+                
+            }
+
+
 
         }
-
-
-
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("csVentaCabecera.cs", "GetObjMedioPagoTRByVcaId", ex.ToString(), DateTime.Now);
+        }
     }
-    public void armaObjeto(DataTable dt)
+
+    public List<csVentaCabecera> armaObjeto(DataTable dt)
     {
+        List<csVentaCabecera> lstVentaCabecera = new List<csVentaCabecera>();
         foreach (DataRow dr in dt.Rows)
         {
-            vca_id = int.Parse(dr[0].ToString());
-            vca_folio = int.Parse(dr[1].ToString());
-            vca_cli_rut = dr[1].ToString();
-            vca_fecha_docto = dr[2].ToString();
-            vca_suc_id = int.Parse(dr[3].ToString());
-            vca_comentario = dr[1].ToString();
-            vca_tipo_doc = dr[1].ToString();
-            vca_impuesto = int.Parse(dr[1].ToString());
-            vca_total = int.Parse(dr[1].ToString());
-            vca_est_id = dr[1].ToString();
-            vca_estado_docto = dr[1].ToString();
-            vca_emp_rut = dr[1].ToString();
+            lstVentaCabecera.Add(new csVentaCabecera(
+            vca_id = int.Parse(dr[0].ToString()),
+            vca_folio = int.Parse(dr[1].ToString()),
+            vca_cli_rut = dr[2].ToString(),
+            vca_fecha_docto = dr[3].ToString(),
+            vca_suc_id = int.Parse(dr[4].ToString()),
+            vca_comentario = dr[5].ToString(),
+            vca_tipo_doc = dr[6].ToString(),
+            vca_impuesto = double.Parse(dr[7].ToString()),
+            vca_total = double.Parse(dr[8].ToString()),
+            vca_est_id = dr[9].ToString(),
+            vca_estado_docto = dr[10].ToString(),
+            vca_emp_rut = dr[11].ToString(),
+            vca_totalDescuento = double.Parse(dr[12].ToString()),
+            vca_porcDescuento = int.Parse(dr[13].ToString())));
 
+            
         }
+        return lstVentaCabecera;
 
     }
-    
 
+   
+       
 
 }

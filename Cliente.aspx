@@ -50,11 +50,8 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="txtRut">Rut</label>
-                                    <input type="text" id="txtRut" name="txtRut" class="form-control" placeholder="19234231-4" required="required" oninput="checkRut(this)"
-                                        data-error="Ingrese Rut" />
-                                    <button class="pull-right  btn btn-success" type="button" onclick="GetByRut()">
-                                        <i class="glyphicon glyphicon-search"></i>
-                                    </button>
+                                    <input type="text" id="txtRut" name="txtRut" class="form-control " placeholder="19234231-4" required="required" oninput="checkRut(this)"
+                                        data-error="Ingrese Rut" />                                   
                                     <div class="help-block with-errors"></div>
                                 </div>
 
@@ -62,7 +59,7 @@
                             <div class="col-lg-6 ">
                                 <div class="form-group">
                                     <label for="txtEmail">Email </label>
-                                    <input type="email" class="form-control" id="txtEmail" name="txtEmail" placeholder="name@example.com" required="required" data-error="Ingrese Email">
+                                    <input type="email" class="form-control control_txt" id="txtEmail" name="txtEmail" placeholder="name@example.com" required="required" data-error="Ingrese Email">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
@@ -76,14 +73,14 @@
 
                                 <div class="form-group">
                                     <label for="txtNombre">Nombre</label>
-                                    <input type="text" class="form-control" id="txtNombre" name="txtNombre" placeholder="Alan Brito Delgado" required="required" data-error="Ingrese Nombre">
+                                    <input type="text" class="form-control control_txt" id="txtNombre" name="txtNombre" placeholder="Alan Brito Delgado" required="required" data-error="Ingrese Nombre">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="txtGiro">Giro</label>
-                                    <input type="text" class="form-control" id="txtGiro" name="txtGiro" placeholder="Particular" required="required"
+                                    <input type="text" class="form-control control_txt" id="txtGiro" name="txtGiro" placeholder="Particular" required="required"
                                         data-error="Ingrese Giro">
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -94,19 +91,19 @@
 
                                 <div class="form-group">
                                     <label for="txtTelefono">Telefono</label>
-                                    <input type="number" class="form-control" id="txtTelefono" name="txtTelefono" />
+                                    <input type="number" class="form-control control_txt" id="txtTelefono" name="txtTelefono" />
                                 </div>
                             </div>
 
                             <div class=" col-lg-6 radio">
                                 <p></p>
                                 <label class="radio-inline">
-                                    <input class="form-check-input" checked="checked" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
+                                    <input class="form-check-input control_txt" checked="checked" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
                                     Activo
                                 </label>
 
                                 <label class="radio-inline">
-                                    <input class="form-check-input" type="radio" name="cmbEstado" id="cmbInactivo" value="optInactivo">
+                                    <input class="form-check-input control_txt" type="radio" name="cmbEstado" id="cmbInactivo" value="optInactivo">
                                     Inactivo
                                 </label>
                             </div>
@@ -116,7 +113,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="cmbRegion">Region</label>
-                                    <select id="cmbRegion" class="form-control" name="cmbRegion" required="required" data-error="Seleccione Región">
+                                    <select id="cmbRegion" class="form-control control_cmb" name="cmbRegion" required="required" data-error="Seleccione Región">
                                         <option value="0">Seleccione...</option>
 
                                     </select>
@@ -126,7 +123,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="cmbComuna">Comuna</label>
-                                    <select id="cmbComuna" name="cmbComuna" class="form-control" required="required">
+                                    <select id="cmbComuna" name="cmbComuna" class="form-control control_cmb" required="required">
                                         <option value="0" selected>Seleccione...</option>
 
                                     </select>
@@ -145,7 +142,7 @@
 
                             <div class="form-group">
                                 <label for="txtCalle">Calle</label>
-                                <input type="text" class="form-control" id="txtCalle" name="txtCalle" placeholder="av. vitacura" required="required" data-error="Ingrese Calle">
+                                <input type="text" class="form-control control_txt" id="txtCalle" name="txtCalle" placeholder="av. vitacura" required="required" data-error="Ingrese Calle">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -153,14 +150,14 @@
 
                             <div class="form-group">
                                 <label for="txtNumero">Número</label>
-                                <input type="number" class="form-control" id="txtNumero" name="txtNumero" placeholder="210" required="required" data-error="Ingrese Numero">
+                                <input type="number" class="form-control control_txt" id="txtNumero" name="txtNumero" placeholder="210" required="required" data-error="Ingrese Numero">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
                         <div class="row col-lg-12">
                             <div class="form-group">
                                 <label for="txtDepto">Dpto./ Casa/ Oficina/ Condominio (opcional)</label>
-                                <input type="text" class="form-control" id="txtDepto" name="txtDepto" placeholder="Depto 201C" required="required" data-error="Ingrese Dato">
+                                <input type="text" class="form-control control_txt" id="txtDepto" name="txtDepto" placeholder="Depto 201C" required="required" data-error="Ingrese Dato">
                                 <div class="help-block with-errors"></div>
                             </div>
                         </div>
@@ -168,7 +165,10 @@
                     </fieldset>
                 </div>
                 <div class="row col-lg-12">
-                    <button type="button" class="btn btn-success" onclick="Insert();">
+                     <button type="button" class="btn btn-success" onclick="GetByRut()">
+                        <span class="glyphicon glyphicon-search"></span>Buscar 
+                    </button>
+                    <button type="button" class="btn btn-success control_btn" onclick="Insert();">
                         <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                     </button>
                     <button type="reset" class="btn btn-success">

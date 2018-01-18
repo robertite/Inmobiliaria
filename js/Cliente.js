@@ -3,18 +3,35 @@ var path_url_small = window.location.protocol + '//' + window.location.host;
 var reg_id;
 
 function Initialize() {
-  
+
     if (sessionStorage.getItem("Login") == undefined) {
         location.href = path_url_small + '/Login.aspx';
     }
+    var Login = $.parseJSON(sessionStorage.getItem("Login"))
 
-    console.log($.parseJSON(sessionStorage.getItem("Login")).email);
+
+
+    for (var i = 0; i <= Login.lstPerfil.length; i++) {
+        if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
+
+            if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E") {
+                InitializeLectura();
+            }
+        }
+    }
+}
+function InitializeLectura() {
+
+    $('.control_txt').prop("disabled", true);
+    $('.control_btn').prop("disabled", true);
+    $('.control_cmb').prop("disabled", "disabled");
+
 
 }
-
 window.onload = function () {
 
-    Initialize();
+ 
+
     if (localStorage.getItem("Region") === null) {
         GetAllRegion();
     }
@@ -42,7 +59,8 @@ window.onload = function () {
             }
         });
     });
-    }
+    Initialize();
+}
 
 function loadCmbRegion() {
 

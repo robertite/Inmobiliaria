@@ -11,8 +11,8 @@
     <link rel='stylesheet' href='css/estilos.css'>
     <title>Blog De Música</title>
 
-
 </head>
+
 <body class="blog-body">
 
     <div class="container">
@@ -51,9 +51,6 @@
                                     <label for="txtId">Codigo</label>
                                     <input type="text" id="txtId" name="txtId" class="form-control" placeholder="102938" required="required"
                                         data-error="Ingrese Codigo Producto" />
-                                    <button class="pull-right  btn btn-success" type="button" onclick="GetById()">
-                                        <i class="glyphicon glyphicon-search"></i>
-                                    </button>
                                     <div class="help-block with-errors"></div>
                                 </div>
 
@@ -61,7 +58,7 @@
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label for="txtDescripcion">Descripcion</label>
-                                    <input type="text" class="form-control" id="txtDescripcion" name="txtDescripcion" placeholder="comedor" required="required"
+                                    <input type="text" class="form-control control_txt" id="txtDescripcion" name="txtDescripcion" placeholder="comedor" required="required"
                                         data-error="Ingrese Descripcion">
                                     <div class="help-block with-errors"></div>
                                 </div>
@@ -74,25 +71,28 @@
 
                                 <div class="form-group">
                                     <label for="txtPrecio">Precio Unitario </label>
-                                    <input type="number" class="form-control" id="txtPrecio" name="txtPrecio" placeholder="400000" required="required" data-error="Ingrese Precio Unitario">
+                                    <input type="number" class="form-control control_txt" id="txtPrecio" name="txtPrecio" data-error="Ingrese Precio Unitario">
                                     <div class="help-block with-errors"></div>
                                 </div>
                             </div>
-                             <div class=" col-lg-6 radio">
+                            <div class=" col-lg-6 radio">
                                 <p></p>
                                 <label class="radio-inline">
-                                    <input class="form-check-input" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
+                                    <input class="form-check-input control_txt" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
                                     Activo
                                 </label>
 
                                 <label class="radio-inline">
-                                    <input class="form-check-input" type="radio" name="cmbEstado" id="cmbInactivo" value="optInactivo">
+                                    <input class="form-check-input control_txt" type="radio" name="cmbEstado" id="cmbInactivo" value="optInactivo">
                                     Inactivo
                                 </label>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12">
+                                <button type="button" class="btn btn-success" onclick="GetById()">
+                                    <span class="glyphicon glyphicon-search"></span>Buscar 
+                                </button>
                                 <button type="button" class="btn btn-success" onclick="Insert()">
                                     <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                                 </button>
@@ -105,10 +105,10 @@
                 </div>
 
             </div>
-    </form>
+        </form>
     </div>
 
-     <!-- Modal -->
+    <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -123,7 +123,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
-                   
+
                 </div>
             </div>
         </div>
@@ -155,7 +155,7 @@
     <script src="js/bootstrap-datetimepicker.js"></script>
     <script src="js/bootstrap-datetimepicker.es.js"></script>
     <script src="js/Validator.js"></script>
-     <script src="js/jquery.serializejson.js"></script>
+    <script src="js/jquery.serializejson.js"></script>
     <script src="js/jquery.json-2.2.min.js"></script>
     <script src="js/Producto.js"></script>
     <script src="js/loading.js"></script>

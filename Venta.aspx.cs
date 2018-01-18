@@ -58,6 +58,16 @@ public partial class Venta : System.Web.UI.Page
         return JsonConvert.SerializeObject(ventaCabecera.estado_transaccion);        
 
     }
+
+    [WebMethod()]
+    public static string GetByParams(string objVenta)
+    {
+
+        csVentaCabecera ventaCabecera = JsonConvert.DeserializeObject<csVentaCabecera>(objVenta);
+
+        return JsonConvert.SerializeObject(ventaCabecera.GetByParams());
+
+    }
 }
 
 

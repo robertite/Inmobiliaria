@@ -30,7 +30,7 @@ public class csMedioPagoCH
     }
     public csMedioPagoCH() { }
 
-    public List<csMedioPagoCH> GetByVcaId(int _vca_id)
+    public static List<csMedioPagoCH> GetByVcaId(int _vca_id)
     {
         DataTable dt = new DataTable("MedioPagoCH");
         SqlConnection con = new SqlConnection(GlobalClass.conexion);

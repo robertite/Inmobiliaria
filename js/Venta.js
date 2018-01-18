@@ -10,7 +10,7 @@ function Initialize(){
     }
     var Login = $.parseJSON(sessionStorage.getItem("Login"))
     
-    console.log(Login);
+
 
     for (var i = 0; i <= Login.lstPerfil.length; i++)
     {
@@ -26,23 +26,27 @@ function Initialize(){
 function InitializeLectura() {
 
     
-    $('#txtRut').prop("disabled", true);
-    $('#txtNombre').prop("disabled", true);
-    $('#txtGiro').prop("disabled", true);
-    $('#txtFechaDocto').prop("disabled", true);
-    $('#txtFolio').prop("disabled", true);
-    $('#cmbSucursal').prop('disabled', 'disabled');
-    $('#cmbFactura').prop("disabled", true);
-    $('#cmbBoleta').prop("disabled", true);
-    $('#cmbEstado').prop('disabled', 'disabled');
-    $('#btnAddProduct').prop("disabled", true);
-    $('#btnInsert').prop("disabled", true);
-    $('#txtComentario').prop("disabled", true);
-    $('#txtTotalAntesDescuento').prop("disabled", true);
-    $('#txtPorcDescuento').prop("disabled", true);
-    $('#txtDescuento').prop("disabled", true);
-    $('#txtImpuesto').prop("disabled", true);
-    $('#txtTotal').prop("disabled", true);
+
+    //$('#txtNombre').prop("disabled", true);
+    //$('#txtGiro').prop("disabled", true);
+    //$('#txtFechaDocto').prop("disabled", true);
+    //$('#cmbSucursal').prop('disabled', 'disabled');
+    //$('#cmbFactura').prop("disabled", true);
+    //$('#cmbBoleta').prop("disabled", true);
+    //$('#cmbEstado').prop('disabled', 'disabled');
+    //$('#btnAddProduct').prop("disabled", true);
+    //$('#btnInsert').prop("disabled", true);
+    //$('#txtComentario').prop("disabled", true);
+    //$('#txtTotalAntesDescuento').prop("disabled", true);
+    //$('#txtPorcDescuento').prop("disabled", true);
+    //$('#txtDescuento').prop("disabled", true);
+    //$('#txtImpuesto').prop("disabled", true);
+    //$('#txtTotal').prop("disabled", true);
+
+    $('.control_txt').prop("disabled", true);
+    $('.control_btn').prop("disabled", true);
+    $('.control_cmb').prop("disabled", "disabled");
+  
 
 }
 
@@ -166,6 +170,199 @@ function GetMaxDocNum() {
     return false;
 }
 
+function GetByParams()
+{
+    if ($('#txtRut').val() == "" && $('#txtNumInterno').val() == "" && $('#txtFolio').val() == "") { mensajeModal("Para Buscar debe ingresar Rut, Numero de documento o Folio"); return; }
+
+    var id = parseInt($('#txtNumInterno').val());
+    var folio = parseInt($('#txtFolio').val());
+
+    if (isNaN(parseInt($('#txtNumInterno').val()))) { id = 0; }
+    if (isNaN(parseInt($('#txtFolio').val()))) { folio = 0; }
+
+    var item = {
+        vca_id: id,
+        vca_folio: folio,
+        vca_cli_rut: $('#txtRut').val()
+    }
+
+    $.ajax({
+        type: "POST",
+        url: path_url + '/GetByParams',
+        data: $.toJSON({ objVenta: JSON.stringify(item) }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+
+        success: function (response) {
+            var data = $.parseJSON(response.d);        
+
+            if (data.length == 0) {
+                mensajeModal("No Existen datos");
+                return;
+            }
+            else if (data.length == 1) {
+                setVentaCabecera(data);
+            }
+            else if (data.length > 1)
+            {
+              
+                $("#tblVentaCabecera tbody").html('');
+                for (var i = 0; i < data.length;i++)
+                {
+                    $('#txtNumInterno').val(data[i]);
+                    $("#tblVentaCabecera tbody").append("<tr><td>" + data[i].vca_id + "</td>" +
+                                                        "<td>" + data[i].vca_cli_rut + "</td>" +
+                                                        "<td>" + data[i].vca_folio + "</td>" +
+                                                        "<td>" + data[i].vca_total + "</td>" +
+                                                        "<td><button type=\"button\" class=\"btn btn-link \" onclick=\"loadVentaCabecera(" + data[i].vca_id + ")\">Seleccionar</button>" +
+                                                        "</tr>");
+                
+                }
+                $('#modalVentaCabecera').modal('show');
+            }
+
+        },
+        error: function (response) { mensajeModal("Error BBDD"); return; }
+    });
+    return false;
+
+
+}
+
+function loadVentaCabecera(value) {
+    $('#txtNumInterno').val(value);
+    $('#txtRut').val('');
+    $('#txtFolio').val('');
+    GetByParams();
+    $('#modalVentaCabecera').modal('hide');
+
+}
+function setVentaCabecera(data)
+{
+    $('#txtNumInterno').val(data[0].vca_id);
+    $('#txtRut').val(data[0].vca_cli_rut);
+    GetClienteByRut(data[0].vca_cli_rut);
+    $('#txtFechaDocto').val(data[0].vca_fecha_docto);
+    $('#txtFolio').val(data[0].vca_folio);
+    if (data[0].vca_tipo_doc == "Boleta") {
+        $('#cmbBoleta').prop("checked", true);
+    }
+    else {
+        $('#cmbFactura').prop("checked", true);
+    }
+    $('#cmbSucursal').val(data[0].vca_suc_id);
+    $('#txtComentario').val(data[0].vca_comentario);
+    $('#txtTotalAntesDescuento').val(parseInt(data[0].vca_total) - parseInt(data[0].vca_impuesto) + parseInt(data[0].vca_totalDescuento));
+    $('#txtPorcDescuento').val(data[0].vca_porcDescuento);
+    $('#txtDescuento').val(data[0].vca_totalDescuento);
+    $('#txtImpuesto').val(data[0].vca_impuesto);
+    $('#txtTotal').val(data[0].vca_total);
+    setTableProduct(data[0].lstVentaDetalle);
+    setTableCheque(data[0].lstMedioPagoCH);
+    setMedioPagoTR(data[0].objMedioPagoTR);
+    setMedioPagoEF(data[0].objMedioPagoEF);
+    setMedioPagoTC(data[0].objMedioPagoTC);
+    setMedioPagoTD(data[0].objMedioPagoTD);
+
+    return;
+}
+function setTableCheque(lstCheque) {
+
+    $('#tblCheque tbody').html('');
+    var importeCH = 0;
+    var ban_descripcion = "";
+    $.each(lstCheque, function (key, value) {
+
+         GetTextBancoByVal(value.banco, function (data) {
+            $.each(data, function (i, valor) {
+
+                if (parseInt(valor.id) == parseInt(value.banco)) {
+                               
+                    ban_descripcion = valor.descripcion;
+                    return;
+                }     
+            }); 
+            
+        });
+         console.log(ban_descripcion);
+        $("#tblCheque tbody").append("<tr id=" + value.numeroCheque + ">" +
+                                            "<td>" + value.numeroCheque + "</td>" +
+                                            "<td>" + value.fechaDocto + "</td>" +
+                                            "<td>" + value.importe + "</td>" +
+                                            "<td id=" + value.banco + ">" + ban_descripcion + "</td>" +
+                                            "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + value.numeroCheque + ");\">" +
+                                            "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
+
+        importeCH += value.importe;
+
+    });
+    $('#txtImporteTotalCH').val(importeCH);
+}
+
+function GetTextBancoByVal(id,callback)
+{
+    if (typeof callback === 'function') {
+        callback($.parseJSON(sessionStorage.getItem("Banco")));
+    }
+}
+function setTableProduct(lstVentaDetalle) {
+
+    $('#tblProductoVenta tbody').html('');
+
+    $.each(lstVentaDetalle, function (key, value) {
+        //  $("#cmbRegion").append("<option value=" + value.id + ">" + datos[key].descripcion + "</option>");
+     
+        $("#tblProductoVenta tbody").append("<tr id=" + value.vde_pro_id + ">" +
+                                        "<td>" + value.vde_pro_id + "</td>" +
+                                        "<td>" + value.vde_pro_descripcion + "</td>" +
+                                        "<td contenteditable=\"true\" onblur=\"updateLineTableProduct(" + value.vde_pro_id + ");\">" + value.vde_cantidad + "</td>" +
+                                        "<td>" + value.vde_precio_unitario + "</td>" +
+                                        "<td id=\"lineTotal\" class=" + value.vde_id + ">" + value.vde_total + "</td>" +
+                                        "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableProduct(" + value.vde_pro_id + ");\">" +
+                                        "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
+    });
+
+
+}
+function setMedioPagoTR(data) {
+
+    if (data.importe > 0) {
+        $('#txtFechaTR').val(data.fechaDocto);
+        $('#txtImporteTR').val(data.importe);
+        $('#cmbBancoTR').val(data.banco);
+        $('#txtNumTransaccionTR').val(data.numero_transaccion);
+    }
+}
+function setMedioPagoEF(data) {
+    if (data.importe > 0) {
+        $('#txtFechaEF').val(data.fechaDocto);
+        $('#txtImporteEF').val(data.importe);
+    }
+
+}
+function setMedioPagoTC(data) {
+
+  
+    if (data.importe > 0) {
+        $('#txtFechaTC').val(data.fechaDocto);
+        $('#txtImporteTC').val(data.importe);
+        $('#txtNumCuotaTC').val(data.numero_cuota);
+        $('#txtNumTransaccionTC').val(data.numero_tran);
+        $('#cmbBancoTC').val(data.banco);      
+    }
+
+}
+function setMedioPagoTD(data) {
+
+
+    if (data.importe > 0) {
+        $('#txtFechaTD').val(data.fechaDocto);
+        $('#txtImporteTD').val(data.importe);
+        $('#txtNumTransaccionTD').val(data.numero_tran);
+        $('#cmbBancoTD').val(data.banco);
+    }
+
+}
 function Insert() {
     if ($('#txtRut').val() == "" || $('#txtNombre').val() == "" || $('#txtGiro').val() == "") { mensajeModal("Debe Cargar Un Cliente"); return; }
 
@@ -177,14 +374,21 @@ function Insert() {
 
     
 
-    var importech = parseInt($('#txtImporteTotalCH').val());
+    var importeCH = parseInt($('#txtImporteTotalCH').val());
     var importeTR = parseInt($('#txtImporteTR').val());
+    var importeEF = parseInt($('#txtImporteEF').val());
+    var importeTC = parseInt($('#txtImporteTC').val());
+    var importeTD = parseInt($('#txtImporteTD').val());
+
     var total = parseInt($('#txtTotal').val());
 
-    if (importech == "") { importech = 0; }
-    if (importeTR == "") { importeTR = 0; }
+    if (importeCH == "") { importech = 0; }
+    if (importeTR == "" || 0) { importeTR = 0; }
+    if (importeEF == "" ) { importeEF = 0; }
+    if (importeTC == "" || 0) { importeTC = 0; }
+    if (importeTD == "" || 0) { importeTD = 0; }
 
-    if ( (importech + importeTR) != total ) { mensajeModal('El medio de Pago no corresponde al total de la Venta'); return; }
+    if ( (importeCH + importeTR + importeEF + importeTC + importeTD) != total ) { mensajeModal('El medio de Pago no corresponde al total de la Venta'); return; }
 
 
     var _vca_tipo_doc;
@@ -216,7 +420,10 @@ function Insert() {
         vca_porcDescuento: $('#txtPorcDescuento').val(),
         lstVentaDetalle: GetProductFromTable(),
         lstMedioPagoCH: GetMedioPagoCHFromHtml(),
-        objMedioPagoTR: GetMedioPagoTRFromHtml()
+        objMedioPagoTR: GetMedioPagoTRFromHtml(),
+        objMedioPagoEF: GetMedioPagoEFFromHtml(),
+        objMedioPagoTC: GetMedioPagoTCFromHtml(),
+        objMedioPagoTD: GetMedioPagoTDFromHtml()
     }
 
 
@@ -252,37 +459,82 @@ function Insert() {
     return false;
 }
 
+function GetMedioPagoTCFromHtml() {
+    if ($('#txtImporteTC').val() == "" || $('#txtImporteTC').val() == 0) { return null; }
+    else {
+        objMedioPagoTC = {
+            fechaDocto: $('#txtFechaTC').val(),
+            importe: $('#txtImporteTC').val(),
+            banco: $('#cmbBancoTC').val(),
+            numero_cuota: $('#txtNumCuotaTC').val(),
+            numero_tran: $('#txtNumTransaccionTC').val(),
+            vca_id: $('#txtNumInterno').val()
+        }
+    }
+    return objMedioPagoTC;
+}
+function GetMedioPagoTDFromHtml() {
+    if ($('#txtImporteTD').val() == "" || $('#txtImporteTD').val() == 0) { return null; }
+    else {
+        objMedioPagoTD = {
+            fechaDocto: $('#txtFechaTD').val(),
+            importe: $('#txtImporteTD').val(),
+            banco: $('#cmbBancoTD').val(),            
+            numero_tran: $('#txtNumTransaccionTD').val(),
+            vca_id: $('#txtNumInterno').val()
+        }
+    }
+    return objMedioPagoTD;
+}
 function GetMedioPagoTRFromHtml(){
 
-    objMedioPagoTR = {
-        fechaDocto: $('#txtFechaTR').val(),
-        importe: $('#txtImporteTR').val(),
-        banco: $('#cmbBancoTR').val(),
-        numero_transaccion: $('#txtNumTransaccionTR').val(),
-        vca_id: $('#txtNumInterno').val()
+    if ($('#txtImporteTR').val() == "" || $('#txtImporteTR').val() == 0) { return null; }
+    else {
+        objMedioPagoTR = {
+            fechaDocto: $('#txtFechaTR').val(),
+            importe: $('#txtImporteTR').val(),
+            banco: $('#cmbBancoTR').val(),
+            numero_transaccion: $('#txtNumTransaccionTR').val(),
+            vca_id: $('#txtNumInterno').val()
+        }
     }
     return objMedioPagoTR;
 }
 function GetMedioPagoCHFromHtml() {
 
-    var _lstMedioPagoCH = [];
-    var item;
-    $('#tblCheque > tbody  > tr').each(function (tr) {
+    if ($('#txtImporteTotalCH').val() > 0) {
+        var _lstMedioPagoCH = [];
+        var item;
+        $('#tblCheque > tbody  > tr').each(function (tr) {
 
-        var cheque = {
+            var cheque = {
 
-            numeroCheque: $(this).find("td")[0].innerHTML,
-            fechaDocto: $(this).find("td")[1].innerHTML,
-            importe: $(this).find("td")[2].innerHTML,
-            banco: $(this).find("td")[3].id,
+                numeroCheque: $(this).find("td")[0].innerHTML,
+                fechaDocto: $(this).find("td")[1].innerHTML,
+                importe: $(this).find("td")[2].innerHTML,
+                banco: $(this).find("td")[3].id,
 
-            vca_id:$('#txtNumInterno').val()
+                vca_id: $('#txtNumInterno').val()
 
+            }
+            _lstMedioPagoCH.push(cheque)
+
+        });
+        return _lstMedioPagoCH;
+    }
+    else { return null;}
+}
+function GetMedioPagoEFFromHtml() {
+
+    if (parseInt($('#txtImporteEF').val()) == 0) { return null; }
+    else {
+        objMedioPagoEF = {
+            fechaDocto: $('#txtFechaEF').val(),
+            importe: $('#txtImporteEF').val(),
+            vca_id: $('#txtNumInterno').val()
         }
-        _lstMedioPagoCH.push(cheque)
-
-    });
-    return _lstMedioPagoCH;
+        return objMedioPagoEF;
+    }
 }
 
 function GetProductFromTable() {
@@ -299,7 +551,9 @@ function GetProductFromTable() {
             vde_cantidad: parseInt($(this).find("td")[2].innerHTML),
             vde_total: parseInt($(this).find("td")[4].innerHTML),
             vde_est_id: 'A',
-            vde_precio_unitario: parseInt($(this).find("td")[3].innerHTML)
+            vde_precio_unitario: parseInt($(this).find("td")[3].innerHTML),
+            vde_pro_descripcion: $(this).find("td")[1].innerHTML
+
 
         }
         _lstVentaDetalle.push(producto)
@@ -307,7 +561,7 @@ function GetProductFromTable() {
     });
     return _lstVentaDetalle;
 }
-function GetByRut() {
+function GetClienteByRut() {
 
     //  vca_id = $('#txtNumInterno').val();
 
@@ -424,7 +678,11 @@ function CargarProductos() {
             $("#tblProductoLista tbody").html('');
             $.each(data, function (key, value) {
 
-                $("#tblProductoLista tbody").append("<tr><td>" + value.id + '</td><td>' + value.descripcion + '</td><td>' + value.precio + "</td>" + "</td><td><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + "})\">Agregar</button></td></tr>");
+                $("#tblProductoLista tbody").append("<tr><td>" + value.id + '</td>' +
+                                                    '<td>' + value.descripcion + '</td>' +
+                                                    '<td>' + value.precio + "</td>" +
+                                                    "<td><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + "})\">Agregar</button>" +
+                                                    "</td></tr>");
 
             });
             $('#modalProductos').modal('show');
