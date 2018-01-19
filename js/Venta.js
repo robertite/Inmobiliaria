@@ -2,57 +2,37 @@
 var path_url_small = window.location.protocol + '//' + window.location.host;
 var totalMedioPago = 0;
 
-function Initialize(){
+function Initialize() {
 
-    if (sessionStorage.getItem("Login") == undefined)
-    {
+    if (sessionStorage.getItem("Login") == undefined) {
         location.href = path_url_small + '/Login.aspx';
     }
     var Login = $.parseJSON(sessionStorage.getItem("Login"))
-    
 
 
-    for (var i = 0; i <= Login.lstPerfil.length; i++)
-    {
+
+    for (var i = 0; i <= Login.lstPerfil.length; i++) {
         if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
 
-            if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E")
-            {
+            if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E") {
                 InitializeLectura();
-            }       
+            }
         }
     }
 }
 function InitializeLectura() {
 
-    
-
-    //$('#txtNombre').prop("disabled", true);
-    //$('#txtGiro').prop("disabled", true);
-    //$('#txtFechaDocto').prop("disabled", true);
-    //$('#cmbSucursal').prop('disabled', 'disabled');
-    //$('#cmbFactura').prop("disabled", true);
-    //$('#cmbBoleta').prop("disabled", true);
-    //$('#cmbEstado').prop('disabled', 'disabled');
-    //$('#btnAddProduct').prop("disabled", true);
-    //$('#btnInsert').prop("disabled", true);
-    //$('#txtComentario').prop("disabled", true);
-    //$('#txtTotalAntesDescuento').prop("disabled", true);
-    //$('#txtPorcDescuento').prop("disabled", true);
-    //$('#txtDescuento').prop("disabled", true);
-    //$('#txtImpuesto').prop("disabled", true);
-    //$('#txtTotal').prop("disabled", true);
 
     $('.control_txt').prop("disabled", true);
     $('.control_btn').prop("disabled", true);
     $('.control_cmb').prop("disabled", "disabled");
-  
+
 
 }
 
 window.onload = function () {
-  
-  
+
+
     limpiar();
 
     GetMaxDocNum();
@@ -170,8 +150,7 @@ function GetMaxDocNum() {
     return false;
 }
 
-function GetByParams()
-{
+function GetByParams() {
     if ($('#txtRut').val() == "" && $('#txtNumInterno').val() == "" && $('#txtFolio').val() == "") { mensajeModal("Para Buscar debe ingresar Rut, Numero de documento o Folio"); return; }
 
     var id = parseInt($('#txtNumInterno').val());
@@ -194,7 +173,7 @@ function GetByParams()
         dataType: "json",
 
         success: function (response) {
-            var data = $.parseJSON(response.d);        
+            var data = $.parseJSON(response.d);
 
             if (data.length == 0) {
                 mensajeModal("No Existen datos");
@@ -203,20 +182,18 @@ function GetByParams()
             else if (data.length == 1) {
                 setVentaCabecera(data);
             }
-            else if (data.length > 1)
-            {
-              
+            else if (data.length > 1) {
+
                 $("#tblVentaCabecera tbody").html('');
-                for (var i = 0; i < data.length;i++)
-                {
-                    $('#txtNumInterno').val(data[i]);
+                for (var i = 0; i < data.length; i++) {
+                   
                     $("#tblVentaCabecera tbody").append("<tr><td>" + data[i].vca_id + "</td>" +
                                                         "<td>" + data[i].vca_cli_rut + "</td>" +
                                                         "<td>" + data[i].vca_folio + "</td>" +
                                                         "<td>" + data[i].vca_total + "</td>" +
                                                         "<td><button type=\"button\" class=\"btn btn-link \" onclick=\"loadVentaCabecera(" + data[i].vca_id + ")\">Seleccionar</button>" +
                                                         "</tr>");
-                
+
                 }
                 $('#modalVentaCabecera').modal('show');
             }
@@ -232,13 +209,11 @@ function GetByParams()
 function loadVentaCabecera(value) {
     $('#txtNumInterno').val(value);
     $('#txtRut').val('');
-    $('#txtFolio').val('');
     GetByParams();
     $('#modalVentaCabecera').modal('hide');
 
 }
-function setVentaCabecera(data)
-{
+function setVentaCabecera(data) {
     $('#txtNumInterno').val(data[0].vca_id);
     $('#txtRut').val(data[0].vca_cli_rut);
     GetClienteByRut(data[0].vca_cli_rut);
@@ -263,6 +238,7 @@ function setVentaCabecera(data)
     setMedioPagoEF(data[0].objMedioPagoEF);
     setMedioPagoTC(data[0].objMedioPagoTC);
     setMedioPagoTD(data[0].objMedioPagoTD);
+    setMedioPagoCS(data[0].objMedioPagoCS);
 
     return;
 }
@@ -273,18 +249,18 @@ function setTableCheque(lstCheque) {
     var ban_descripcion = "";
     $.each(lstCheque, function (key, value) {
 
-         GetTextBancoByVal(value.banco, function (data) {
+        GetTextBancoByVal(value.banco, function (data) {
             $.each(data, function (i, valor) {
 
                 if (parseInt(valor.id) == parseInt(value.banco)) {
-                               
+
                     ban_descripcion = valor.descripcion;
                     return;
-                }     
-            }); 
-            
+                }
+            });
+
         });
-         console.log(ban_descripcion);
+        console.log(ban_descripcion);
         $("#tblCheque tbody").append("<tr id=" + value.numeroCheque + ">" +
                                             "<td>" + value.numeroCheque + "</td>" +
                                             "<td>" + value.fechaDocto + "</td>" +
@@ -299,8 +275,7 @@ function setTableCheque(lstCheque) {
     $('#txtImporteTotalCH').val(importeCH);
 }
 
-function GetTextBancoByVal(id,callback)
-{
+function GetTextBancoByVal(id, callback) {
     if (typeof callback === 'function') {
         callback($.parseJSON(sessionStorage.getItem("Banco")));
     }
@@ -311,7 +286,7 @@ function setTableProduct(lstVentaDetalle) {
 
     $.each(lstVentaDetalle, function (key, value) {
         //  $("#cmbRegion").append("<option value=" + value.id + ">" + datos[key].descripcion + "</option>");
-     
+
         $("#tblProductoVenta tbody").append("<tr id=" + value.vde_pro_id + ">" +
                                         "<td>" + value.vde_pro_id + "</td>" +
                                         "<td>" + value.vde_pro_descripcion + "</td>" +
@@ -342,13 +317,13 @@ function setMedioPagoEF(data) {
 }
 function setMedioPagoTC(data) {
 
-  
+
     if (data.importe > 0) {
         $('#txtFechaTC').val(data.fechaDocto);
         $('#txtImporteTC').val(data.importe);
         $('#txtNumCuotaTC').val(data.numero_cuota);
         $('#txtNumTransaccionTC').val(data.numero_tran);
-        $('#cmbBancoTC').val(data.banco);      
+        $('#cmbBancoTC').val(data.banco);
     }
 
 }
@@ -363,6 +338,21 @@ function setMedioPagoTD(data) {
     }
 
 }
+
+function setMedioPagoCS(data) {
+
+
+    if (data.importe > 0) {
+        
+        $('#txtFechaCS').val(data.fechaDocto);
+         
+        $('#txtImporteCS').val(data.importe);
+        $('#txtNumeroCuotaCS').val(data.numero_cuota);
+        $('#txtCuotaPagadaCS').val(data.numero_cuota_pagada);
+        $('#txtMontoCuotaCS').val(data.monto_cuota);
+    }
+
+}
 function Insert() {
     if ($('#txtRut').val() == "" || $('#txtNombre').val() == "" || $('#txtGiro').val() == "") { mensajeModal("Debe Cargar Un Cliente"); return; }
 
@@ -372,23 +362,25 @@ function Insert() {
 
     if ($('#tblProductoVenta > tbody  > tr').length == 0) { mensajeModal("Debe Agregar Productos a la Venta"); return; }
 
-    
+
 
     var importeCH = parseInt($('#txtImporteTotalCH').val());
     var importeTR = parseInt($('#txtImporteTR').val());
     var importeEF = parseInt($('#txtImporteEF').val());
     var importeTC = parseInt($('#txtImporteTC').val());
     var importeTD = parseInt($('#txtImporteTD').val());
+    var importeCS = parseInt($('#txtImporteCS').val());
 
     var total = parseInt($('#txtTotal').val());
 
     if (importeCH == "") { importech = 0; }
     if (importeTR == "" || 0) { importeTR = 0; }
-    if (importeEF == "" ) { importeEF = 0; }
+    if (importeEF == "") { importeEF = 0; }
     if (importeTC == "" || 0) { importeTC = 0; }
     if (importeTD == "" || 0) { importeTD = 0; }
+    if (importeCS == "" || 0) { importeCS = 0; }
 
-    if ( (importeCH + importeTR + importeEF + importeTC + importeTD) != total ) { mensajeModal('El medio de Pago no corresponde al total de la Venta'); return; }
+    if ((importeCH + importeTR + importeEF + importeTC + importeTD + importeCS) != total) { mensajeModal('El medio de Pago no corresponde al total de la Venta'); return; }
 
 
     var _vca_tipo_doc;
@@ -423,7 +415,8 @@ function Insert() {
         objMedioPagoTR: GetMedioPagoTRFromHtml(),
         objMedioPagoEF: GetMedioPagoEFFromHtml(),
         objMedioPagoTC: GetMedioPagoTCFromHtml(),
-        objMedioPagoTD: GetMedioPagoTDFromHtml()
+        objMedioPagoTD: GetMedioPagoTDFromHtml(),
+        objMedioPagoCS: GetMedioPagoCSFromHtml()
     }
 
 
@@ -448,6 +441,17 @@ function Insert() {
                 $('#txtNumInterno').val(data);
                 mensajeModal("Registro Ingresado Exitosamente");
 
+            }
+            else if (parseInt(data) == -3) {
+                mensajeModal("Ya alcanzó el limite de creditos. favor seleccione otra forma de Pago");
+
+                $('#txtFechaCS').val(''),
+
+                $('#txtImporteCS').val(''),
+                $('#txtNumeroCuotaCS').val(''),
+                $('#txtCuotaPagadaCS').val(''),
+                $('#txtMontoCuotaCS').val('')
+                return;
             }
             else { mensajeModal("Error BBDD"); }
 
@@ -479,14 +483,14 @@ function GetMedioPagoTDFromHtml() {
         objMedioPagoTD = {
             fechaDocto: $('#txtFechaTD').val(),
             importe: $('#txtImporteTD').val(),
-            banco: $('#cmbBancoTD').val(),            
+            banco: $('#cmbBancoTD').val(),
             numero_tran: $('#txtNumTransaccionTD').val(),
             vca_id: $('#txtNumInterno').val()
         }
     }
     return objMedioPagoTD;
 }
-function GetMedioPagoTRFromHtml(){
+function GetMedioPagoTRFromHtml() {
 
     if ($('#txtImporteTR').val() == "" || $('#txtImporteTR').val() == 0) { return null; }
     else {
@@ -522,7 +526,7 @@ function GetMedioPagoCHFromHtml() {
         });
         return _lstMedioPagoCH;
     }
-    else { return null;}
+    else { return null; }
 }
 function GetMedioPagoEFFromHtml() {
 
@@ -536,7 +540,28 @@ function GetMedioPagoEFFromHtml() {
         return objMedioPagoEF;
     }
 }
+function GetMedioPagoCSFromHtml() {
+    if ($('#txtImporteCS').val() == "" || $('#txtImporteCS').val() == 0) { return null; }
+    else {
+        objMedioPagoCS = {
+            vca_id: $('#txtNumInterno').val(),
+            fechaDocto: $('#txtFechaCS').val(),
+            cli_rut: $('#txtRut').val(),
+            cli_nombre: $('#txtNombre').val(),
+            importe: $('#txtImporteCS').val(),
+            numero_cuota: $('#txtNumeroCuotaCS').val(),
+            numero_cuota_pagada: $('#txtCuotaPagadaCS').val(),
+            monto_cuota: $('#txtMontoCuotaCS').val()
 
+        }
+    }
+    return objMedioPagoCS;
+}
+function CalcularCuotaCS() {
+
+    var monto_cuota = (parseInt($('#txtImporteCS').val()) / parseInt($('#txtNumeroCuotaCS').val()));
+    $('#txtMontoCuotaCS').val(monto_cuota);
+}
 function GetProductFromTable() {
 
     var _lstVentaDetalle = [];
@@ -707,7 +732,7 @@ function AddCheque() {
                                         "<td>" + $('#txtNumeroCheque').val() + "</td>" +
                                         "<td>" + $('#txtFechaDocumentoCH').val() + "</td>" +
                                         "<td>" + $('#txtImporteCH').val() + "</td>" +
-                                        "<td id="+$('#cmbBancoCH').val()+">" + $('#cmbBancoCH option:selected').text() + "</td>" +
+                                        "<td id=" + $('#cmbBancoCH').val() + ">" + $('#cmbBancoCH option:selected').text() + "</td>" +
                                         "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + $('#txtNumeroCheque').val() + ");\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
 

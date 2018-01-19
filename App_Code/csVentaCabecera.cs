@@ -32,6 +32,7 @@ public class csVentaCabecera
     public csMedioPagoEF objMedioPagoEF { get; set; }
     public csMedioPagoTC objMedioPagoTC { get; set; }
     public csMedioPagoTD objMedioPagoTD { get; set; }
+    public csMedioPagoCS objMedioPagoCS { get; set; }
    
 	public csVentaCabecera(){}
 
@@ -61,6 +62,7 @@ public class csVentaCabecera
         objMedioPagoEF = csMedioPagoEF.GetByVcaId(vca_id);
         objMedioPagoTC = csMedioPagoTC.GetByVcaId(vca_id);
         objMedioPagoTD = csMedioPagoTD.GetByVcaId(vca_id);
+        objMedioPagoCS = csMedioPagoCS.GetByVcaId(vca_id);
     }
 
     public static int GetMaxDocNum() {
@@ -96,6 +98,18 @@ public class csVentaCabecera
     }
     public void Insert()
     {
+        //valida si tiene un medio de pago credito simple y si es asi, valida si puede acceder a credito el cliente en cuestión.
+
+        //debo validar cuando sea una actualizacion o una nueva venta
+        if (objMedioPagoCS.importe > 0)
+        {
+            objMedioPagoCS.ValidaCredito();
+            if (!objMedioPagoCS.estado_transaccion.Equals(""))
+            {
+                estado_transaccion = objMedioPagoCS.estado_transaccion;
+                return;
+            }
+        }
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
         SqlParameter param = new SqlParameter("@retorno", SqlDbType.NVarChar, 50);
@@ -137,9 +151,9 @@ public class csVentaCabecera
                 MedioPagoEF_Insert();
                 MedioPagoTC_Insert();
                 MedioPagoTD_Insert();
+                MedioPagoCS_Insert();
                
                 
-
                 return;
             }
             else if (int.Parse(param.Value.ToString()) == -2)
@@ -157,6 +171,7 @@ public class csVentaCabecera
                 MedioPagoEF_Insert();
                 MedioPagoTC_Insert();
                 MedioPagoTD_Insert();
+                MedioPagoCS_Insert();
                 return;
             }
 
@@ -257,7 +272,16 @@ public class csVentaCabecera
         catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTD_Insert", ex.ToString(), DateTime.Now); }
 
     }
+    private void MedioPagoCS_Insert()
+    {
+        try
+        {
+            objMedioPagoCS.Insert();
 
+        }
+        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTD_Insert", ex.ToString(), DateTime.Now); }
+
+    }
     public List<csVentaCabecera> GetByParams()
     {
         DataTable dt = new DataTable("VentaCabecera");
@@ -295,78 +319,78 @@ public class csVentaCabecera
 
     }
 
-    public void GetMedioPagoCHByVcaId()
-    {
-        DataTable dt = new DataTable("MedioPagoCH");
-        SqlConnection con = new SqlConnection(GlobalClass.conexion);
-        SqlCommand cmd = new SqlCommand();
-        cmd.CommandText = "MedioPagoCH_GetByVcaId";
-        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
-        SqlDataAdapter da = new SqlDataAdapter();
-        lstMedioPagoCH = new List<csMedioPagoCH>(); 
+    //public void GetMedioPagoCHByVcaId()
+    //{
+    //    DataTable dt = new DataTable("MedioPagoCH");
+    //    SqlConnection con = new SqlConnection(GlobalClass.conexion);
+    //    SqlCommand cmd = new SqlCommand();
+    //    cmd.CommandText = "MedioPagoCH_GetByVcaId";
+    //    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+    //    cmd.Connection = con;
+    //    cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
+    //    SqlDataAdapter da = new SqlDataAdapter();
+    //    lstMedioPagoCH = new List<csMedioPagoCH>(); 
 
-        da.SelectCommand = cmd;
-        try
-        {
+    //    da.SelectCommand = cmd;
+    //    try
+    //    {
 
-            con.Open();
-            da.Fill(dt);
-            con.Close();
+    //        con.Open();
+    //        da.Fill(dt);
+    //        con.Close();
 
 
-            foreach (DataRow dr in dt.Rows)
-            {
+    //        foreach (DataRow dr in dt.Rows)
+    //        {
 
-                lstMedioPagoCH.Add(new csMedioPagoCH(int.Parse(dr[0].ToString()),dr[1].ToString(),double.Parse(dr[2].ToString()),int.Parse(dr[3].ToString()),int.Parse(dr[4].ToString())));
+    //            lstMedioPagoCH.Add(new csMedioPagoCH(int.Parse(dr[0].ToString()),dr[1].ToString(),double.Parse(dr[2].ToString()),int.Parse(dr[3].ToString()),int.Parse(dr[4].ToString())));
              
-            }
+    //        }
 
 
 
-        }
-        catch (Exception ex)
-        {
-            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_GetByVcaId", ex.ToString(), DateTime.Now);
-        }
-    }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_GetByVcaId", ex.ToString(), DateTime.Now);
+    //    }
+    //}
 
-    public void GetObjMedioPagoTRByVcaId()
-    {
-        DataTable dt = new DataTable("MedioPagoTR");
-        SqlConnection con = new SqlConnection(GlobalClass.conexion);
-        SqlCommand cmd = new SqlCommand();
-        cmd.CommandText = "MedioPagoTR_GetByVcaId";
-        cmd.CommandType = System.Data.CommandType.StoredProcedure;
-        cmd.Connection = con;
-        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
-        SqlDataAdapter da = new SqlDataAdapter();
+    //public void GetObjMedioPagoTRByVcaId()
+    //{
+    //    DataTable dt = new DataTable("MedioPagoTR");
+    //    SqlConnection con = new SqlConnection(GlobalClass.conexion);
+    //    SqlCommand cmd = new SqlCommand();
+    //    cmd.CommandText = "MedioPagoTR_GetByVcaId";
+    //    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+    //    cmd.Connection = con;
+    //    cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
+    //    SqlDataAdapter da = new SqlDataAdapter();
        
 
-        da.SelectCommand = cmd;
-        try
-        {
+    //    da.SelectCommand = cmd;
+    //    try
+    //    {
 
-            con.Open();
-            da.Fill(dt);
-            con.Close();
+    //        con.Open();
+    //        da.Fill(dt);
+    //        con.Close();
 
 
-            foreach (DataRow dr in dt.Rows)
-            {
-                objMedioPagoTR = new csMedioPagoTR(dr[0].ToString(), double.Parse(dr[1].ToString()), int.Parse(dr[2].ToString()), vca_id, int.Parse(dr[3].ToString()), dr[4].ToString());
+    //        foreach (DataRow dr in dt.Rows)
+    //        {
+    //            objMedioPagoTR = new csMedioPagoTR(dr[0].ToString(), double.Parse(dr[1].ToString()), int.Parse(dr[2].ToString()), vca_id, int.Parse(dr[3].ToString()), dr[4].ToString());
                 
-            }
+    //        }
 
 
 
-        }
-        catch (Exception ex)
-        {
-            GlobalClass.SaveLog("csVentaCabecera.cs", "GetObjMedioPagoTRByVcaId", ex.ToString(), DateTime.Now);
-        }
-    }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        GlobalClass.SaveLog("csVentaCabecera.cs", "GetObjMedioPagoTRByVcaId", ex.ToString(), DateTime.Now);
+    //    }
+    //}
 
     public List<csVentaCabecera> armaObjeto(DataTable dt)
     {

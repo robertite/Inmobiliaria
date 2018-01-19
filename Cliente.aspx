@@ -9,7 +9,7 @@
     <meta name='mobile-web-app-capable' content='yes'>
     <link rel='stylesheet' href='css/bootstrap.css'>
     <link rel='stylesheet' href='css/estilos.css'>
-    <title>Blog De Música</title>
+    <title>Muebles Oliva</title>
 </head>
 <body class="blog-body">
 
@@ -29,7 +29,7 @@
                         <li><a href="Venta.aspx">Venta</a></li>
                         <li class="active"><a href="Cliente.aspx">Cliente</a></li>
                         <li><a href="Producto.aspx">Producto</a></li>
-
+                        <li><a href="CreditoSimple.aspx">Credito Simple</a></li>
 
                     </ul>
                     <ul class="nav navbar-nav navbar-right">

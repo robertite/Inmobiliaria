@@ -11,7 +11,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/bootstrap-datepicker3.min.css" rel="stylesheet" />
 
-    <title>Demo</title>
+    <title>Muebles Oliva</title>
 
 
 </head>
@@ -35,6 +35,7 @@
                         <li class="active"><a href="Venta.aspx">Venta</a></li>
                         <li><a href="Cliente.aspx">Cliente</a></li>
                         <li><a href="Producto.aspx">Producto</a></li>
+                        <li><a href="CreditoSimple.aspx">Credito Simple</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="login.aspx">Salir</a></li>
@@ -413,8 +414,8 @@
                                         </div>
                                         <div class="col-lg-4">
                                             <div class="form-group">
-                                                <label for="txtNumeroCuota">N° Cuotas</label>
-                                                <input type="number" class="form-control control_txt" id="txtNumeroCuota" name="txtNumeroCuota" max="2" placeholder="12" required="required">
+                                                <label for="txtNumeroCuotaCS">N° Cuotas</label>
+                                                <input type="number" class="form-control control_txt" id="txtNumeroCuotaCS" name="txtNumeroCuotaCS" max="2" required="required">
                                             </div>
                                         </div>
                                     </div>
@@ -422,17 +423,24 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtImporteCS">Importe</label>
-                                                <input type="number" class="form-control control_txt" id="txtImporteCS" name="txtImporteCS" placeholder="120000" required="required">
+                                                <input type="number" class="form-control control_txt" id="txtImporteCS" name="txtImporteCS" onblur="CalcularCuotaCS();" value="0" required="required">
                                             </div>
                                         </div>
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtCuotaPagadaCS">N° Cuotas Pagadas</label>
-                                                <input type="number" class="form-control control_txt" id="txtCuotaPagadaCS" name="txtCuotaPagadaCS" max="2" placeholder="2" required="required">
+                                                <input type="number" class="form-control" id="txtCuotaPagadaCS" value="0" readonly="true" name="txtCuotaPagadaCS" max="2" required="required">
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="row">
+                                        <div class=" col-lg-4">
+                                            <div class="form-group">
+                                                <label for="txtMontoCuotaCS">Monto Por Cuota</label>
+                                                <input type="number" class="form-control" id="txtMontoCuotaCS" readonly="true" name="txtMontoCuotaCS" max="2" required="required">
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="efectivoTab">
@@ -454,7 +462,7 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtImporteEF">Importe</label>
-                                                <input type="number" class="form-control control_txt" id="txtImporteEF" value="0" name="txtImporteEF" placeholder="120000" required="required">
+                                                <input type="number" class="form-control control_txt" id="txtImporteEF" value="0" name="txtImporteEF" required="required">
                                             </div>
                                         </div>
                                     </div>
@@ -604,7 +612,7 @@
 
 
     <!--Modal Ventas Cabeceras-->
-     <div class="modal fade" id="modalVentaCabecera" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalVentaCabecera" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -628,9 +636,9 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <table id="tblVentaCabecera" class="table table-hover form-group">
                                     <thead>
-                                        <tr>                  
+                                        <tr>
                                             <th class="col-lg-2">N° Interno</th>
-                                             <th class="col-lg-2">Rut</th>
+                                            <th class="col-lg-2">Rut</th>
                                             <th class="col-lg-3">Folio</th>
                                             <th class="col-lg-3">Total</th>
                                             <th class="col-lg-2"></th>
@@ -644,7 +652,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-dismiss="modal">Salir</button>
-                   
+
                 </div>
             </div>
         </div>
