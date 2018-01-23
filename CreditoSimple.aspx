@@ -34,6 +34,7 @@
                         <li><a href="Cliente.aspx">Cliente</a></li>
                         <li><a href="Producto.aspx">Producto</a></li>
                         <li class="active"><a href="CreditoSimple.aspx">Credito Simple</a></li>
+                        <li><a href="Informe.aspx">Informes</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="login.aspx">Salir</a></li>
@@ -80,11 +81,11 @@
                             </div>
                             <div class=" col-lg-6 form-group">
                                 <label for="txtFecha">Fecha Credito</label>
-                                <div class="input-group date datepicker" data-provide="datepicker">
+                                <div class="input-group date datepicker" data-provide="datepicker" >
 
                                     <input type="text" id="txtFecha" name="txtFecha" class="form-control control_txt" readonly="true">
                                     <div class="input-group-addon">
-                                        <span class="glyphicon glyphicon-th"></span>
+                                        <span class="glyphicon glyphicon-th" ></span>
                                     </div>
                                 </div>
 

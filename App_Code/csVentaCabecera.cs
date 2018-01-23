@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -103,6 +104,11 @@ public class csVentaCabecera
         //debo validar cuando sea una actualizacion o una nueva venta
         if (objMedioPagoCS.importe > 0)
         {
+            if (objMedioPagoCS.numero_cuota > 5)
+            {
+                estado_transaccion = "Exede Maximo de 5 cuotas";
+                return;
+            }
             objMedioPagoCS.ValidaCredito();
             if (!objMedioPagoCS.estado_transaccion.Equals(""))
             {
@@ -114,6 +120,8 @@ public class csVentaCabecera
         SqlCommand cmd = new SqlCommand();
         SqlParameter param = new SqlParameter("@retorno", SqlDbType.NVarChar, 50);
         param.Direction = ParameterDirection.Output;
+        DateTime dt = Convert.ToDateTime(vca_fecha_docto); //DateTimeFormatInfo.InvariantInfo
+
 
         cmd.CommandText = "VentaCabecera_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
@@ -121,7 +129,7 @@ public class csVentaCabecera
         cmd.Parameters.AddWithValue("@vca_id", SqlDbType.BigInt).Value = vca_id;
         cmd.Parameters.AddWithValue("@vca_folio", SqlDbType.Int).Value = vca_folio;
         cmd.Parameters.AddWithValue("@vca_cli_rut", SqlDbType.NVarChar).Value = vca_cli_rut;
-        cmd.Parameters.AddWithValue("@vca_fecha_docto", SqlDbType.DateTime).Value = vca_fecha_docto;
+        cmd.Parameters.AddWithValue("@vca_fecha_docto", SqlDbType.DateTime).Value = Convert.ToDateTime(dt, DateTimeFormatInfo.InvariantInfo);
         cmd.Parameters.AddWithValue("@vca_suc_id", SqlDbType.Int).Value = vca_suc_id;
         cmd.Parameters.AddWithValue("@vca_comentario", SqlDbType.Text).Value = vca_comentario;
         cmd.Parameters.AddWithValue("@vca_tipo_docto", SqlDbType.NVarChar).Value = vca_tipo_doc;
@@ -152,7 +160,7 @@ public class csVentaCabecera
                 MedioPagoTC_Insert();
                 MedioPagoTD_Insert();
                 MedioPagoCS_Insert();
-               
+                
                 
                 return;
             }

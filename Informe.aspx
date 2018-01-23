@@ -1,18 +1,18 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Producto.aspx.cs" Inherits="Producto" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Informe.aspx.cs" Inherits="Informe" %>
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="utf-8">
     <meta name='viewport' content='width=device-width initial-scale=1'>
     <meta name='mobile-web-app-capable' content='yes'>
-    <link rel='stylesheet' href='css/bootstrap.css'>
     <link rel='stylesheet' href='css/estilos.css'>
+    <link href="css/venta.css" rel="stylesheet" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+
     <title>Muebles Oliva</title>
-
 </head>
-
 <body class="blog-body">
 
     <div class="container">
@@ -31,9 +31,10 @@
                     <ul class="nav navbar-nav list-inline text-center">
                         <li><a href="Venta.aspx">Venta</a></li>
                         <li><a href="Cliente.aspx">Cliente</a></li>
-                        <li class="active"><a href="Producto.aspx">Producto</a></li>
+                        <li><a href="Producto.aspx">Producto</a></li>
                         <li><a href="CreditoSimple.aspx">Credito Simple</a></li>
-                        <li><a href="Informe.aspx">Informes</a></li>
+                        <li class="active"><a href="Informe.aspx">Informes</a></li>
+
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="login.aspx">Salir</a></li>
@@ -44,59 +45,54 @@
         </div>
         <form id="form" data-toggle="validator">
             <div class="row contenedor-principal container-fluid">
-                <div class="col-lg-6 contenedor2">
+                <div class="col-lg-6 contenedor1">
                     <fieldset>
-                        <legend>Información de Productos</legend>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txtId">Codigo</label>
-                                    <input type="text" id="txtId" name="txtId" class="form-control" placeholder="102938" required="required"
-                                        data-error="Ingrese Codigo Producto" />
-                                    <div class="help-block with-errors"></div>
-                                </div>
-
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label for="txtDescripcion">Descripcion</label>
-                                    <input type="text" class="form-control control_txt" id="txtDescripcion" name="txtDescripcion" placeholder="comedor" required="required"
-                                        data-error="Ingrese Descripcion">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-lg-6 ">
-
-                                <div class="form-group">
-                                    <label for="txtPrecio">Precio Unitario </label>
-                                    <input type="number" class="form-control control_txt" id="txtPrecio" name="txtPrecio" data-error="Ingrese Precio Unitario">
-                                    <div class="help-block with-errors"></div>
-                                </div>
-                            </div>
-                            <div class=" col-lg-6 radio">
-                                <p></p>
-                                <label class="radio-inline">
-                                    <input class="form-check-input control_txt" type="radio" name="cmbEstado" id="cmbActivo" value="optActivo">
-                                    Activo
-                                </label>
-
-                                <label class="radio-inline">
-                                    <input class="form-check-input control_txt" type="radio" name="cmbEstado" id="cmbInactivo" value="optInactivo">
-                                    Inactivo
-                                </label>
-                            </div>
-                        </div>
+                        <legend>Descarga de Informes</legend>
                         <div class="row">
                             <div class="col-lg-12">
-                                <button type="button" class="btn btn-success" onclick="GetById()">
-                                    <span class="glyphicon glyphicon-search"></span>Buscar 
-                                </button>
-                                <button type="button" class="btn btn-success" onclick="Insert()">
-                                    <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
+                                <select class="form-control form-control-lg" id="cmbInforme">
+                                    <option value="0" selected="selected">SELECCIONAR...</option>
+                                    <option value="1">CLIENTES</option>
+                                    <option value="2">CREDITOS</option>
+                                    <option value="3">PRODUCTOS</option>
+                                    <option value="4">VENTAS</option>
+
+
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+
+                            <div class="col-lg-6 form-group">
+                                <label for="txtFechaInicio">Fecha Inicio</label>
+                                <div class="input-group date datepicker" data-provide="datepicker">
+
+                                    <input type="text" id="txtFechaInicio" name="txtFechaInicio" class="form-control">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 form-group">
+                                <label for="txtFechaTermino">Fecha Termino</label>
+                                <div class="input-group date datepicker" data-provide="datepicker">
+
+                                    <input type="text" id="txtFechaTermino" name="txtFechaTermino" class="form-control">
+                                    <div class="input-group-addon">
+                                        <span class="glyphicon glyphicon-th"></span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+
+                                <button type="button" class="btn btn-success" onclick="Descargar()">
+                                    <span class="glyphicon glyphicon-download"></span>Descargar 
                                 </button>
                                 <button type="reset" class="btn btn-success">
                                     <span class="glyphicon glyphicon-trash"></span>Limpiar 
@@ -108,6 +104,7 @@
 
             </div>
         </form>
+        <br />
     </div>
 
     <!-- Modal -->
@@ -152,14 +149,15 @@
             </div>
         </div>
     </div>
-    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/Informe.js"></script>
+    <script src="js/jquery-3.2.1.js"></script>
+    <script src="js/moment.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.js"></script>
-    <script src="js/bootstrap-datetimepicker.es.js"></script>
     <script src="js/Validator.js"></script>
     <script src="js/jquery.serializejson.js"></script>
     <script src="js/jquery.json-2.2.min.js"></script>
-    <script src="js/Producto.js"></script>
+    <script src="js/bootstrap-datepicker.min.js"></script>
+    <script src="js/locales/bootstrap-datepicker.es.min.js"></script>
     <script src="js/loading.js"></script>
 </body>
 </html>

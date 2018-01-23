@@ -9,13 +9,19 @@ function Initialize() {
 
 
 
+    var existe = false;
     for (var i = 0; i <= Login.lstPerfil.length; i++) {
         if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
 
             if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E") {
+                existe = true;
                 InitializeLectura();
             }
+
         }
+    }
+    if (existe = false) {
+        InitializeLectura();
     }
 }
 function InitializeLectura() {

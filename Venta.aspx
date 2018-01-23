@@ -36,6 +36,7 @@
                         <li><a href="Cliente.aspx">Cliente</a></li>
                         <li><a href="Producto.aspx">Producto</a></li>
                         <li><a href="CreditoSimple.aspx">Credito Simple</a></li>
+                        <li><a href="Informe.aspx">Informes</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="login.aspx">Salir</a></li>
@@ -415,7 +416,7 @@
                                         <div class="col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtNumeroCuotaCS">N° Cuotas</label>
-                                                <input type="number" class="form-control control_txt" id="txtNumeroCuotaCS" name="txtNumeroCuotaCS" max="2" required="required">
+                                                <input type="number" class="form-control control_txt" id="txtNumeroCuotaCS" value="0" name="txtNumeroCuotaCS" max="2" onblur="CalcularCuotaCS();" required="required">
                                             </div>
                                         </div>
                                     </div>
@@ -437,7 +438,7 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtMontoCuotaCS">Monto Por Cuota</label>
-                                                <input type="number" class="form-control" id="txtMontoCuotaCS" readonly="true" name="txtMontoCuotaCS" max="2" required="required">
+                                                <input type="number" class="form-control" id="txtMontoCuotaCS" readonly="true" name="txtMontoCuotaCS" value="0" max="2" required="required">
                                             </div>
                                         </div>
                                     </div>

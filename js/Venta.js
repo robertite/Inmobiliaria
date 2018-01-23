@@ -4,6 +4,7 @@ var totalMedioPago = 0;
 
 function Initialize() {
 
+  
     if (sessionStorage.getItem("Login") == undefined) {
         location.href = path_url_small + '/Login.aspx';
     }
@@ -11,13 +12,19 @@ function Initialize() {
 
 
 
+    var existe = false;
     for (var i = 0; i <= Login.lstPerfil.length; i++) {
         if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
 
             if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E") {
+                existe = true;
                 InitializeLectura();
             }
+
         }
+    }
+    if (existe = false) {
+        InitializeLectura();
     }
 }
 function InitializeLectura() {
@@ -260,7 +267,7 @@ function setTableCheque(lstCheque) {
             });
 
         });
-        console.log(ban_descripcion);
+      
         $("#tblCheque tbody").append("<tr id=" + value.numeroCheque + ">" +
                                             "<td>" + value.numeroCheque + "</td>" +
                                             "<td>" + value.fechaDocto + "</td>" +
@@ -453,12 +460,33 @@ function Insert() {
                 $('#txtMontoCuotaCS').val('')
                 return;
             }
-            else { mensajeModal("Error BBDD"); }
+            else {
+                mensajeModal(data);
+                return;
+            }
 
             limpiar();
 
         },
-        error: function (response) { mensajeModal("Error BBDD"); }
+        error: function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            } else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            } else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+          
+         }
     });
     return false;
 }
@@ -835,9 +863,16 @@ function totalImpuesto() {
 }
 function totalDescuento() {
 
-    $('#txtDescuento').val(Math.round((parseInt($('#txtPorcDescuento').val()) * parseInt($('#txtTotalAntesDescuento').val())) / 100), 1);
-    totalImpuesto();
+    if (parseInt($('#txtPorcDescuento').val()) > 5) {
+        mensajeModal("Excede maximo de descuento. esta permitido hasta un 5%", "txtPorcDescuento");
+        $('#txtPorcDescuento').val(0);
+        $('#txtDescuento').val(0);
+        return;
 
+    } else {
+        $('#txtDescuento').val(Math.round((parseInt($('#txtPorcDescuento').val()) * parseInt($('#txtTotalAntesDescuento').val())) / 100), 1);
+        totalImpuesto();
+    }
 }
 
 function mensajeModal(mensaje, focus) {

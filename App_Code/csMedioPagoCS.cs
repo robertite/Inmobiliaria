@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 
@@ -89,12 +90,13 @@ public class csMedioPagoCS
         SqlCommand cmd = new SqlCommand();
         SqlParameter param = new SqlParameter("@retorno", SqlDbType.NVarChar, 50);
         param.Direction = ParameterDirection.Output;
+        DateTime dt = Convert.ToDateTime(fechaDocto);
 
         cmd.CommandText = "MedioPagoCS_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
         cmd.Parameters.AddWithValue("@vca_id", SqlDbType.BigInt).Value = vca_id;
-        cmd.Parameters.AddWithValue("@fechaDocto", SqlDbType.DateTime).Value = fechaDocto;
+        cmd.Parameters.AddWithValue("@fechaDocto", SqlDbType.DateTime).Value = Convert.ToDateTime(dt, DateTimeFormatInfo.InvariantInfo);
         cmd.Parameters.AddWithValue("@importe", SqlDbType.BigInt).Value = importe;
         cmd.Parameters.AddWithValue("@numero_cuota", SqlDbType.BigInt).Value = numero_cuota;
         cmd.Parameters.AddWithValue("@numero_cuota_pagada", SqlDbType.Int).Value = numero_cuota_pagada;
@@ -126,7 +128,7 @@ public class csMedioPagoCS
         catch (Exception ex)
         {
             GlobalClass.SaveLog("MedioPagoCS.cs", "Insert", ex.ToString(), DateTime.Now);
-            estado_transaccion = "Error BD";
+            estado_transaccion = ex.ToString();
         }
 
 

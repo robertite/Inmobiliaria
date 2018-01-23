@@ -30,6 +30,7 @@
                         <li class="active"><a href="Cliente.aspx">Cliente</a></li>
                         <li><a href="Producto.aspx">Producto</a></li>
                         <li><a href="CreditoSimple.aspx">Credito Simple</a></li>
+                        <li><a href="Informe.aspx">Informes</a></li>
 
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
