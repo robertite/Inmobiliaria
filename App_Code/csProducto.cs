@@ -13,23 +13,28 @@ public class csProducto
     public string id { get; set; }
     public string descripcion { get; set; }
     public double precio { get; set; }
+    public int stock { get; set; }
     public string est_id { get; set; }
     public string estado_transaccion { get; set; }
+    public List<csProductoAlmacen> lstProductoAlmacen { get; set; }
+  
 
 	public csProducto()	{}
-    public csProducto(string _id,string _descripcion,double _precio,string _est_id) {
+    public csProducto(string _id,string _descripcion,double _precio, string _est_id) {
 
         id = _id;
         descripcion = _descripcion;
         precio = _precio;
         est_id = _est_id;
     }
-    public csProducto(string _id, string _descripcion, double _precio)
+    public csProducto(string _id, string _descripcion, double _precio, int _stock)
     {
 
         id = _id;
         descripcion = _descripcion;
         precio = _precio;
+        stock = _stock;
+
       
     }
 
@@ -64,6 +69,8 @@ public class csProducto
             estado_transaccion = "Error BD";
         }
     }
+
+    
     public void GetById(string id)
     {
         DataTable dt = new DataTable("Producto");
@@ -95,6 +102,38 @@ public class csProducto
  
 
     }
+    public List<csProducto> GetBySucursal(int sucursal)
+    {
+        List<csProducto> lstProducto = new List<csProducto>();
+        DataTable dt = new DataTable("Producto");
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "Producto_GetBySucursal";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@sucursal", SqlDbType.NVarChar).Value = sucursal;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        try
+        {
+
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                lstProducto.Add(new csProducto(dr[0].ToString(), dr[1].ToString(), double.Parse(dr[2].ToString()), int.Parse(dr[3].ToString())));
+            }
+
+            return lstProducto;
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("Producto.cs", "GetAll", ex.ToString(), DateTime.Now);
+            return null;
+        }
+    }
     public List<csProducto> GetAll()
     {
         List<csProducto> lstProducto = new List<csProducto>();
@@ -115,14 +154,14 @@ public class csProducto
 
         foreach(DataRow dr in dt.Rows)
         {
-            lstProducto.Add(new csProducto(dr[0].ToString(),dr[1].ToString(),double.Parse(dr[2].ToString())));
+            lstProducto.Add(new csProducto(dr[0].ToString(),dr[1].ToString(),double.Parse(dr[2].ToString()),int.Parse(dr[3].ToString())));
         }
 
         return lstProducto;
         }
         catch (Exception ex)
         {
-            GlobalClass.SaveLog("Producto.cs", "GetById", ex.ToString(), DateTime.Now);
+            GlobalClass.SaveLog("Producto.cs", "GetAll", ex.ToString(), DateTime.Now);
             return null;
         }
     }

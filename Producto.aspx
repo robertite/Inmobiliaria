@@ -44,7 +44,7 @@
         </div>
         <form id="form" data-toggle="validator">
             <div class="row contenedor-principal container-fluid">
-                <div class="col-lg-6 contenedor2">
+                <div class="col-lg-5 contenedor1">
                     <fieldset>
                         <legend>Información de Productos</legend>
                         <div class="row">
@@ -57,7 +57,7 @@
                                 </div>
 
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="form-group">
                                     <label for="txtDescripcion">Descripcion</label>
                                     <input type="text" class="form-control control_txt" id="txtDescripcion" name="txtDescripcion" placeholder="comedor" required="required"
@@ -89,7 +89,11 @@
                                     Inactivo
                                 </label>
                             </div>
+
+
                         </div>
+
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <button type="button" class="btn btn-success" onclick="GetById()">
@@ -105,7 +109,25 @@
                         </div>
                     </fieldset>
                 </div>
+                <div class="col-lg-offset-1 col-lg-5 contenedor2">
+                <fieldset>
+                    <legend>Almacenes</legend>
+                    <table class="table table-hover" id="tblAlmacen">
+                        <thead>
+                            <tr>
+                                <th class="col-lg-2">ID</th>
+                                <th class="col-lg-4">NOMBRE</th>
+                                <th class="col-lg-1">BLOQUEADO</th>
+                                <th class="col-lg-2">STOCK</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
 
+                    <br />
+                </fieldset>
+                    </div>
             </div>
         </form>
     </div>

@@ -101,7 +101,7 @@ public class csVentaCabecera
     {
         //valida si tiene un medio de pago credito simple y si es asi, valida si puede acceder a credito el cliente en cuestión.
 
-        //debo validar cuando sea una actualizacion o una nueva venta
+       
         if (objMedioPagoCS.importe > 0)
         {
             if (objMedioPagoCS.numero_cuota > 5)
@@ -154,12 +154,19 @@ public class csVentaCabecera
                 
                 DeleteByVcaId();
                 VentaDetalle_Insert();
+                if (!estado_transaccion.Equals("-1")) { return; }
                 MedioPagoCH_Insert();
+                if (!estado_transaccion.Equals("-1")) { return; }
                 MedioPagoTR_Insert();
+                if (!estado_transaccion.Equals("-1")) { return; }
                 MedioPagoEF_Insert();
+                if (!estado_transaccion.Equals("-1")) { return; }
                 MedioPagoTC_Insert();
+                if (!estado_transaccion.Equals("-1")) { return; }
                 MedioPagoTD_Insert();
+                if (!estado_transaccion.Equals("-1")) { return; }
                 MedioPagoCS_Insert();
+                if (!estado_transaccion.Equals("-1")) { return; }
                 
                 
                 return;
@@ -174,12 +181,19 @@ public class csVentaCabecera
                 estado_transaccion = param.Value.ToString();
                 vca_id = int.Parse(param.Value.ToString());
                 VentaDetalle_Insert();
+                if (!estado_transaccion.Equals("-2")) { return; }
                 MedioPagoCH_Insert();
+                if (!estado_transaccion.Equals("-2")) { return; }
                 MedioPagoTR_Insert();
+                if (!estado_transaccion.Equals("-2")) { return; }
                 MedioPagoEF_Insert();
+                if (!estado_transaccion.Equals("-2")) { return; }
                 MedioPagoTC_Insert();
+                if (!estado_transaccion.Equals("-2")) { return; }
                 MedioPagoTD_Insert();
+                if (!estado_transaccion.Equals("-2")) { return; }
                 MedioPagoCS_Insert();
+                if (!estado_transaccion.Equals("-2")) { return; }
                 return;
             }
 
@@ -226,7 +240,11 @@ public class csVentaCabecera
                 item.Insert();
             }
         }
-        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "VentaDetalle_Insert", ex.ToString(), DateTime.Now); }
+        catch (Exception ex) { 
+            GlobalClass.SaveLog("csVentaCabecera.cs", "VentaDetalle_Insert", ex.ToString(), DateTime.Now);
+            DeleteByVcaId();
+            estado_transaccion = "Error en venta detalle";
+        }
     }
     private void MedioPagoCH_Insert() {
         try
@@ -236,7 +254,11 @@ public class csVentaCabecera
                 item.Insert();
             }
         }
-        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_Insert", ex.ToString(), DateTime.Now); }
+        catch (Exception ex) { 
+            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_Insert", ex.ToString(), DateTime.Now);
+            DeleteByVcaId();
+            estado_transaccion = "Error en Medio Pago Cheque";
+        }
 
     }
    
@@ -247,7 +269,11 @@ public class csVentaCabecera
                 objMedioPagoTR.Insert();
            
         }
-        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTR_Insert", ex.ToString(), DateTime.Now); }
+        catch (Exception ex) { 
+            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTR_Insert", ex.ToString(), DateTime.Now);
+            DeleteByVcaId();
+            estado_transaccion = "Error en Medio Pago Transferencia";
+        }
 
     }
     private void MedioPagoEF_Insert()
@@ -257,7 +283,11 @@ public class csVentaCabecera
             objMedioPagoEF.Insert();
 
         }
-        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoEF_Insert", ex.ToString(), DateTime.Now); }
+        catch (Exception ex) { 
+            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoEF_Insert", ex.ToString(), DateTime.Now);
+            DeleteByVcaId();
+            estado_transaccion = "Error en Medio Pago Efectivo";
+        }
 
     }
     private void MedioPagoTC_Insert()
@@ -267,7 +297,11 @@ public class csVentaCabecera
             objMedioPagoTC.Insert();
 
         }
-        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTC_Insert", ex.ToString(), DateTime.Now); }
+        catch (Exception ex) { 
+            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTC_Insert", ex.ToString(), DateTime.Now);
+            DeleteByVcaId();
+            estado_transaccion = "Error en Medio Pago Tarjeta Credito";
+        }
 
     }
     private void MedioPagoTD_Insert()
@@ -277,7 +311,11 @@ public class csVentaCabecera
             objMedioPagoTD.Insert();
 
         }
-        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTD_Insert", ex.ToString(), DateTime.Now); }
+        catch (Exception ex) { 
+            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTD_Insert", ex.ToString(), DateTime.Now);
+            DeleteByVcaId();
+            estado_transaccion = "Error en Medio Pago Tarjeta Debito";
+        }
 
     }
     private void MedioPagoCS_Insert()
@@ -287,7 +325,11 @@ public class csVentaCabecera
             objMedioPagoCS.Insert();
 
         }
-        catch (Exception ex) { GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoTD_Insert", ex.ToString(), DateTime.Now); }
+        catch (Exception ex) { 
+            GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCS_Insert", ex.ToString(), DateTime.Now);
+            DeleteByVcaId();
+            estado_transaccion = "Error en Medio Pago Credito Simple";
+        }
 
     }
     public List<csVentaCabecera> GetByParams()

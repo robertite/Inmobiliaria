@@ -21,6 +21,13 @@ public partial class Producto : System.Web.UI.Page
         producto.GetById(JsonConvert.DeserializeObject(id).ToString());
         return JsonConvert.SerializeObject(producto);
     }
+        [WebMethod()]
+    public static string GetAlmacenByProductoId(string id)
+    {
+        csProductoAlmacen productoAlmacen = new csProductoAlmacen();        
+        return JsonConvert.SerializeObject(productoAlmacen.GetAlmacenByProductoId(JsonConvert.DeserializeObject(id).ToString()));
+    }
+    
     [WebMethod()]
     public static string Insert(string objProducto)
     {
@@ -34,5 +41,12 @@ public partial class Producto : System.Web.UI.Page
         csProducto producto = new csProducto();
         
         return JsonConvert.SerializeObject(producto.GetAll());
+    }
+    [WebMethod()]
+    public static string GetBySucursal( string sucursal)
+    {
+        csProducto producto = new csProducto();
+
+        return JsonConvert.SerializeObject(producto.GetBySucursal(int.Parse(sucursal)));
     }
 }

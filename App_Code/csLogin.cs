@@ -13,6 +13,7 @@ public class csLogin
 {
     public string email { get; set; }
     public string pass { get; set; }
+    public int sucursal { get; set; }
     public List<csPerfil> lstPerfil { get; set; }
 
     public string estado_transaccion { get; set; }
@@ -49,6 +50,8 @@ public class csLogin
                 {
                     lstPerfil.Add(new csPerfil(dr[0].ToString(), dr[1].ToString(), dr[2].ToString()));
                 }
+
+                LoadSucursalByUser();
             }
 
         }
@@ -65,6 +68,46 @@ public class csLogin
         }
 
           
+    }
+    public void LoadSucursalByUser()
+    {
+        DataTable dt = new DataTable("Login");
+        SqlConnection con = new SqlConnection(ConfigurationManager.ConnectionStrings["conn"].ToString());
+        SqlCommand cmd = new SqlCommand();
+        SqlDataAdapter da = new SqlDataAdapter();
+        cmd.Connection = con;
+        cmd.CommandText = "Sucursal_GetByUser";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Parameters.AddWithValue("@email", SqlDbType.NVarChar).Value = email;
+        da.SelectCommand = cmd;
+
+        try
+        {
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+            if (dt.Rows.Count == 0)
+            {
+                //El email o contraseña son incorrectos verifique que el usuario no este deshabilitado
+                estado_transaccion = "-1";
+                return;
+            }
+
+            else
+            {
+
+
+
+                sucursal = int.Parse(dt.Rows[0][0].ToString());
+            }
+
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("csLogin.cs", "GetLogin", ex.ToString(), DateTime.Now);
+            estado_transaccion = "Error BD";
+        }
+
     }
 
 	

@@ -100,7 +100,7 @@ function GetById() {
                 $('#cmbInactivo').prop("checked", true);
             }
             
-
+            GetAlmacenByProductoId($('#txtId').val());
 
         },
         error: function (response) {
@@ -109,6 +109,38 @@ function GetById() {
     });
     return false;
 }
+
+function GetAlmacenByProductoId() {
+
+    $.ajax({
+        type: "POST",
+        url: path_url + '/GetAlmacenByProductoId',
+        data: $.toJSON({ id: JSON.stringify($('#txtId').val()) }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+
+            var data = $.parseJSON(response.d);
+
+           
+            $("#tblAlmacen tbody").html('');
+            $.each(data, function (key, value) {
+                $("#tblAlmacen tbody").append("<tr id=" + value.alm_id + ">" +
+                                           "<td>" + value.alm_id + "</td>" +
+                                           "<td>" + value.alm_nombre + "</td>" +
+                                           "<td>" + value.alm_estado + "</td>" +
+                                           "<td>" + value.alm_stock + "</td>" +
+                                           "</tr>");
+
+            });
+        },
+        error: function (response) {
+            alert('Error');
+        }
+    });
+    return false;
+}
+
 function limpiar() {
 
     $('#txtId').val('');

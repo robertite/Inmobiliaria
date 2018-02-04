@@ -4,13 +4,11 @@ var totalMedioPago = 0;
 
 function Initialize() {
 
-  
+    
     if (sessionStorage.getItem("Login") == undefined) {
         location.href = path_url_small + '/Login.aspx';
     }
-    var Login = $.parseJSON(sessionStorage.getItem("Login"))
-
-
+    var Login = $.parseJSON(sessionStorage.getItem("Login"));
 
     var existe = false;
     for (var i = 0; i <= Login.lstPerfil.length; i++) {
@@ -23,6 +21,7 @@ function Initialize() {
 
         }
     }
+  
     if (existe = false) {
         InitializeLectura();
     }
@@ -51,15 +50,23 @@ window.onload = function () {
             $("#cmbSucursal").append("<option value=" + datos[key].id + ">" + datos[key].descripcion + "</option>");
 
         });
+        setSucursalUser($('#cmbSucursal'), function (datos) {
+
+            $('#cmbSucursal').val(datos.sucursal);
+
+        });
     });
+
+
     var cmbBanco = $('.cmbBanco');
-
-
+    
     loadCmbBanco(cmbBanco, function (datos) {
         cmbBanco.html('');
         cmbBanco.append("<option value = 0>Seleccionar...</option>");
         $.each(datos, function (key, value) {
             cmbBanco.append("<option value=" + datos[key].id + ">" + datos[key].descripcion + "</option>");
+            
+            
 
         });
     });
@@ -69,10 +76,20 @@ window.onload = function () {
         language: 'es'
 
     });
-
+    
     Initialize();
+   
+
+
 };
 
+
+function setSucursalUser(cmbSucursal, Callback) {
+
+    if (typeof Callback === 'function') {
+        Callback($.parseJSON(sessionStorage.getItem("Login")));
+    }
+}
 function loadCmbBanco(cmbBanco, callback) {
 
     if (sessionStorage.getItem("Banco") === null) {
@@ -718,8 +735,8 @@ function CargarProductos() {
     $.ajax({
         type: "POST",
 
-        url: path_url_small + '/Producto.aspx/GetAll',
-        data: '',
+        url: path_url_small + '/Producto.aspx/GetBySucursal',
+        data: $.toJSON({ sucursal: JSON.stringify($.parseJSON(sessionStorage.getItem("Login")).sucursal) }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -731,10 +748,12 @@ function CargarProductos() {
             $("#tblProductoLista tbody").html('');
             $.each(data, function (key, value) {
 
-                $("#tblProductoLista tbody").append("<tr><td>" + value.id + '</td>' +
-                                                    '<td>' + value.descripcion + '</td>' +
-                                                    '<td>' + value.precio + "</td>" +
-                                                    "<td><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + "})\">Agregar</button>" +
+                        
+                $("#tblProductoLista tbody").append("<tr><td class=\"filterable-cell\">" + value.id + '</td>' +
+                                                    "<td class=\"filterable-cell\">" + value.descripcion + '</td>' +
+                                                    "<td class=\"filterable-cell\">" + value.precio + "</td>" +
+                                                    '<td class="filterable-cell">' + value.stock + "</td>" +
+                                                    "<td class=\"filterable-cell\"><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + "})\">Agregar</button>" +
                                                     "</td></tr>");
 
             });

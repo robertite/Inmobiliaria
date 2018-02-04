@@ -157,12 +157,12 @@
                         <table class="table table-hover" id="tblProductoVenta">
                             <thead>
                                 <tr>
-                                    <th class="col-lg-2">ID</th>
+                                    <th class="col-lg-1">ID</th>
                                     <th class="col-lg-4">DESC</th>
                                     <th class="col-lg-1">CANTIDAD</th>
                                     <th class="col-lg-2">PRECIO</th>
                                     <th class="col-lg-2">TOTAL</th>
-                                    <th class="col-lg-1"></th>
+                                    <th class="col-lg-1">SEL</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -183,7 +183,7 @@
 
                                 <div class="form-group">
                                     <label for="cmbSucursal">Sucursal</label>
-                                    <select id="cmbSucursal" class="form-control control_cmb" name="cmbSucursal" required="required" data-error="Seleccione Sucursal">
+                                    <select id="cmbSucursal" class="form-control control_cmb" name="cmbSucursal" disabled="disabled" required="required" data-error="Seleccione Sucursal">
                                         <option value="0">Seleccione...</option>
 
                                     </select>
@@ -586,13 +586,15 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <table id="tblProductoLista" class="table table-hover form-group">
+                                
+                                 <table id="tblProductoLista" class="table table-striped form-group">
                                     <thead>
                                         <tr>
-                                            <th class="col-lg-3">ID</th>
-                                            <th class="col-lg-4">NOMBRE</th>
-                                            <th class="col-lg-3">$</th>
-                                            <th class="col-lg-2"></th>
+                                            <th>ID</th>
+                                            <th >NOMBRE</th>
+                                            <th >PRECIO</th>
+                                            <th >STOCK</th>
+                                            <th >SEL</th>
                                         </tr>
                                     </thead>
                                     <tbody class="buscarProducto"></tbody>
