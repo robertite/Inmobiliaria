@@ -148,7 +148,7 @@ function limpiar() {
     $('#txtPrecio').val('');
     $('#cmbActivo').prop("checked", false);
     $('#cmbInactivo').prop("checked", false);
- 
+    $("#tblAlmacen tbody").html('');
 }
 
 function mensajeModal(mensaje, focus) {

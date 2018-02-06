@@ -220,11 +220,7 @@
                             </div>
                         </div>
 
-                        <div class="row col-lg-12 form-group">
-
-                            <label for="txtImpuesto">Impuesto</label>
-                            <input id="txtImpuesto" name="txtImpuesto" class="form-control" readonly="true" value="0" />
-                        </div>
+                       
                         <div class="row col-lg-12 form-group">
 
                             <label for="txtTotal">Total</label>

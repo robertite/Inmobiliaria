@@ -101,8 +101,8 @@ public class csVentaCabecera
     {
         //valida si tiene un medio de pago credito simple y si es asi, valida si puede acceder a credito el cliente en cuestión.
 
-       
-        if (objMedioPagoCS.importe > 0)
+
+        if (objMedioPagoCS != null && objMedioPagoCS.importe > 0)
         {
             if (objMedioPagoCS.numero_cuota > 5)
             {
@@ -155,17 +155,35 @@ public class csVentaCabecera
                 DeleteByVcaId();
                 VentaDetalle_Insert();
                 if (!estado_transaccion.Equals("-1")) { return; }
-                MedioPagoCH_Insert();
+                if (lstMedioPagoCH != null)
+                {
+                    MedioPagoCH_Insert();
+                }
                 if (!estado_transaccion.Equals("-1")) { return; }
-                MedioPagoTR_Insert();
+                if (objMedioPagoTR != null)
+                {
+                    MedioPagoTR_Insert();
+                }
                 if (!estado_transaccion.Equals("-1")) { return; }
-                MedioPagoEF_Insert();
+                if (objMedioPagoEF != null)
+                {
+                    MedioPagoEF_Insert();
+                }
                 if (!estado_transaccion.Equals("-1")) { return; }
-                MedioPagoTC_Insert();
+                if (objMedioPagoTC != null)
+                {
+                    MedioPagoTC_Insert();
+                }
                 if (!estado_transaccion.Equals("-1")) { return; }
-                MedioPagoTD_Insert();
+                if (objMedioPagoTD != null)
+                {
+                    MedioPagoTD_Insert();
+                }
                 if (!estado_transaccion.Equals("-1")) { return; }
-                MedioPagoCS_Insert();
+                if (objMedioPagoCS != null)
+                {
+                    MedioPagoCS_Insert();
+                }
                 if (!estado_transaccion.Equals("-1")) { return; }
                 
                 
@@ -181,19 +199,38 @@ public class csVentaCabecera
                 estado_transaccion = param.Value.ToString();
                 vca_id = int.Parse(param.Value.ToString());
                 VentaDetalle_Insert();
-                if (!estado_transaccion.Equals("-2")) { return; }
-                MedioPagoCH_Insert();
-                if (!estado_transaccion.Equals("-2")) { return; }
-                MedioPagoTR_Insert();
-                if (!estado_transaccion.Equals("-2")) { return; }
-                MedioPagoEF_Insert();
-                if (!estado_transaccion.Equals("-2")) { return; }
-                MedioPagoTC_Insert();
-                if (!estado_transaccion.Equals("-2")) { return; }
-                MedioPagoTD_Insert();
-                if (!estado_transaccion.Equals("-2")) { return; }
-                MedioPagoCS_Insert();
-                if (!estado_transaccion.Equals("-2")) { return; }
+                
+                if (lstMedioPagoCH != null)
+                {
+                    MedioPagoCH_Insert();
+                }
+              
+                if (objMedioPagoTR != null)
+                {
+                    MedioPagoTR_Insert();
+                }
+               
+                if (objMedioPagoEF != null)
+                {
+                    MedioPagoEF_Insert();
+                }
+               
+                if (objMedioPagoTC != null)
+                {
+                    MedioPagoTC_Insert();
+                }
+             
+                if (objMedioPagoTD != null)
+                {
+                    MedioPagoTD_Insert();
+                }
+              
+                if (objMedioPagoCS != null)
+                {
+                    MedioPagoCS_Insert();
+                }
+             
+                
                 return;
             }
 

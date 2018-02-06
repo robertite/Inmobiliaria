@@ -5,13 +5,15 @@ var totalMedioPago = 0;
 function Initialize() {
 
     
-    if (sessionStorage.getItem("Login") == undefined) {
+    if (typeof sessionStorage.getItem("Login") === undefined || null) {
         location.href = path_url_small + '/Login.aspx';
     }
     var Login = $.parseJSON(sessionStorage.getItem("Login"));
 
+    
     var existe = false;
-    for (var i = 0; i <= Login.lstPerfil.length; i++) {
+
+    for (var i = 0; i < Login.lstPerfil.length; i++) {
         if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
 
             if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E") {
@@ -251,10 +253,11 @@ function setVentaCabecera(data) {
     }
     $('#cmbSucursal').val(data[0].vca_suc_id);
     $('#txtComentario').val(data[0].vca_comentario);
-    $('#txtTotalAntesDescuento').val(parseInt(data[0].vca_total) - parseInt(data[0].vca_impuesto) + parseInt(data[0].vca_totalDescuento));
+    $('#txtTotalAntesDescuento').val(parseInt(data[0].vca_total) + parseInt(data[0].vca_totalDescuento));
+    //$('#txtTotalAntesDescuento').val(parseInt(data[0].vca_total) - parseInt(data[0].vca_impuesto) + parseInt(data[0].vca_totalDescuento));
     $('#txtPorcDescuento').val(data[0].vca_porcDescuento);
     $('#txtDescuento').val(data[0].vca_totalDescuento);
-    $('#txtImpuesto').val(data[0].vca_impuesto);
+    //$('#txtImpuesto').val(data[0].vca_impuesto);
     $('#txtTotal').val(data[0].vca_total);
     setTableProduct(data[0].lstVentaDetalle);
     setTableCheque(data[0].lstMedioPagoCH);
@@ -378,6 +381,8 @@ function setMedioPagoCS(data) {
 
 }
 function Insert() {
+
+
     if ($('#txtRut').val() == "" || $('#txtNombre').val() == "" || $('#txtGiro').val() == "") { mensajeModal("Debe Cargar Un Cliente"); return; }
 
     if ($('#txtFolio').val() == "" || $('#txtFechaDocto').val() == "" || $('#cmbSucursal').val() == "0") { mensajeModal("Ingrese Datos"); return; }
@@ -386,7 +391,8 @@ function Insert() {
 
     if ($('#tblProductoVenta > tbody  > tr').length == 0) { mensajeModal("Debe Agregar Productos a la Venta"); return; }
 
-
+    var Login = $.parseJSON(sessionStorage.getItem("Login"));
+    if (Login.sucursal != $('#cmbSucursal').val()) { mensajeModal("No puede crear ni modificar ventas que no sean de su sucursal"); return; }
 
     var importeCH = parseInt($('#txtImporteTotalCH').val());
     var importeTR = parseInt($('#txtImporteTR').val());
@@ -427,7 +433,7 @@ function Insert() {
         vca_suc_id: $('#cmbSucursal').val(),
         vca_comentario: $('#txtComentario').val(),
         vca_tipo_doc: _vca_tipo_doc,
-        vca_impuesto: $('#txtImpuesto').val(),
+        vca_impuesto: 0,//$('#txtImpuesto').val(),
         vca_total: $('#txtTotal').val(),
         vca_est_id: 'A',
         vca_estado_docto: $('#cmbEstado').val(),
@@ -668,22 +674,24 @@ function limpiar() {
 
     document.getElementById("formMedioPago").reset();
     document.getElementById("form").reset();
-    //$('#txtRut').val('');
-    //$('#txtNombre').val('');
-    //$('#txtGiro').val('');
-    //$('#txtFechaDocto').val('');
-    //$('#txtFolio').val('');
+
+    
+
     $('#tblProductoVenta > tbody ').html('');
     $('#tblCheque > tbody ').html('');
-    //$('#txtSucursal').val('0');
-    //$('#txtTotalAntesDescuento').val('0');
-    //$('#txtPorcDescuento').val('0');
-    //$('#txtDescuento').val('0');
-    //$('#txtImpuesto').val('0');
-    //$('#txtTotal').val('0');
+
+    
 
     GetMaxDocNum();
+    
+    setSucursalUser($('#cmbSucursal'), function (datos) {
+
+        $('#cmbSucursal').val(datos.sucursal);
+
+    });
+   
 }
+
 function checkRut(txtRut) {
     // Despejar Puntos
     var valor = txtRut.value.replace('.', '');
@@ -857,7 +865,8 @@ function Total(cont) {
 
         $('#txtTotalAntesDescuento').val(Math.round(cont, 1));
         totalDescuento();
-        $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())) * 1.19), 1);
+        //$('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())) * 1.19), 1);
+        $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val()))), 1);
     }
     else {
         $('#txtTotalAntesDescuento').val(Math.round(cont, 1));
@@ -870,11 +879,11 @@ function Total(cont) {
 function totalImpuesto() {
 
     if ($("#cmbFactura").is(':checked') == true) {
-        $('#txtImpuesto').val(Math.round((parseInt($('#txtTotalAntesDescuento').val()) - parseInt($('#txtDescuento').val())) * 0.19), 1);
+      //  $('#txtImpuesto').val(Math.round((parseInt($('#txtTotalAntesDescuento').val()) - parseInt($('#txtDescuento').val())) * 0.19), 1);
         $('#txtTotal').val(Math.round((parseInt($('#txtTotalAntesDescuento').val()) - parseInt($('#txtDescuento').val())) * 1.19), 1);
     }
     else {
-        $('#txtImpuesto').val(0);
+     //   $('#txtImpuesto').val(0);
         $('#txtTotal').val(Math.round(parseInt($('#txtTotalAntesDescuento').val()) - parseInt($('#txtDescuento').val())), 1);
     }
 
@@ -886,6 +895,7 @@ function totalDescuento() {
         mensajeModal("Excede maximo de descuento. esta permitido hasta un 5%", "txtPorcDescuento");
         $('#txtPorcDescuento').val(0);
         $('#txtDescuento').val(0);
+        totalImpuesto();
         return;
 
     } else {
