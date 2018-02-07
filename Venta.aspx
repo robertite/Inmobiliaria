@@ -220,7 +220,7 @@
                             </div>
                         </div>
 
-                       
+
                         <div class="row col-lg-12 form-group">
 
                             <label for="txtTotal">Total</label>
@@ -245,6 +245,10 @@
 
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#MedioDePagoModal">
                             <span class="glyphicon glyphicon-credit-card"></span>Pago
+                        </button>
+
+                        <button type="button" class="btn btn-success">
+                            <span class="glyphicon glyphicon-print"></span>Imprimir Comprobante
                         </button>
                     </div>
                 </div>
@@ -349,7 +353,7 @@
 
                                         <div class="form-group">
                                             <label for="txtImporteTotalCH">Importe Total</label>
-                                            <input type="text" class="form-control" id="txtImporteTotalCH" name="txtImporteTotalCH" value="0" readonly="true">
+                                            <input type="text" class="form-control" id="txtImporteTotalCH" name="txtImporteTotalCH" value="0" readonly="readonly">
                                         </div>
                                     </div>
 
@@ -361,7 +365,7 @@
                                             <div class="form-group">
                                                 <label for="txtFechaTR">Fecha</label>
                                                 <div class="input-group date datepicker" data-provide="datepicker">
-                                                    <input class="form-control control_txt" type="text" size="16" id="txtFechaTR" name="txtFechaTR" readonly="true">
+                                                    <input class="form-control control_txt" type="text" size="16" id="txtFechaTR" name="txtFechaTR" readonly="readonly">
                                                     <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                                                 </div>
                                             </div>
@@ -393,6 +397,12 @@
                                                 <input type="number" class="form-control control_txt" id="txtNumTransaccionTR" name="txtNumTransaccionTR" placeholder="120000" required="required">
                                             </div>
                                         </div>
+                                    </div>
+
+                                    <div class="row col-lg-12">
+                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoTR();">
+                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        </button>
                                     </div>
                                 </div>
 
@@ -434,11 +444,15 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtMontoCuotaCS">Monto Por Cuota</label>
-                                                <input type="number" class="form-control" id="txtMontoCuotaCS" readonly="true" name="txtMontoCuotaCS" value="0" max="2" required="required">
+                                                <input type="number" class="form-control" id="txtMontoCuotaCS" readonly="readonly" name="txtMontoCuotaCS" value="0" max="2" required="required">
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="row col-lg-12">
+                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoCS();">
+                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        </button>
+                                    </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="efectivoTab">
                                     <div class="row">
@@ -446,7 +460,7 @@
                                             <div class="form-group">
                                                 <label for="txtFechaEF">Fecha</label>
                                                 <div class="input-group date datepicker" data-provide="datepicker">
-                                                    <input type='text' class="form-control control_txt" readonly="true" id="txtFechaEF" name="txtFechaEF" />
+                                                    <input type='text' class="form-control control_txt" readonly="readonly" id="txtFechaEF" name="txtFechaEF" />
                                                     <span class="input-group-addon">
                                                         <span class="glyphicon glyphicon-calendar"></span>
                                                     </span>
@@ -462,6 +476,11 @@
                                                 <input type="number" class="form-control control_txt" id="txtImporteEF" value="0" name="txtImporteEF" required="required">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="row col-lg-12">
+                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoEF();">
+                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        </button>
                                     </div>
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tarjetaCreditoTab">
@@ -505,7 +524,11 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    <div class="row col-lg-12">
+                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoTC();">
+                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        </button>
+                                    </div>
 
                                 </div>
                                 <div role="tabpanel" class="tab-pane" id="tarjetaDebitoTab">
@@ -542,8 +565,11 @@
                                             </select>
                                         </div>
                                     </div>
-
-
+                                    <div class="row col-lg-12">
+                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoTD();">
+                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        </button>
+                                    </div>
 
                                 </div>
                             </div>
@@ -553,10 +579,31 @@
 
                 </div>
                 <div class="modal-footer">
+                    <br />
+                    <div class="row">
+                       
+                        <div class="col-lg-3 col-lg-offset-6">
+                            <h4>Monto Cancelado: </h4>
+                        </div>
+                        <div class="col-lg-3">
+                            <h4 id="lblMontoCancelado"></h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-lg-3 col-lg-offset-6">
+                             <h4>Total: </h4>
+                        </div>
+                        <div class="col-lg-3">
+                           <h4 id="lblTotal"></h4>
+                        </div>
+                    </div>
+                  
+                   
                     <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
     <%-- Modal productos --%>
@@ -582,15 +629,15 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                
-                                 <table id="tblProductoLista" class="table table-striped form-group">
+
+                                <table id="tblProductoLista" class="table table-striped form-group">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th >NOMBRE</th>
-                                            <th >PRECIO</th>
-                                            <th >STOCK</th>
-                                            <th >SEL</th>
+                                            <th>NOMBRE</th>
+                                            <th>PRECIO</th>
+                                            <th>STOCK</th>
+                                            <th>SEL</th>
                                         </tr>
                                     </thead>
                                     <tbody class="buscarProducto"></tbody>
@@ -671,7 +718,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
-
                 </div>
             </div>
         </div>

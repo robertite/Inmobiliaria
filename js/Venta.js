@@ -300,6 +300,8 @@ function setTableCheque(lstCheque) {
 
     });
     $('#txtImporteTotalCH').val(importeCH);
+
+
 }
 
 function GetTextBancoByVal(id, callback) {
@@ -692,6 +694,45 @@ function limpiar() {
    
 }
 
+function limpiarMedioPagoTR() {
+
+    $('#txtFechaTR').val('');
+    $('#txtImporteTR').val(0);
+    $('#cmbBancoTR').val(0);
+    $('#txtNumTransaccionTR').val(0);
+
+}
+function limpiarMedioPagoCS() {
+
+    $('#txtFechaCS').val('');
+    $('#txtImporteCS').val(0);
+    $('#txtNumeroCuotaCS').val(0);
+    $('#txtCuotaPagadaCS').val(0);
+    $('#txtMontoCuotaCS').val(0);
+}
+function limpiarMedioPagoEF() {
+
+    $('#txtFechaEF').val('');
+    $('#txtImporteEF').val(0);
+   
+}
+function limpiarMedioPagoTC() {
+
+    $('#txtFechaTC').val('');
+    $('#txtImporteTC').val(0);
+    $('#txtNumCuotaTC').val(0);
+    $('#txtNumTransaccionTC').val(0);
+    $('#cmbBancoTC').val(0);
+}
+
+function limpiarMedioPagoTD() {
+
+    $('#txtFechaTD').val('');
+    $('#txtImporteTD').val(0);
+    $('#txtNumTransaccionTD').val(0);
+    $('#cmbBancoTD').val(0);
+}
+
 function checkRut(txtRut) {
     // Despejar Puntos
     var valor = txtRut.value.replace('.', '');
@@ -816,6 +857,7 @@ function updateChequeDocTotal() {
 }
 function TotalCheque(cont) {
     $('#txtImporteTotalCH').val(cont);
+    $('#lblMontoCancelado').html(cont);
 }
 function AddProduct(value) {
     if ($('#' + value.id)[0] != undefined) { mensajeModal("Usted Ya registró este Producto"); $('#modalProductos').modal('show'); return; }
@@ -867,11 +909,13 @@ function Total(cont) {
         totalDescuento();
         //$('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())) * 1.19), 1);
         $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val()))), 1);
+        $('#lblTotal').html($('#txtTotal').val());
     }
     else {
         $('#txtTotalAntesDescuento').val(Math.round(cont, 1));
         totalDescuento();
         $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())), 1));
+        $('#lblTotal').html($('#txtTotal').val());
     }
 
 }
@@ -901,6 +945,7 @@ function totalDescuento() {
     } else {
         $('#txtDescuento').val(Math.round((parseInt($('#txtPorcDescuento').val()) * parseInt($('#txtTotalAntesDescuento').val())) / 100), 1);
         totalImpuesto();
+        $('#lblTotal').html($('#txtTotal').val());
     }
 }
 
