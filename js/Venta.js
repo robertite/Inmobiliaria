@@ -4,16 +4,16 @@ var totalMedioPago = 0;
 
 function Initialize() {
 
-    
-    if (typeof sessionStorage.getItem("Login") === undefined || null) {
+   
+    if (sessionStorage.getItem("Login") == undefined || null) {
         location.href = path_url_small + '/Login.aspx';
     }
+
     var Login = $.parseJSON(sessionStorage.getItem("Login"));
-
     
-    var existe = false;
 
-    for (var i = 0; i < Login.lstPerfil.length; i++) {
+    var existe = false;
+    for (var i = 0; i <= Login.lstPerfil.length; i++) {
         if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
 
             if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E") {
@@ -23,7 +23,6 @@ function Initialize() {
 
         }
     }
-  
     if (existe = false) {
         InitializeLectura();
     }
@@ -40,8 +39,8 @@ function InitializeLectura() {
 
 window.onload = function () {
 
+   
 
-    limpiar();
 
     GetMaxDocNum();
 
@@ -54,6 +53,7 @@ window.onload = function () {
         });
         setSucursalUser($('#cmbSucursal'), function (datos) {
 
+            
             $('#cmbSucursal').val(datos.sucursal);
 
         });
@@ -80,8 +80,7 @@ window.onload = function () {
     });
     
     Initialize();
-   
-
+    limpiar();
 
 };
 
@@ -166,9 +165,10 @@ function GetMaxDocNum() {
             else {
 
                 $('#txtNumInterno').val(data);
-
+                
             }
         },
+
         error: function (response) {
             alert(response.responseText);
         }
@@ -259,6 +259,8 @@ function setVentaCabecera(data) {
     $('#txtDescuento').val(data[0].vca_totalDescuento);
     //$('#txtImpuesto').val(data[0].vca_impuesto);
     $('#txtTotal').val(data[0].vca_total);
+    $('#lblTotal').html(data[0].vca_total);
+    $('#lblMontoCancelado').html(data[0].vca_total);
     setTableProduct(data[0].lstVentaDetalle);
     setTableCheque(data[0].lstMedioPagoCH);
     setMedioPagoTR(data[0].objMedioPagoTR);
@@ -612,8 +614,22 @@ function GetMedioPagoCSFromHtml() {
 }
 function CalcularCuotaCS() {
 
+    if ((parseInt($('#txtImporteCS').val())) + parseInt($('#lblMontoCancelado').html()) > parseInt($('#txtTotal').val())) {
+        mensajeModal("El monto cancelado no puede ser mayor al total de la venta");
+        $('#txtFechaCS').val('');
+        $('#txtCuotaPagadaCS').val(0);
+        $('#txtImporteCS').val(0);
+        $('#txtNumeroCuotaCS').val(0);
+        $('#txtMontoCuotaCS').val(0);
+        
+        return;
+    }
+
+
     var monto_cuota = (parseInt($('#txtImporteCS').val()) / parseInt($('#txtNumeroCuotaCS').val()));
     $('#txtMontoCuotaCS').val(monto_cuota);
+
+
 }
 function GetProductFromTable() {
 
@@ -674,6 +690,7 @@ function GetClienteByRut() {
 }
 function limpiar() {
 
+
     document.getElementById("formMedioPago").reset();
     document.getElementById("form").reset();
 
@@ -682,17 +699,11 @@ function limpiar() {
     $('#tblProductoVenta > tbody ').html('');
     $('#tblCheque > tbody ').html('');
 
-    
 
-    GetMaxDocNum();
-    
-    setSucursalUser($('#cmbSucursal'), function (datos) {
 
-        $('#cmbSucursal').val(datos.sucursal);
-
-    });
-   
+    location.reload();
 }
+
 
 function limpiarMedioPagoTR() {
 
@@ -819,8 +830,20 @@ function CargarProductos() {
 
 function AddCheque() {
 
+   
+
     if ($('#cmbBancoCH').val() == '0' || $('#txtNumeroCheque').val() == '' || $('#txtFechaDocumentoCH').val() == '' || $('#txtImporteCH').val() == '') {
         mensajeModal('Ingrese Información del cheque');
+        return;
+    }
+
+    if ( (parseInt($('#txtImporteCH').val())) + parseInt($('#lblMontoCancelado').html()) > parseInt($('#txtTotal').val()))
+    {
+        mensajeModal("El monto cancelado no puede ser mayor al total de la venta");
+        $('#txtNumeroCheque').val('');
+        $('#txtFechaDocumentoCH').val('');
+        $('#txtImporteCH').val(0);
+        $('#cmbBancoCH').val(0);
         return;
     }
 
@@ -832,9 +855,9 @@ function AddCheque() {
                                         "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + $('#txtNumeroCheque').val() + ");\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
 
-    $('#txtNumeroCheque').val('');
-    $('#txtFechaDocumentoCH').val();
-    $('#txtImporteCH').val();
+    $('#txtNumeroCheque').val(0);
+    $('#txtFechaDocumentoCH').val('');
+    $('#txtImporteCH').val(0);
     $('#cmbBancoCH').val(0);
 
     updateChequeDocTotal();
@@ -857,7 +880,7 @@ function updateChequeDocTotal() {
 }
 function TotalCheque(cont) {
     $('#txtImporteTotalCH').val(cont);
-    $('#lblMontoCancelado').html(cont);
+    totalCancelado("txtImporteTotalCH");
 }
 function AddProduct(value) {
     if ($('#' + value.id)[0] != undefined) { mensajeModal("Usted Ya registró este Producto"); $('#modalProductos').modal('show'); return; }
@@ -953,5 +976,32 @@ function mensajeModal(mensaje, focus) {
     $('#mensaje').html('<p>' + mensaje + '</p>');
     $('#myModal').modal('show');
     $('#' + focus).focus();
+
+}
+
+function totalCancelado(objeto) {
+
+    
+
+    var ImporteCH = parseInt($('#txtImporteTotalCH').val());
+    var importeTR = parseInt($('#txtImporteTR').val());
+    var importeCS = parseInt($('#txtImporteCS').val());
+    var importeEF = parseInt($('#txtImporteEF').val());
+    var importeTC = parseInt($('#txtImporteTC').val());
+    var importeTD = parseInt($('#txtImporteTD').val());
+
+    var montoCancelado = ImporteCH + importeTR + importeCS + importeEF + importeTC + importeTD;
+
+    if (montoCancelado > $('#txtTotal').val())
+    {
+     
+        
+            mensajeModal("El monto cancelado no puede ser mayor al total de la venta");
+            $('#' + objeto.id).val(0);
+            return;
+        
+    }
+
+    $('#lblMontoCancelado').html(montoCancelado);
 
 }

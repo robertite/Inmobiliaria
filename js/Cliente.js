@@ -4,7 +4,7 @@ var reg_id;
 
 function Initialize() {
 
-    if (typeof sessionStorage.getItem("Login") === undefined || null) {
+    if (sessionStorage.getItem("Login") == undefined | null) {
         location.href = path_url_small + '/Login.aspx';
     }
     var Login = $.parseJSON(sessionStorage.getItem("Login"))

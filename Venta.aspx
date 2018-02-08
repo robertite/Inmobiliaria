@@ -375,7 +375,7 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtImporteTR">Importe</label>
-                                                <input type="number" class="form-control control_txt" id="txtImporteTR" name="txtImporteTR" value="0" required="required">
+                                                <input type="number" class="form-control control_txt" id="txtImporteTR" name="txtImporteTR" value="0" required="required" onblur="totalCancelado(this);">
                                             </div>
                                         </div>
                                     </div>
@@ -473,7 +473,7 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtImporteEF">Importe</label>
-                                                <input type="number" class="form-control control_txt" id="txtImporteEF" value="0" name="txtImporteEF" required="required">
+                                                <input type="number" class="form-control control_txt" id="txtImporteEF" value="0" name="txtImporteEF" required="required" onblur="totalCancelado(this);">
                                             </div>
                                         </div>
                                     </div>
@@ -505,7 +505,7 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtImporteTC">Importe</label>
-                                                <input type="number" class="form-control control_txt" id="txtImporteTC" value="0" name="txtImporteTC" placeholder="20000" required="required">
+                                                <input type="number" class="form-control control_txt" id="txtImporteTC" value="0" name="txtImporteTC" placeholder="20000" required="required" onblur="totalCancelado(this);">
                                             </div>
                                         </div>
                                         <div class=" col-lg-4">
@@ -556,7 +556,7 @@
                                         <div class=" col-lg-4">
                                             <div class="form-group">
                                                 <label for="txtImporteTD">Importe</label>
-                                                <input type="number" class="form-control control_txt" id="txtImporteTD" name="txtImporteTD" value="0" placeholder="20000" required="required">
+                                                <input type="number" class="form-control control_txt" id="txtImporteTD" name="txtImporteTD" value="0" placeholder="20000" required="required" onblur="totalCancelado(this);">
                                             </div>
                                         </div>
                                         <div class=" col-lg-4">
@@ -586,7 +586,7 @@
                             <h4>Monto Cancelado: </h4>
                         </div>
                         <div class="col-lg-3">
-                            <h4 id="lblMontoCancelado"></h4>
+                            <h4 id="lblMontoCancelado">0</h4>
                         </div>
                     </div>
                     <div class="row">
@@ -594,7 +594,7 @@
                              <h4>Total: </h4>
                         </div>
                         <div class="col-lg-3">
-                           <h4 id="lblTotal"></h4>
+                           <h4 id="lblTotal">0</h4>
                         </div>
                     </div>
                   
@@ -751,7 +751,6 @@
     <script src="js/Venta.js"></script>
     <%--<script src="js/Login.js"></script>--%>
     <script src="js/jquery-3.2.1.js"></script>
-    <script src="js/moment.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/Validator.js"></script>
     <script src="js/jquery.serializejson.js"></script>

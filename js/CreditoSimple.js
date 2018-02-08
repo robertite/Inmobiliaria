@@ -3,7 +3,7 @@ var path_url_small = window.location.protocol + '//' + window.location.host;
 
 function Initialize() {
 
-    if (typeof sessionStorage.getItem("Login") === undefined || null) {
+    if (sessionStorage.getItem("Login") == undefined || null) {
         location.href = path_url_small + '/Login.aspx';
     }
     var Login = $.parseJSON(sessionStorage.getItem("Login"))
