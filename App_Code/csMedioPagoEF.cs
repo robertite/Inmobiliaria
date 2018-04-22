@@ -71,13 +71,13 @@ public class csMedioPagoEF
 
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
-        DateTime dt = Convert.ToDateTime(fechaDocto);
+        
 
         cmd.CommandText = "MedioPagoEF_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
         cmd.Parameters.AddWithValue("@vca_id", SqlDbType.BigInt).Value = vca_id;
-        cmd.Parameters.AddWithValue("@fechaDocto", SqlDbType.DateTime).Value = Convert.ToDateTime(dt, DateTimeFormatInfo.InvariantInfo); ;
+        cmd.Parameters.AddWithValue("@fechaDocto", SqlDbType.DateTime).Value = Convert.ToDateTime(Convert.ToDateTime(fechaDocto), DateTimeFormatInfo.InvariantInfo);
         cmd.Parameters.AddWithValue("@importe", SqlDbType.BigInt).Value = importe;
         cmd.Parameters.AddWithValue("@est_id", SqlDbType.Char).Value = 'A';
 

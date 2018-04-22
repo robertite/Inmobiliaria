@@ -26,7 +26,6 @@ public class csVentaCabecera
     public double vca_totalDescuento { get; set; }
     public int vca_porcDescuento { get; set; }
     public string estado_transaccion { get; set; }
-    
     public List<csVentaDetalle> lstVentaDetalle { get; set; }
     public List<csMedioPagoCH> lstMedioPagoCH { get; set; }
     public csMedioPagoTR objMedioPagoTR { get; set; }
@@ -99,23 +98,20 @@ public class csVentaCabecera
     }
     public void Insert()
     {
-        //valida si tiene un medio de pago credito simple y si es asi, valida si puede acceder a credito el cliente en cuestión.
-
-
         if (objMedioPagoCS != null && objMedioPagoCS.importe > 0)
         {
             if (objMedioPagoCS.numero_cuota > 5)
             {
                 estado_transaccion = "Exede Maximo de 5 cuotas";
-                return;
+                
             }
             objMedioPagoCS.ValidaCredito();
             if (!objMedioPagoCS.estado_transaccion.Equals(""))
             {
-                estado_transaccion = objMedioPagoCS.estado_transaccion;
-                return;
+                estado_transaccion = objMedioPagoCS.estado_transaccion;               
             }
         }
+
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
         SqlParameter param = new SqlParameter("@retorno", SqlDbType.NVarChar, 50);
@@ -136,11 +132,13 @@ public class csVentaCabecera
         cmd.Parameters.AddWithValue("@vca_impuesto", SqlDbType.BigInt).Value = vca_impuesto;
         cmd.Parameters.AddWithValue("@vca_total", SqlDbType.BigInt).Value = vca_total;
         cmd.Parameters.AddWithValue("@vca_est_id", SqlDbType.Char).Value = vca_est_id;
-        cmd.Parameters.AddWithValue("@vca_estado_docto", SqlDbType.Char).Value = vca_estado_docto;
+        cmd.Parameters.AddWithValue("@vca_estado_docto", SqlDbType.Char).Value = 'C';
         cmd.Parameters.AddWithValue("@vca_emp_rut", SqlDbType.NVarChar).Value = vca_emp_rut;
         cmd.Parameters.AddWithValue("@vca_totalDescuento", SqlDbType.Decimal).Value = vca_totalDescuento;
         cmd.Parameters.AddWithValue("@vca_porcDescuento", SqlDbType.Int).Value = vca_porcDescuento;
         cmd.Parameters.Add(param);
+
+
 
         try
         {
@@ -152,12 +150,14 @@ public class csVentaCabecera
             {
                 estado_transaccion = param.Value.ToString();
                 
+                
+
                 DeleteByVcaId();
-                VentaDetalle_Insert();
+                VentaDetalle_Insert(0);
                 if (!estado_transaccion.Equals("-1")) { return; }
                 if (lstMedioPagoCH != null)
                 {
-                    MedioPagoCH_Insert();
+                    MedioPagoCH_Insert(0);
                 }
                 if (!estado_transaccion.Equals("-1")) { return; }
                 if (objMedioPagoTR != null)
@@ -198,11 +198,12 @@ public class csVentaCabecera
             {
                 estado_transaccion = param.Value.ToString();
                 vca_id = int.Parse(param.Value.ToString());
-                VentaDetalle_Insert();
+                
+                VentaDetalle_Insert(vca_id);
                 
                 if (lstMedioPagoCH != null)
                 {
-                    MedioPagoCH_Insert();
+                    MedioPagoCH_Insert(vca_id);
                 }
               
                 if (objMedioPagoTR != null)
@@ -245,7 +246,7 @@ public class csVentaCabecera
    
 
     private void DeleteByVcaId() {
-        DataTable dt = new DataTable("VentaCabecera");
+        
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
         cmd.CommandText = "VentaDetalle_DeleteByVcaId";
@@ -268,12 +269,25 @@ public class csVentaCabecera
 
         }
     }
-    private void VentaDetalle_Insert()
+    private void VentaDetalle_Insert(int _vca_id)
     {
         try
         {
             foreach (csVentaDetalle item in lstVentaDetalle)
             {
+                if (_vca_id > 0)
+                {
+                    
+                    item.vde_vca_id = _vca_id;
+
+                    if (objMedioPagoTR != null) { objMedioPagoTR.vca_id = _vca_id; }
+                    if (objMedioPagoCS != null) { objMedioPagoCS.vca_id = _vca_id; }
+                    if (objMedioPagoEF != null) { objMedioPagoEF.vca_id = _vca_id; }
+                    if (objMedioPagoTC != null) { objMedioPagoTC.vca_id = _vca_id; }
+                    if (objMedioPagoTD != null) { objMedioPagoTD.vca_id = _vca_id; }
+                    
+                }
+
                 item.Insert();
             }
         }
@@ -283,11 +297,16 @@ public class csVentaCabecera
             estado_transaccion = "Error en venta detalle";
         }
     }
-    private void MedioPagoCH_Insert() {
+    private void MedioPagoCH_Insert(int _vca_id) {
         try
         {
             foreach (csMedioPagoCH item in lstMedioPagoCH)
             {
+                if (_vca_id > 0)
+                {
+
+                    item.vca_id = _vca_id;
+                }
                 item.Insert();
             }
         }
@@ -406,78 +425,6 @@ public class csVentaCabecera
 
     }
 
-    //public void GetMedioPagoCHByVcaId()
-    //{
-    //    DataTable dt = new DataTable("MedioPagoCH");
-    //    SqlConnection con = new SqlConnection(GlobalClass.conexion);
-    //    SqlCommand cmd = new SqlCommand();
-    //    cmd.CommandText = "MedioPagoCH_GetByVcaId";
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-    //    cmd.Connection = con;
-    //    cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
-    //    SqlDataAdapter da = new SqlDataAdapter();
-    //    lstMedioPagoCH = new List<csMedioPagoCH>(); 
-
-    //    da.SelectCommand = cmd;
-    //    try
-    //    {
-
-    //        con.Open();
-    //        da.Fill(dt);
-    //        con.Close();
-
-
-    //        foreach (DataRow dr in dt.Rows)
-    //        {
-
-    //            lstMedioPagoCH.Add(new csMedioPagoCH(int.Parse(dr[0].ToString()),dr[1].ToString(),double.Parse(dr[2].ToString()),int.Parse(dr[3].ToString()),int.Parse(dr[4].ToString())));
-             
-    //        }
-
-
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        GlobalClass.SaveLog("csVentaCabecera.cs", "MedioPagoCH_GetByVcaId", ex.ToString(), DateTime.Now);
-    //    }
-    //}
-
-    //public void GetObjMedioPagoTRByVcaId()
-    //{
-    //    DataTable dt = new DataTable("MedioPagoTR");
-    //    SqlConnection con = new SqlConnection(GlobalClass.conexion);
-    //    SqlCommand cmd = new SqlCommand();
-    //    cmd.CommandText = "MedioPagoTR_GetByVcaId";
-    //    cmd.CommandType = System.Data.CommandType.StoredProcedure;
-    //    cmd.Connection = con;
-    //    cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vca_id;
-    //    SqlDataAdapter da = new SqlDataAdapter();
-       
-
-    //    da.SelectCommand = cmd;
-    //    try
-    //    {
-
-    //        con.Open();
-    //        da.Fill(dt);
-    //        con.Close();
-
-
-    //        foreach (DataRow dr in dt.Rows)
-    //        {
-    //            objMedioPagoTR = new csMedioPagoTR(dr[0].ToString(), double.Parse(dr[1].ToString()), int.Parse(dr[2].ToString()), vca_id, int.Parse(dr[3].ToString()), dr[4].ToString());
-                
-    //        }
-
-
-
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        GlobalClass.SaveLog("csVentaCabecera.cs", "GetObjMedioPagoTRByVcaId", ex.ToString(), DateTime.Now);
-    //    }
-    //}
 
     public List<csVentaCabecera> armaObjeto(DataTable dt)
     {
@@ -506,6 +453,29 @@ public class csVentaCabecera
 
     }
 
+    public string Delete()
+    {
+
+        try {
+            foreach (csVentaDetalle item in lstVentaDetalle)
+            {
+                item.Delete();
+            
+            }
+
+            DeleteByVcaId();
+            estado_transaccion = "";
+
+        }catch (Exception ex)
+        {
+            GlobalClass.SaveLog("csVentaCabecera.cs", "GetByParams", ex.ToString(), DateTime.Now);
+            return "-1";
+        }
+
+
+        return "";
+    
+    }
    
        
 

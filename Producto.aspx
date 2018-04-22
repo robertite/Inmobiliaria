@@ -44,7 +44,7 @@
         </div>
         <form id="form" data-toggle="validator">
             <div class="row contenedor-principal container-fluid">
-                <div class="col-lg-5 contenedor1">
+                <div class="col-lg-4 contenedor2">
                     <fieldset>
                         <legend>Información de Productos</legend>
                         <div class="row">
@@ -99,17 +99,17 @@
                                 <button type="button" class="btn btn-success" onclick="GetById()">
                                     <span class="glyphicon glyphicon-search"></span>Buscar 
                                 </button>
-                                <button type="button" class="btn btn-success" onclick="Insert()">
+                                <button type="button" class="btn btn-success control_btn" onclick="Insert()">
                                     <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                                 </button>
-                                <button type="reset" class="btn btn-success">
+                                <button type="button" class="btn btn-success" onclick="limpiar();">
                                     <span class="glyphicon glyphicon-trash"></span>Limpiar 
                                 </button>
                             </div>
                         </div>
                     </fieldset>
                 </div>
-                <div class="col-lg-offset-1 col-lg-5 contenedor2">
+                <div class="col-lg-offset-1 col-lg-6 contenedor2">
                 <fieldset>
                     <legend>Almacenes</legend>
                     <table class="table table-hover" id="tblAlmacen">
@@ -117,8 +117,8 @@
                             <tr>
                                 <th class="col-lg-2">ID</th>
                                 <th class="col-lg-4">NOMBRE</th>
-                                <th class="col-lg-1">BLOQUEADO</th>
                                 <th class="col-lg-2">STOCK</th>
+                             
                             </tr>
                         </thead>
                         <tbody>
@@ -176,8 +176,6 @@
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/bootstrap-datetimepicker.js"></script>
-    <script src="js/bootstrap-datetimepicker.es.js"></script>
     <script src="js/Validator.js"></script>
     <script src="js/jquery.serializejson.js"></script>
     <script src="js/jquery.json-2.2.min.js"></script>

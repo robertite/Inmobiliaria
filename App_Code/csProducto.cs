@@ -17,7 +17,7 @@ public class csProducto
     public string est_id { get; set; }
     public string estado_transaccion { get; set; }
     public List<csProductoAlmacen> lstProductoAlmacen { get; set; }
-  
+    public int almacen { get; set; }
 
 	public csProducto()	{}
     public csProducto(string _id,string _descripcion,double _precio, string _est_id) {
@@ -42,6 +42,8 @@ public class csProducto
     {
         SqlConnection con = new SqlConnection(GlobalClass.conexion);
         SqlCommand cmd = new SqlCommand();
+        SqlParameter param = new SqlParameter("@retorno", SqlDbType.NVarChar, 50);
+        param.Direction = ParameterDirection.Output;
         cmd.CommandText = "Producto_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
@@ -49,16 +51,34 @@ public class csProducto
         cmd.Parameters.AddWithValue("@pro_descripcion", SqlDbType.NVarChar).Value = descripcion;
         cmd.Parameters.AddWithValue("@pro_precio", SqlDbType.BigInt).Value = precio;
         cmd.Parameters.AddWithValue("@pro_est_id", SqlDbType.Char).Value = est_id;
-       
+        cmd.Parameters.Add(param);
         try
         {
             con.Open();
-            int ret = cmd.ExecuteNonQuery();
+            cmd.ExecuteNonQuery();
             con.Close();
 
-            if (ret != 0)
+            if (int.Parse(param.Value.ToString()) == -1)
             {
-                estado_transaccion = "Registrado Exitosamente";
+                
+                csProductoAlmacen productoAlmacen = new csProductoAlmacen();
+                productoAlmacen.SetAlmacenByProductId(id);
+                
+                estado_transaccion = productoAlmacen.estado_transaccion;
+            }
+            if (int.Parse(param.Value.ToString()) == -2)
+            {
+                estado_transaccion = "Registro Acualizado Exitosamente";
+                foreach (csProductoAlmacen item in lstProductoAlmacen)
+                {
+                    item.Stock_Add(id);
+                    if (!item.estado_transaccion.Equals("")) {
+                        estado_transaccion = item.estado_transaccion;
+                        break;
+                    }
+                    
+                }
+              
             }
 
 
@@ -178,4 +198,6 @@ public class csProducto
         }
 
     }
+
+    
 }

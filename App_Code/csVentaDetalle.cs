@@ -19,12 +19,14 @@ public class csVentaDetalle
     public string vde_est_id { get; set; }
     public int vde_precio_unitario { get; set; }
     public string estado_transaccion { get; set; }
+    public int vde_pal_alm_id { get; set; }
 
 
     public csVentaDetalle() { }
 
     public csVentaDetalle(int _vde_id, int _vde_vca_id, string _vde_pro_id,
-                          int _vde_cantidad, double _vde_total, string _vde_est_id, int _vde_precio_unitario, string _vde_pro_descripcion)
+                          int _vde_cantidad, double _vde_total, string _vde_est_id, int _vde_precio_unitario, string _vde_pro_descripcion,
+                          int _vde_pal_alm_id)
     {
 
         vde_id = _vde_id;
@@ -35,6 +37,7 @@ public class csVentaDetalle
         vde_est_id = _vde_est_id;
         vde_precio_unitario = _vde_precio_unitario;
         vde_pro_descripcion = _vde_pro_descripcion;
+        vde_pal_alm_id = 0;
     }
 
 
@@ -54,6 +57,7 @@ public class csVentaDetalle
         cmd.Parameters.AddWithValue("@vde_est_id", SqlDbType.Text).Value = vde_est_id;
         cmd.Parameters.AddWithValue("@vde_precio_unitario", SqlDbType.Text).Value = vde_precio_unitario;
         cmd.Parameters.AddWithValue("@vde_pro_descripcion", SqlDbType.NVarChar).Value = vde_pro_descripcion;
+        cmd.Parameters.AddWithValue("@vde_pal_alm_id", SqlDbType.Int).Value = vde_pal_alm_id;
 
         try
         {
@@ -104,7 +108,8 @@ public class csVentaDetalle
                     double.Parse(dr[4].ToString()),
                     dr[5].ToString(),
                     int.Parse(dr[6].ToString()),
-                    dr[7].ToString()));
+                    dr[7].ToString(),
+                    int.Parse(dr[8].ToString())));
 
             }
 
@@ -162,10 +167,41 @@ public class csVentaDetalle
             vde_est_id = dr[5].ToString();
             vde_precio_unitario = int.Parse(dr[6].ToString());
             vde_pro_descripcion = dr[7].ToString();
+            vde_pal_alm_id = int.Parse(dr[8].ToString());
             estado_transaccion = "cargado";
         }
 
     }
 
+    public string Delete()
+    {
+
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "ProductoAlmacen_Insert";
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        cmd.Parameters.AddWithValue("@pro_id", SqlDbType.NVarChar).Value = vde_pro_id;
+        cmd.Parameters.AddWithValue("@vca_id", SqlDbType.Int).Value = vde_vca_id;
+        cmd.Parameters.AddWithValue("@stock", SqlDbType.Int).Value = vde_cantidad;
+        
+        
+        try
+        {
+
+            con.Open();
+            cmd.ExecuteNonQuery();
+            con.Close();
+
+            return "Eliminado Exitosamente";
+
+
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("csVentaDetalle.cs", "Delete", ex.ToString(), DateTime.Now);
+            return "Error al eliminar Venta";
+        }
+    }
 
 }

@@ -21,6 +21,7 @@ public class csMedioPagoCS
     public int numero_cuota_pagada { get; set; }
     public double monto_cuota { get; set; }
     public string estado_transaccion { get; set; }
+    public List<csPagoCuota> lstPagoCuota { get; set; }
 
     public csMedioPagoCS() { }
     public csMedioPagoCS(int _vca_id, string _cli_rut, string _cli_nombre, string _fechaDocto,
@@ -36,6 +37,21 @@ public class csMedioPagoCS
         numero_cuota_pagada = _numero_cuota_pagada;
         monto_cuota = _monto_cuota;
 
+    }
+    public csMedioPagoCS(int _id, int _vca_id, string _cli_rut, string _cli_nombre, string _fechaDocto,
+                     double _importe, int _numero_cuota, int _numero_cuota_pagada,
+                     double _monto_cuota, List<csPagoCuota> _lstPagoCuota)
+    {
+        id = _id;
+        vca_id = _vca_id;
+        cli_rut = _cli_rut;
+        cli_nombre = _cli_nombre;
+        fechaDocto = _fechaDocto;
+        importe = _importe;
+        numero_cuota = _numero_cuota;
+        numero_cuota_pagada = _numero_cuota_pagada;
+        monto_cuota = _monto_cuota;
+        lstPagoCuota = _lstPagoCuota;
 
     }
 
@@ -58,8 +74,6 @@ public class csMedioPagoCS
             con.Open();
             da.Fill(dt);
             con.Close();
-
-
 
             foreach (DataRow dr in dt.Rows)
             {
@@ -90,13 +104,13 @@ public class csMedioPagoCS
         SqlCommand cmd = new SqlCommand();
         SqlParameter param = new SqlParameter("@retorno", SqlDbType.NVarChar, 50);
         param.Direction = ParameterDirection.Output;
-        DateTime dt = Convert.ToDateTime(fechaDocto);
+        
 
         cmd.CommandText = "MedioPagoCS_Insert";
         cmd.CommandType = System.Data.CommandType.StoredProcedure;
         cmd.Connection = con;
         cmd.Parameters.AddWithValue("@vca_id", SqlDbType.BigInt).Value = vca_id;
-        cmd.Parameters.AddWithValue("@fechaDocto", SqlDbType.DateTime).Value = Convert.ToDateTime(dt, DateTimeFormatInfo.InvariantInfo);
+        cmd.Parameters.AddWithValue("@fechaDocto", SqlDbType.DateTime).Value = Convert.ToDateTime(Convert.ToDateTime(fechaDocto), DateTimeFormatInfo.InvariantInfo);
         cmd.Parameters.AddWithValue("@importe", SqlDbType.BigInt).Value = importe;
         cmd.Parameters.AddWithValue("@numero_cuota", SqlDbType.BigInt).Value = numero_cuota;
         cmd.Parameters.AddWithValue("@numero_cuota_pagada", SqlDbType.Int).Value = numero_cuota_pagada;
@@ -207,22 +221,46 @@ public class csMedioPagoCS
     public List<csMedioPagoCS> armaObjeto(DataTable dt)
     {
         List<csMedioPagoCS> lstMedioPagoCS = new List<csMedioPagoCS>();
-        foreach (DataRow dr in dt.Rows)
+        List<csPagoCuota> listaPagoCuota = null;
+        csPagoCuota pagoCuota = null;
+        try
         {
-            lstMedioPagoCS.Add(new csMedioPagoCS(
-            vca_id = int.Parse(dr[0].ToString()),
-            cli_rut = dr[1].ToString(),
-            cli_nombre = dr[2].ToString(),
-            fechaDocto = dr[3].ToString(),
-            importe = double.Parse(dr[4].ToString()),          
-            numero_cuota = int.Parse(dr[5].ToString()),
-            numero_cuota_pagada = int.Parse(dr[6].ToString()),
-            monto_cuota = double.Parse(dr[7].ToString())));
+            foreach (DataRow dr in dt.Rows)
+            {
 
-            
+                if (dt.Rows.Count == 1)
+                {
+                    pagoCuota = new csPagoCuota();
+                    listaPagoCuota = pagoCuota.GetByVcaId(vca_id);
+                }
+
+                lstMedioPagoCS.Add(new csMedioPagoCS(
+                id = int.Parse(dr[0].ToString()),
+                vca_id = int.Parse(dr[1].ToString()),
+                cli_rut = dr[2].ToString(),
+                cli_nombre = dr[3].ToString(),
+                fechaDocto = dr[4].ToString(),
+                importe = double.Parse(dr[5].ToString()),
+                numero_cuota = int.Parse(dr[6].ToString()),
+                numero_cuota_pagada = int.Parse(dr[7].ToString()),
+                monto_cuota = double.Parse(dr[8].ToString()),
+                lstPagoCuota = listaPagoCuota)
+                );
+
+
+
+
+            }
+            return lstMedioPagoCS;
 
         }
-        return lstMedioPagoCS;
+        catch (Exception ex) { GlobalClass.SaveLog("csMedioPagoCS", "armaObjeto", ex.ToString(), DateTime.Now); return null; }
+        finally {
 
+            listaPagoCuota = null;
+            pagoCuota = null;
+           
+            
+        }
     }
 }

@@ -47,56 +47,14 @@ window.onload = function () {
     Initialize();
 }
 
-function Insert() {
-    if ($('#txtRut').val() == "" || $('#txtNombre').val() == "" || $('#txtImporte').val() == "") { mensajeModal("Ingrese Datos"); return; }
 
-    if (parseInt($('#txtNumeroCuotas').val()) == parseInt($('#txtCuotasPagadas').val())) { mensajeModal("No Hay Cuotas por pagar, La cuenta ya esta saldada"); return;  }
-
-    //validar que el monto de los medio de pago sea >= al total de la venta
-
-
-
-    item = {
-        vca_id: $('#txtNumInterno').val(),
-        fechaDocto: $('#txtFecha').val(),
-        cli_rut: $('#txtRut').val(),
-        cli_nombre: $('#txtNombre').val(),
-        importe: $('#txtImporte').val(),
-        numero_cuota:$('#txtNumeroCuotas').val(),
-        numero_cuota_pagada:parseInt($('#txtCuotasPagadas').val()) + 1,
-        monto_cuota: $('#txtMontoCuota').val()
-}
-
-
-$.ajax({
-    type: "POST",
-    url: path_url + '/Insert',
-    data: $.toJSON({ objCredito: JSON.stringify(item) }),
-    contentType: "application/json; charset=utf-8",
-    dataType: "json",
-
-    success: function (response) {
-        var data = $.parseJSON(response.d);
-
-        if (parseInt(data) == -1) {
-            mensajeModal("Credito Registrado Exitosamente");
-        }
-        else if (parseInt(data) == -2) {
-            mensajeModal("Credito Actualizado Exitosamente");
-        }
-        else { mensajeModal("Error BBDD"); }
-
-        limpiar();
-
-    },
-    error: function (response) { mensajeModal("Error BBDD"); }
-});
-return false;
-}
 
 function limpiar() {
 
-    document.getElementById("form").reset();
+    document.getElementById("form1").reset();
+
+    $('#tblCuota > tbody ').html('');
+
 }
 
 
@@ -132,14 +90,20 @@ function GetByParams()
             }
             else if (data.length == 1) {
                 setMedioPagoCS(data[0]);
+
+                loadTablePagoCuota(data[0].lstPagoCuota);
             }
             else if (data.length > 1) {
 
-               
+                var tr_estado;
+
                 $("#tblCreditoSimple tbody").html('');
                 for (var i = 0; i < data.length; i++) {
-                  
-                    $("#tblCreditoSimple tbody").append("<tr><td>" + data[i].vca_id + "</td>" +
+
+                    if (parseInt(data[i].numero_cuota) <= parseInt(data[i].numero_cuota_pagada)) { tr_estado = "bg-success"; }
+                    else { tr_estado = "bg-danger"; }
+                    $("#tblCreditoSimple tbody").append("<tr class='" + tr_estado + "'><td>" + data[i].vca_id + "</td>" +
+                                                        "<td>" + data[i].fechaDocto + "</td>" +
                                                         "<td>" + data[i].cli_rut + "</td>" +
                                                         "<td>" + data[i].cli_nombre + "</td>" +
                                                         "<td>" + data[i].importe + "</td>" +
@@ -155,6 +119,40 @@ function GetByParams()
     });
     return false;
 }
+function loadTablePagoCuota(data)
+{
+    var forma_pago;
+    $("#tblCuota tbody").html('');
+    for (var i = 0; i < data.length; i++) {
+
+        if (data[i].forma_pago == "EF")
+        {
+            forma_pago = "EFECTIVO";
+        }
+        else if (data[i].forma_pago == "TR") {
+            forma_pago = "TRANSFERENCIA";
+        }
+        else if (data[i].forma_pago == "CH") {
+            forma_pago = "CHEQUE";
+        }
+        else if (data[i].forma_pago == "TC") {
+            forma_pago = "TAR. CREDITO";
+        }
+        else if (data[i].forma_pago == "TD") {
+            forma_pago = "TAR. DEBITO";
+        }
+
+        $("#tblCuota tbody").append("<tr><td>" + data[i].numero_cuota_pagada + "</td>" +
+                                            "<td>" + data[i].fecha_pago + "</td>" +
+                                            "<td>" + forma_pago + "</td>" +
+                                            "<td><button type=\"button\"onclick=\"Panel_Comprobante({id:" + data[i].id + ",cuota_pagada:" + data[i].numero_cuota_pagada + ",fecha_pago:" + data[i].fecha_pago + ",forma_pago:'" + data[i].forma_pago+"'});\" class=\"btn btn-link \">Seleccionar</button>" +
+                                            "</tr>");
+
+
+
+    }
+}
+
 function loadCreditoSimple(value) {
     $('#txtNumInterno').val(value);
     $('#txtRut').val('');
@@ -162,6 +160,74 @@ function loadCreditoSimple(value) {
     $('#modalCreditoSimple').modal('hide');
 
 }
+
+function Panel_Comprobante(data)
+{
+ 
+  
+    $("#txtId").val(data.id);
+    $('#txtNumeroCuota').val(data.cuota_pagada);
+    $('#txtRutCliente').val($('#txtRut').val());
+    $('#txtNombreCliente').val($('#txtNombre').val());
+    $('#cmbFPComprobante').val(data.forma_pago);
+    
+    $("#tblPagoCuota tbody").html('');
+    $("#tblPagoCuota tbody").append("<tr><td>" + data.cuota_pagada + " de " + $('#txtNumeroCuotas').val() + "</td>" +
+                                        "<td>Pago Credito Simple</td>" +
+                                        "<td>" + $('#txtMontoCuota').val() + "</td>" +
+                                        "</tr>");
+
+    $('#modal_comprobante').modal('show');
+    
+
+}
+
+function Panel_PagoCuota()
+{
+    if ($('#txtNumeroCredito').val() == "") {  mensajeModal("Debe Cargar un Credito");  return; }
+    if (parseInt($('#txtNumeroCuotas').val()) == parseInt($('#txtCuotasPagadas').val())) { mensajeModal("No Hay Cuotas por pagar, La cuenta ya esta saldada"); return; }
+
+    $('#txtNumeroCuotaPagar').val(parseInt($('#txtCuotasPagadas').val()) + 1);
+    $('#modal_PagoCuota').modal('show');
+}
+
+function Pago_Insert()
+{
+    if ($('#cmbFormaPago').val() == 0 || $('#txtFechaPagoCuota').val() == "") { mensajeModal("Ingrese Datos"); return; }
+
+    item = {
+        pcs_id: $('#txtNumeroCredito').val(),
+        numero_cuota_pagada: $('#txtNumeroCuotaPagar').val(),
+        forma_pago: $('#cmbFormaPago').val(),
+        fecha_pago: moment($('#txtFechaPagoCuota').val(), "DD-MM-YYYY").format("YYYY-MM-DD")
+
+   
+}
+    
+
+$.ajax({
+    type: "POST",
+    url: path_url + '/Cuota_Insert',
+    data: $.toJSON({ valform: JSON.stringify(item) }),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+
+    success: function (response) {
+        var data = $.parseJSON(response.d);
+
+        mensajeModal(data); 
+
+        GetByParams();
+
+    },
+    error: function (response) { mensajeModal("Error BBDD"); }
+});
+return false;
+
+
+ 
+}
+
 function checkRut(txtRut) {
     // Despejar Puntos
     var valor = txtRut.value.replace('.', '');
@@ -212,6 +278,7 @@ function checkRut(txtRut) {
 
 function setMedioPagoCS(data) {
 
+    $('#txtNumInterno').val(data.vca_id);
     $('#txtFecha').val(data.fechaDocto);
     $('#txtRut').val(data.cli_rut);
     $('#txtNombre').val(data.cli_nombre);
@@ -219,6 +286,7 @@ function setMedioPagoCS(data) {
     $('#txtNumeroCuotas').val(data.numero_cuota);
     $('#txtCuotasPagadas').val(data.numero_cuota_pagada);
     $('#txtMontoCuota').val(data.monto_cuota);
+    $('#txtNumeroCredito').val(data.id);
 
 }
 function mensajeModal(mensaje, focus) {

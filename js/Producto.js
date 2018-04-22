@@ -35,7 +35,9 @@ function InitializeLectura() {
 
 
 window.onload = function () {
+    limpiar();
     Initialize();
+   
 }
 function Insert() {
     if ($('#txtId').val() == "" || $('#txtDesripcion').val() == "" || $('#txtPrecio').val() == "" )
@@ -54,7 +56,8 @@ function Insert() {
         id: $('#txtId').val(),
         descripcion: $('#txtDescripcion').val(),
         precio: $('#txtPrecio').val(),
-        est_id: estado     
+        est_id: estado,
+        lstProductoAlmacen: GetproductoAlmacenFromTable()
     }
  
     $.ajax({
@@ -67,7 +70,7 @@ function Insert() {
         success: function (response) {
             var data = $.parseJSON(response.d);
             mensajeModal(data);
-            limpiar();
+        
         },
         error: function (response) { alert("Error"); }
     });
@@ -109,13 +112,30 @@ function GetById() {
     });
     return false;
 }
+function GetproductoAlmacenFromTable() {
 
-function GetAlmacenByProductoId() {
+    var _lstProductoAlmacen = [];
+    var item;
+    $('#tblAlmacen > tbody  > tr').each(function (tr) {
+
+        var productoAlmacen = {
+
+            alm_id: parseInt($(this).find("td")[0].innerHTML),
+            alm_nombre: $(this).find("td")[1].innerHTML,
+            alm_stock: parseInt($(this).find("td")[2].innerHTML)
+           
+        }
+        _lstProductoAlmacen.push(productoAlmacen)
+
+    });
+    return _lstProductoAlmacen;
+}
+function GetAlmacenByProductoId(txtId) {
 
     $.ajax({
         type: "POST",
         url: path_url + '/GetAlmacenByProductoId',
-        data: $.toJSON({ id: JSON.stringify($('#txtId').val()) }),
+        data: $.toJSON({ id: JSON.stringify(txtId) }),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
@@ -128,8 +148,7 @@ function GetAlmacenByProductoId() {
                 $("#tblAlmacen tbody").append("<tr id=" + value.alm_id + ">" +
                                            "<td>" + value.alm_id + "</td>" +
                                            "<td>" + value.alm_nombre + "</td>" +
-                                           "<td>" + value.alm_estado + "</td>" +
-                                           "<td>" + value.alm_stock + "</td>" +
+                                           "<td contenteditable=\"true\">" + value.alm_stock + "</td>" +
                                            "</tr>");
 
             });
@@ -143,12 +162,14 @@ function GetAlmacenByProductoId() {
 
 function limpiar() {
 
+    $("#tblAlmacen tbody").html('');
     $('#txtId').val('');
     $('#txtDescripcion').val('');
     $('#txtPrecio').val('');
-    $('#cmbActivo').prop("checked", false);
+    $('#cmbActivo').prop("checked", true);
     $('#cmbInactivo').prop("checked", false);
-    $("#tblAlmacen tbody").html('');
+ 
+ 
 }
 
 function mensajeModal(mensaje, focus) {

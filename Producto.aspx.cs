@@ -33,6 +33,9 @@ public partial class Producto : System.Web.UI.Page
     {
         csProducto producto = JsonConvert.DeserializeObject<csProducto>(objProducto);
         producto.Insert();
+
+        
+
         return JsonConvert.SerializeObject(producto.estado_transaccion);
     }
     [WebMethod()]

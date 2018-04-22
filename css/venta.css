@@ -7,32 +7,41 @@
     height:80%;
     
 }
-table {
+
+#tblProductoLista {
         width: 100%;
     }
 
-/*thead, tbody, tr, td, th { display: block; }
+#tblProductoLista thead,#tblProductoLista tbody,#tblProductoLista tbody tr,#tblProductoLista tbody tr td,#tblProductoLista tbody tr th { 
+    display: block; 
 
-tr:after {
+}
+
+#tblProductoLista tbody tr:after {
     content: ' ';
     display: block;
     visibility: hidden;
     clear: both;
 }
 
-thead th {
+#tblProductoLista thead th {
     height: 30px;
 
 }
 
-tbody {
-    height: 120px;
+#tblProductoLista tbody {
+    height: 240px;
     overflow-y: auto;
     overflow-x: auto;
+    margin-bottom:5px;
 }
 
 
-tbody td, thead th {
-    width: 19.2%;
+#tblProductoLista tbody td, thead th {
+    width: 20%;
     float: left;
-}*/
+}
+.lista-productos {
+
+height:300px;
+}

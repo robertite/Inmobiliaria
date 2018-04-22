@@ -45,7 +45,7 @@
             </nav>
 
         </div>
-        <form id="form" data-toggle="validator">
+        <form id="form" data-toggle="validator" runat="server">
             <div class="row contenedor-principal container-fluid">
 
                 <fieldset>
@@ -101,12 +101,12 @@
 
                             <div class="col-lg-6 form-group">
                                 <label for="txtCalle">N° Interno</label>
-                                <input type="text" class="form-control " id="txtNumInterno" name="txtNumInterno" placeholder="22312">
+                                <input type="text" class="form-control " id="txtNumInterno" name="txtNumInterno" placeholder="22312" runat="server">
                             </div>
                             <div class="col-lg-6 form-group">
                                 <label for="cmbEstado">Estado</label>
                                 <select id="cmbEstado" class="form-control control_cmb" name="cmbEstado">
-                                    <option selected value="O">Abierto</option>
+                                    <option value="O">Abierto</option>
                                     <option value="C">Cerrado</option>
                                 </select>
                             </div>
@@ -159,7 +159,7 @@
                                 <tr>
                                     <th class="col-lg-1">ID</th>
                                     <th class="col-lg-4">DESC</th>
-                                    <th class="col-lg-1">CANTIDAD</th>
+                                    <th class="col-lg-2">CANTIDAD</th>
                                     <th class="col-lg-2">PRECIO</th>
                                     <th class="col-lg-2">TOTAL</th>
                                     <th class="col-lg-1">SEL</th>
@@ -239,17 +239,17 @@
                             <span class="glyphicon glyphicon-floppy-disk"></span>Registrar 
                         </button>
 
-                        <button type="reset" class="btn btn-success" onclick="limpiar();">
+                        <button type="button" class="btn btn-success control_btn " onclick="limpiar();">
                             <span class="glyphicon glyphicon-trash"></span>Limpiar 
                         </button>
-
+                        <button type="button" class="btn btn-success" onclick="eliminar();">
+                            <span class="glyphicon glyphicon-remove"></span>Eliminar 
+                        </button>
                         <button type="button" class="btn btn-success" data-toggle="modal" data-target="#MedioDePagoModal">
                             <span class="glyphicon glyphicon-credit-card"></span>Pago
                         </button>
 
-                        <button type="button" class="btn btn-success">
-                            <span class="glyphicon glyphicon-print"></span>Imprimir Comprobante
-                        </button>
+                        <asp:Button ID="btn_Imprimir" Text="Imprimir Comprobante" runat="server" CssClass="btn btn-success" OnClick="btn_Imprimir_Click" />
                     </div>
                 </div>
             </div>
@@ -400,7 +400,7 @@
                                     </div>
 
                                     <div class="row col-lg-12">
-                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoTR();">
+                                        <button type="button" class="btn btn-success control_btn" onclick="limpiarMedioPagoTR();">
                                             <span class="glyphicon glyphicon-trash"></span>Limpiar
                                         </button>
                                     </div>
@@ -449,7 +449,7 @@
                                         </div>
                                     </div>
                                     <div class="row col-lg-12">
-                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoCS();">
+                                        <button type="button" class="btn btn-success control_btn" onclick="limpiarMedioPagoCS();">
                                             <span class="glyphicon glyphicon-trash"></span>Limpiar
                                         </button>
                                     </div>
@@ -478,8 +478,8 @@
                                         </div>
                                     </div>
                                     <div class="row col-lg-12">
-                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoEF();">
-                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        <button type="button" class="btn btn-success control_btn" onclick="limpiarMedioPagoEF();">
+                                            <span class="glyphicon glyphicon-trash control_btn"></span>Limpiar
                                         </button>
                                     </div>
                                 </div>
@@ -525,8 +525,8 @@
                                         </div>
                                     </div>
                                     <div class="row col-lg-12">
-                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoTC();">
-                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        <button type="button" class="btn btn-success control_btn" onclick="limpiarMedioPagoTC();">
+                                            <span class="glyphicon glyphicon-trash control_btn"></span>Limpiar
                                         </button>
                                     </div>
 
@@ -566,8 +566,8 @@
                                         </div>
                                     </div>
                                     <div class="row col-lg-12">
-                                        <button type="button" class="btn btn-success" onclick="limpiarMedioPagoTD();">
-                                            <span class="glyphicon glyphicon-trash"></span>Limpiar
+                                        <button type="button" class="btn btn-success control_btn" onclick="limpiarMedioPagoTD();">
+                                            <span class="glyphicon glyphicon-trash control_btn"></span>Limpiar
                                         </button>
                                     </div>
 
@@ -581,7 +581,7 @@
                 <div class="modal-footer">
                     <br />
                     <div class="row">
-                       
+
                         <div class="col-lg-3 col-lg-offset-6">
                             <h4>Monto Cancelado: </h4>
                         </div>
@@ -590,21 +590,29 @@
                         </div>
                     </div>
                     <div class="row">
-                         <div class="col-lg-3 col-lg-offset-6">
-                             <h4>Total: </h4>
+                        <div class="col-lg-3 col-lg-offset-6">
+                            <h4>Monto Faltante: </h4>
                         </div>
                         <div class="col-lg-3">
-                           <h4 id="lblTotal">0</h4>
+                            <h4 id="lblMontoFaltante">0</h4>
                         </div>
                     </div>
-                  
-                   
+                    <div class="row">
+                        <div class="col-lg-3 col-lg-offset-6">
+                            <h4>Total: </h4>
+                        </div>
+                        <div class="col-lg-3">
+                            <h4 id="lblTotal">0</h4>
+                        </div>
+                    </div>
+
+
                     <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+
 
     <%-- Modal productos --%>
     <div class="modal fade" id="modalProductos" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -629,31 +637,34 @@
                         </div>
                         <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-                                <table id="tblProductoLista" class="table table-striped form-group">
+                              
+                                <table id="tblProductoLista" class="table table-striped">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>NOMBRE</th>
-                                            <th>PRECIO</th>
-                                            <th>STOCK</th>
-                                            <th>SEL</th>
+                                            <th class="col-lg-1">ID</th>
+                                            <th class="col-lg-1">NOMBRE</th>
+                                            <th class="col-lg-1">PRECIO</th>
+                                            <th class="col-lg-1">STOCK</th>
+                                            <th class="col-lg-1">SEL</th>
                                         </tr>
                                     </thead>
                                     <tbody class="buscarProducto"></tbody>
                                 </table>
+                                  
                             </div>
                         </div>
                     </div>
+
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
                     <%--  <button type="button" class="btn btn-success save">Agregar</button>--%>
                 </div>
             </div>
         </div>
-    </div>
 
+    </div>
 
 
 
@@ -748,8 +759,7 @@
 
 
 
-    <script src="js/Venta.js"></script>
-    <%--<script src="js/Login.js"></script>--%>
+
     <script src="js/jquery-3.2.1.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/Validator.js"></script>
@@ -757,7 +767,9 @@
     <script src="js/jquery.json-2.2.min.js"></script>
     <script src="js/bootstrap-datepicker.min.js"></script>
     <script src="js/locales/bootstrap-datepicker.es.min.js"></script>
+    <script src="js/Venta.js"></script>
     <script src="js/loading.js"></script>
+    <script src="js/moment.js"></script>
 </body>
 
 

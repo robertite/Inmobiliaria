@@ -53,4 +53,40 @@ public class csSucursal
             return null;           
         }
     }
+
+    public static string GetDescripcionById(int code)
+    {
+        List<csSucursal> lstSucursal = new List<csSucursal>();
+        DataTable dt = new DataTable("Sucursal");
+        SqlConnection con = new SqlConnection(GlobalClass.conexion);
+        SqlCommand cmd = new SqlCommand();
+        cmd.CommandText = "Sucursal_GetDescripcionById";
+        cmd.Parameters.AddWithValue("@id",SqlDbType.Int).Value = code;
+        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+        cmd.Connection = con;
+        SqlDataAdapter da = new SqlDataAdapter();
+        da.SelectCommand = cmd;
+        try
+        {
+
+            con.Open();
+            da.Fill(dt);
+            con.Close();
+
+            if (dt.Rows.Count == 0)
+            {
+                return "null";
+            }
+            else
+            {
+                return dt.Rows[0][0].ToString();
+            }
+         
+        }
+        catch (Exception ex)
+        {
+            GlobalClass.SaveLog("Sucursal.cs", "GetAll", ex.ToString(), DateTime.Now);
+            return null;
+        }
+    }
 }

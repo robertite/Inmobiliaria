@@ -12,20 +12,21 @@ function Initialize() {
     var Login = $.parseJSON(sessionStorage.getItem("Login"));
     
 
-    var existe = false;
+  
     for (var i = 0; i <= Login.lstPerfil.length; i++) {
+       
         if (Login.lstPerfil[i].formulario.toUpperCase() == window.location.pathname.toUpperCase()) {
 
-            if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura == "E") {
-                existe = true;
+            if (Login.lstPerfil[i].lectura.toUpperCase() == "A" && Login.lstPerfil[i].escritura.toUpperCase() == "E") {
+                  
+               
                 InitializeLectura();
+              
             }
-
+            break;
         }
     }
-    if (existe = false) {
-        InitializeLectura();
-    }
+
 }
 function InitializeLectura() {
 
@@ -33,16 +34,15 @@ function InitializeLectura() {
     $('.control_txt').prop("disabled", true);
     $('.control_btn').prop("disabled", true);
     $('.control_cmb').prop("disabled", "disabled");
-
+  
 
 }
 
 window.onload = function () {
 
-   
-
-
+    
     GetMaxDocNum();
+  
 
     loadCmbSucursal($('#cmbSucursal'), function (datos) {
         $("#cmbSucursal").html('');
@@ -78,9 +78,11 @@ window.onload = function () {
         language: 'es'
 
     });
-    
+  
     Initialize();
+  
     limpiar();
+   
 
 };
 
@@ -207,6 +209,7 @@ function GetByParams() {
             }
             else if (data.length == 1) {
                 setVentaCabecera(data);
+                InitializeLectura();
             }
             else if (data.length > 1) {
 
@@ -222,6 +225,7 @@ function GetByParams() {
 
                 }
                 $('#modalVentaCabecera').modal('show');
+                InitializeLectura();
             }
 
         },
@@ -243,6 +247,9 @@ function setVentaCabecera(data) {
     $('#txtNumInterno').val(data[0].vca_id);
     $('#txtRut').val(data[0].vca_cli_rut);
     GetClienteByRut(data[0].vca_cli_rut);
+
+    $('#cmbEstado').val(data[0].vca_estado_docto);
+
     $('#txtFechaDocto').val(data[0].vca_fecha_docto);
     $('#txtFolio').val(data[0].vca_folio);
     if (data[0].vca_tipo_doc == "Boleta") {
@@ -260,7 +267,7 @@ function setVentaCabecera(data) {
     //$('#txtImpuesto').val(data[0].vca_impuesto);
     $('#txtTotal').val(data[0].vca_total);
     $('#lblTotal').html(data[0].vca_total);
-    $('#lblMontoCancelado').html(data[0].vca_total);
+    
     setTableProduct(data[0].lstVentaDetalle);
     setTableCheque(data[0].lstMedioPagoCH);
     setMedioPagoTR(data[0].objMedioPagoTR);
@@ -268,6 +275,9 @@ function setVentaCabecera(data) {
     setMedioPagoTC(data[0].objMedioPagoTC);
     setMedioPagoTD(data[0].objMedioPagoTD);
     setMedioPagoCS(data[0].objMedioPagoCS);
+    totalCancelado();
+
+    InitializeLectura();
 
     return;
 }
@@ -295,7 +305,7 @@ function setTableCheque(lstCheque) {
                                             "<td>" + value.fechaDocto + "</td>" +
                                             "<td>" + value.importe + "</td>" +
                                             "<td id=" + value.banco + ">" + ban_descripcion + "</td>" +
-                                            "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + value.numeroCheque + ");\">" +
+                                            "<td><button type=\"button\" class=\"btn-danger btn-circle control_btn\" onclick=\"deleteLineTableCheque(" + value.numeroCheque + ");\">" +
                                             "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
 
         importeCH += value.importe;
@@ -324,7 +334,7 @@ function setTableProduct(lstVentaDetalle) {
                                         "<td contenteditable=\"true\" onblur=\"updateLineTableProduct(" + value.vde_pro_id + ");\">" + value.vde_cantidad + "</td>" +
                                         "<td>" + value.vde_precio_unitario + "</td>" +
                                         "<td id=\"lineTotal\" class=" + value.vde_id + ">" + value.vde_total + "</td>" +
-                                        "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableProduct(" + value.vde_pro_id + ");\">" +
+                                        "<td><button type=\"button\" class=\"btn-danger btn-circle control_btn\" onclick=\"deleteLineTableProduct({id:" + value.vde_pro_id + ",cantidad:" + value.vde_cantidad + "});\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
     });
 
@@ -384,6 +394,21 @@ function setMedioPagoCS(data) {
     }
 
 }
+
+function validaMedioPagoTR(estado) {
+
+
+    if (parseInt($('#txtImporteTR').val()) > 0) {
+
+        if ($('#txtFechaTR').val() == "" || null) { return (false);}
+        else if ($('#cmbBancoTR').val() == "0" || null) { return (false); }
+        else if ($('#txtNumTransaccionTR').val() == "" || null || 0) { return (false); }
+        else if ($('#txtNumInterno').val() == "" || null || 0) { return (false); }
+        else { return (true);}
+    }
+    
+}
+
 function Insert() {
 
 
@@ -404,11 +429,12 @@ function Insert() {
     var importeTC = parseInt($('#txtImporteTC').val());
     var importeTD = parseInt($('#txtImporteTD').val());
     var importeCS = parseInt($('#txtImporteCS').val());
-
+    var estado = true;
     var total = parseInt($('#txtTotal').val());
 
     if (importeCH == "") { importech = 0; }
-    if (importeTR == "" || 0) { importeTR = 0; }
+    
+    if (importeTR == "" || 0) { importeTR = 0; } else { if (!validaMedioPagoTR(estado)) { mensajeModal("Ingrese todos los datos del medio de pago Transferencia"); return; }}
     if (importeEF == "") { importeEF = 0; }
     if (importeTC == "" || 0) { importeTC = 0; }
     if (importeTD == "" || 0) { importeTD = 0; }
@@ -429,15 +455,14 @@ function Insert() {
 
 
 
-    item = {
+   var item = {
         vca_id: $('#txtNumInterno').val(),
         vca_folio: $('#txtFolio').val(),
         vca_cli_rut: $('#txtRut').val(),
-        vca_fecha_docto: $('#txtFechaDocto').val(),
+        vca_fecha_docto: moment($('#txtFechaDocto').val(),"DD-MM-YYYY").format("YYYY-MM-DD"),
         vca_suc_id: $('#cmbSucursal').val(),
         vca_comentario: $('#txtComentario').val(),
         vca_tipo_doc: _vca_tipo_doc,
-        vca_impuesto: 0,//$('#txtImpuesto').val(),
         vca_total: $('#txtTotal').val(),
         vca_est_id: 'A',
         vca_estado_docto: $('#cmbEstado').val(),
@@ -453,11 +478,10 @@ function Insert() {
         objMedioPagoCS: GetMedioPagoCSFromHtml()
     }
 
-
     $.ajax({
         type: "POST",
         url: path_url + '/Insert',
-        data: $.toJSON({ objVenta: JSON.stringify(item) }),
+        data: $.toJSON({ objVenta: JSON.stringify(item) }),       
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 
@@ -466,6 +490,7 @@ function Insert() {
 
             if (parseInt(data) == -1) {
                 mensajeModal("Registro Actualizado Exitosamente");
+                return;
             }
             else if (parseInt(data) == -2) {
                 mensajeModal("Ya existe este folio y rut en otra Venta");
@@ -474,24 +499,27 @@ function Insert() {
             else if (parseInt(data) > 0) {
                 $('#txtNumInterno').val(data);
                 mensajeModal("Registro Ingresado Exitosamente");
-
+                return;
             }
             else if (parseInt(data) == -3) {
                 mensajeModal("Ya alcanzó el limite de creditos. favor seleccione otra forma de Pago");
 
-                $('#txtFechaCS').val(''),
+                $('#txtFechaCS').val('');
 
-                $('#txtImporteCS').val(''),
-                $('#txtNumeroCuotaCS').val(''),
-                $('#txtCuotaPagadaCS').val(''),
-                $('#txtMontoCuotaCS').val('')
+                $('#txtImporteCS').val(0);
+                $('#txtNumeroCuotaCS').val(0);
+                $('#txtCuotaPagadaCS').val('');
+                $('#txtMontoCuotaCS').val('');
+           
+                totalCancelado();
+       
                 return;
             }
             else {
                 mensajeModal(data);
                 return;
             }
-
+            mensajeModal(data);
             limpiar();
 
         },
@@ -501,7 +529,7 @@ function Insert() {
                 msg = 'Not connect.\n Verify Network.';
             } else if (jqXHR.status == 404) {
                 msg = 'Requested page not found. [404]';
-            } else if (jqXHR.status == 500) {
+            } else if (jqXHR.status == 500) {               
                 msg = 'Internal Server Error [500].';
             } else if (exception === 'parsererror') {
                 msg = 'Requested JSON parse failed.';
@@ -512,7 +540,7 @@ function Insert() {
             } else {
                 msg = 'Uncaught Error.\n' + jqXHR.responseText;
             }
-          
+            mensajeModal(jqXHR.responseText);
          }
     });
     return false;
@@ -522,7 +550,7 @@ function GetMedioPagoTCFromHtml() {
     if ($('#txtImporteTC').val() == "" || $('#txtImporteTC').val() == 0) { return null; }
     else {
         objMedioPagoTC = {
-            fechaDocto: $('#txtFechaTC').val(),
+            fechaDocto: moment($('#txtFechaTC').val(), "DD-MM-YYYY").format("YYYY-MM-DD"),
             importe: $('#txtImporteTC').val(),
             banco: $('#cmbBancoTC').val(),
             numero_cuota: $('#txtNumCuotaTC').val(),
@@ -536,7 +564,7 @@ function GetMedioPagoTDFromHtml() {
     if ($('#txtImporteTD').val() == "" || $('#txtImporteTD').val() == 0) { return null; }
     else {
         objMedioPagoTD = {
-            fechaDocto: $('#txtFechaTD').val(),
+            fechaDocto: moment($('#txtFechaTD').val(), "DD-MM-YYYY").format("YYYY-MM-DD"),
             importe: $('#txtImporteTD').val(),
             banco: $('#cmbBancoTD').val(),
             numero_tran: $('#txtNumTransaccionTD').val(),
@@ -550,7 +578,7 @@ function GetMedioPagoTRFromHtml() {
     if ($('#txtImporteTR').val() == "" || $('#txtImporteTR').val() == 0) { return null; }
     else {
         objMedioPagoTR = {
-            fechaDocto: $('#txtFechaTR').val(),
+            fechaDocto: moment($('#txtFechaTR').val(), "DD-MM-YYYY").format("YYYY-MM-DD"),
             importe: $('#txtImporteTR').val(),
             banco: $('#cmbBancoTR').val(),
             numero_transaccion: $('#txtNumTransaccionTR').val(),
@@ -569,7 +597,7 @@ function GetMedioPagoCHFromHtml() {
             var cheque = {
 
                 numeroCheque: $(this).find("td")[0].innerHTML,
-                fechaDocto: $(this).find("td")[1].innerHTML,
+                fechaDocto:moment( $(this).find("td")[1].innerHTML,"DD-MM-YYYY").format("YYYY-MM-DD"),
                 importe: $(this).find("td")[2].innerHTML,
                 banco: $(this).find("td")[3].id,
 
@@ -588,10 +616,11 @@ function GetMedioPagoEFFromHtml() {
     if (parseInt($('#txtImporteEF').val()) == 0) { return null; }
     else {
         objMedioPagoEF = {
-            fechaDocto: $('#txtFechaEF').val(),
+            fechaDocto: moment($('#txtFechaEF').val(),"DD-MM-YYYY").format("YYYY-MM-DD"),
             importe: $('#txtImporteEF').val(),
             vca_id: $('#txtNumInterno').val()
         }
+   
         return objMedioPagoEF;
     }
 }
@@ -600,7 +629,7 @@ function GetMedioPagoCSFromHtml() {
     else {
         objMedioPagoCS = {
             vca_id: $('#txtNumInterno').val(),
-            fechaDocto: $('#txtFechaCS').val(),
+            fechaDocto: moment($('#txtFechaCS').val(), "DD-MM-YYYY").format("YYYY-MM-DD"),
             cli_rut: $('#txtRut').val(),
             cli_nombre: $('#txtNombre').val(),
             importe: $('#txtImporteCS').val(),
@@ -614,16 +643,10 @@ function GetMedioPagoCSFromHtml() {
 }
 function CalcularCuotaCS() {
 
-    if ((parseInt($('#txtImporteCS').val())) + parseInt($('#lblMontoCancelado').html()) > parseInt($('#txtTotal').val())) {
-        mensajeModal("El monto cancelado no puede ser mayor al total de la venta");
-        $('#txtFechaCS').val('');
-        $('#txtCuotaPagadaCS').val(0);
-        $('#txtImporteCS').val(0);
-        $('#txtNumeroCuotaCS').val(0);
-        $('#txtMontoCuotaCS').val(0);
+
+    totalCancelado();
         
-        return;
-    }
+
 
 
     var monto_cuota = (parseInt($('#txtImporteCS').val()) / parseInt($('#txtNumeroCuotaCS').val()));
@@ -664,7 +687,7 @@ function GetClienteByRut() {
         return;
 
     }
-
+ 
     $.ajax({
         type: "POST",
         url: path_url_small + '/Cliente.aspx/GetByRutActive',
@@ -699,9 +722,15 @@ function limpiar() {
     $('#tblProductoVenta > tbody ').html('');
     $('#tblCheque > tbody ').html('');
 
+    GetMaxDocNum();
+
+    setSucursalUser($('#cmbSucursal'), function (datos) {
 
 
-    location.reload();
+        $('#cmbSucursal').val(datos.sucursal);
+
+    });
+  //  location.reload();
 }
 
 
@@ -711,6 +740,7 @@ function limpiarMedioPagoTR() {
     $('#txtImporteTR').val(0);
     $('#cmbBancoTR').val(0);
     $('#txtNumTransaccionTR').val(0);
+    totalCancelado();
 
 }
 function limpiarMedioPagoCS() {
@@ -720,11 +750,13 @@ function limpiarMedioPagoCS() {
     $('#txtNumeroCuotaCS').val(0);
     $('#txtCuotaPagadaCS').val(0);
     $('#txtMontoCuotaCS').val(0);
+    totalCancelado();
 }
 function limpiarMedioPagoEF() {
 
     $('#txtFechaEF').val('');
     $('#txtImporteEF').val(0);
+    totalCancelado();
    
 }
 function limpiarMedioPagoTC() {
@@ -734,6 +766,7 @@ function limpiarMedioPagoTC() {
     $('#txtNumCuotaTC').val(0);
     $('#txtNumTransaccionTC').val(0);
     $('#cmbBancoTC').val(0);
+    totalCancelado();
 }
 
 function limpiarMedioPagoTD() {
@@ -742,6 +775,7 @@ function limpiarMedioPagoTD() {
     $('#txtImporteTD').val(0);
     $('#txtNumTransaccionTD').val(0);
     $('#cmbBancoTD').val(0);
+    totalCancelado();
 }
 
 function checkRut(txtRut) {
@@ -809,11 +843,11 @@ function CargarProductos() {
             $.each(data, function (key, value) {
 
                         
-                $("#tblProductoLista tbody").append("<tr><td class=\"filterable-cell\">" + value.id + '</td>' +
-                                                    "<td class=\"filterable-cell\">" + value.descripcion + '</td>' +
-                                                    "<td class=\"filterable-cell\">" + value.precio + "</td>" +
-                                                    '<td class="filterable-cell">' + value.stock + "</td>" +
-                                                    "<td class=\"filterable-cell\"><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + "})\">Agregar</button>" +
+                $("#tblProductoLista tbody").append("<tr><td>" + value.id + '</td>' +
+                                                    "<td >" + value.descripcion + '</td>' +
+                                                    "<td >$ " + value.precio + "</td>" +
+                                                    '<td >' + value.stock + "</td>" +
+                                                    "<td ><button type=\"button\" class=\"btn btn-link \" onclick=\"AddProduct({id:" + value.id + ",descripcion:'" + value.descripcion + "'   ,precio:" + value.precio + ",stock:" + value.stock + "})\">Agregar</button>" +
                                                     "</td></tr>");
 
             });
@@ -852,7 +886,7 @@ function AddCheque() {
                                         "<td>" + $('#txtFechaDocumentoCH').val() + "</td>" +
                                         "<td>" + $('#txtImporteCH').val() + "</td>" +
                                         "<td id=" + $('#cmbBancoCH').val() + ">" + $('#cmbBancoCH option:selected').text() + "</td>" +
-                                        "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableCheque(" + $('#txtNumeroCheque').val() + ");\">" +
+                                        "<td><button type=\"button\" class=\"btn-danger btn-circle control_btn\" onclick=\"deleteLineTableCheque(" + $('#txtNumeroCheque').val() + ");\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
 
     $('#txtNumeroCheque').val(0);
@@ -883,14 +917,15 @@ function TotalCheque(cont) {
     totalCancelado("txtImporteTotalCH");
 }
 function AddProduct(value) {
+    
     if ($('#' + value.id)[0] != undefined) { mensajeModal("Usted Ya registró este Producto"); $('#modalProductos').modal('show'); return; }
     $("#tblProductoVenta tbody").append("<tr id=" + value.id + ">" +
                                         "<td>" + value.id + "</td>" +
                                         "<td>" + value.descripcion + "</td>" +
-                                        "<td contenteditable=\"true\" onblur=\"updateLineTableProduct(" + value.id + ");\">1</td>" +
+                                        "<td contenteditable=\"true\" onblur=\"updateLineTableProduct({id:" + value.id + ",stock:" + value.stock + "});\">1</td>" +
                                         "<td>" + value.precio + "</td>" +
                                         "<td id=\"lineTotal\" class=" + value.id + ">" + value.precio + "</td>" +
-                                        "<td><button type=\"button\" class=\"btn-danger btn-circle\" onclick=\"deleteLineTableProduct(" + value.id + ");\">" +
+                                        "<td><button type=\"button\" class=\"btn-danger btn-circle control_btn\" onclick=\"deleteLineTableProduct({id:" + value.id + ",cantidad:1});\">" +
                                         "<span class=\"glyphicon glyphicon glyphicon-remove\"></span></button></td></tr>");
     $('#modalProductos').modal('hide');
 
@@ -899,19 +934,62 @@ function AddProduct(value) {
 }
 function updateLineTableProduct(value) {
 
-    if (!$.isNumeric(parseInt($('#' + value)[0].cells[2].innerHTML))) {
+ 
+    if (!$.isNumeric(parseInt($('#' + value.id)[0].cells[2].innerHTML))) {
         mensajeModal("Ingrese Números, no letras en la columna cantidad");
-        $('#' + value)[0].cells[2].innerHTML = 1;
+        $('#' + value.id)[0].cells[2].innerHTML = 1;
         return;
     } else {
-        $('#' + value)[0].cells[4].innerHTML = parseInt($('#' + value)[0].cells[2].innerHTML) * parseInt($('#' + value)[0].cells[3].innerHTML);
+        if (parseInt($('#' + value.id)[0].cells[2].innerHTML) > value.stock) {
+            mensajeModal("Falta Stock de este producto");
+            $('#' + value.id)[0].cells[2].innerHTML = 1;
+            return;
+        }
+        $('#' + value.id)[0].cells[4].innerHTML = parseInt($('#' + value.id)[0].cells[2].innerHTML) * parseInt($('#' + value.id)[0].cells[3].innerHTML);
 
         updateDocTotal();
     }
 }
 function deleteLineTableProduct(value) {
-    $('#tblProductoVenta tbody #' + value)[0].remove();
+   
+    
+        
+    $('#tblProductoVenta tbody #' + value.id)[0].remove();
+   
+        document.getElementById("formMedioPago").reset();
+        $('#tblCheque > tbody ').html('');
+    
     updateDocTotal();
+
+    
+
+   // value.cantidad = $('#tblProductoVenta tbody #' + value.id)[0].cells[2].innerHTML.replace('<br>', '');
+    
+    //item = {
+    //    pro_id: value.id,
+    //    vca_id: $('#txtNumInterno').val(),
+    //    pro_cantidad: value.cantidad,
+    //}
+    //$.ajax({
+    //    type: "POST",
+    //    url: path_url + '/Stock_Set',
+    //    data: $.toJSON({ valform: JSON.stringify(item) }),
+    //    contentType: "application/json; charset=utf-8",
+    //    dataType: "json",
+    //    success: function (response) {
+
+    //        var data = $.parseJSON(response.d);
+    //        $('#tblProductoVenta tbody #' + value.id)[0].remove();
+    //        updateDocTotal();
+            
+    //    },
+    //    error: function (response) {
+    //        alert(response.responseText);
+    //    }
+    //});
+    //return false;
+
+    
 }
 
 function updateDocTotal() {
@@ -933,12 +1011,14 @@ function Total(cont) {
         //$('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())) * 1.19), 1);
         $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val()))), 1);
         $('#lblTotal').html($('#txtTotal').val());
+        totalCancelado();
     }
     else {
         $('#txtTotalAntesDescuento').val(Math.round(cont, 1));
         totalDescuento();
         $('#txtTotal').val(Math.round((cont - parseInt($('#txtDescuento').val())), 1));
         $('#lblTotal').html($('#txtTotal').val());
+        totalCancelado();
     }
 
 }
@@ -958,16 +1038,19 @@ function totalImpuesto() {
 }
 function totalDescuento() {
 
-    if (parseInt($('#txtPorcDescuento').val()) > 5) {
+    if (parseInt($('#txtPorcDescuento').val()) > 10) {
         mensajeModal("Excede maximo de descuento. esta permitido hasta un 5%", "txtPorcDescuento");
         $('#txtPorcDescuento').val(0);
         $('#txtDescuento').val(0);
         totalImpuesto();
+        totalCancelado();
+        $('#lblTotal').html($('#txtTotal').val());
         return;
 
     } else {
         $('#txtDescuento').val(Math.round((parseInt($('#txtPorcDescuento').val()) * parseInt($('#txtTotalAntesDescuento').val())) / 100), 1);
         totalImpuesto();
+        totalCancelado();
         $('#lblTotal').html($('#txtTotal').val());
     }
 }
@@ -979,9 +1062,19 @@ function mensajeModal(mensaje, focus) {
 
 }
 
+function isNAN_convert(value)
+{
+    if (isNaN(value))
+    {
+        value = 0;
+        return (value);
+    }
+    return (value);
+}
+
 function totalCancelado(objeto) {
 
-    
+  
 
     var ImporteCH = parseInt($('#txtImporteTotalCH').val());
     var importeTR = parseInt($('#txtImporteTR').val());
@@ -990,18 +1083,79 @@ function totalCancelado(objeto) {
     var importeTC = parseInt($('#txtImporteTC').val());
     var importeTD = parseInt($('#txtImporteTD').val());
 
-    var montoCancelado = ImporteCH + importeTR + importeCS + importeEF + importeTC + importeTD;
 
-    if (montoCancelado > $('#txtTotal').val())
-    {
-     
-        
-            mensajeModal("El monto cancelado no puede ser mayor al total de la venta");
-            $('#' + objeto.id).val(0);
-            return;
-        
+
+    var montoCancelado = isNAN_convert(ImporteCH) + isNAN_convert(importeTR) + isNAN_convert(importeCS) + isNAN_convert(importeEF) + isNAN_convert(importeTC) + isNAN_convert(importeTD);
+    var montoFaltante = parseInt($('#txtTotal').val()) - montoCancelado;
+
+    if (montoCancelado > parseInt($('#txtTotal').val())) {
+
+        //if (objeto.id == undefined || null)
+        //{
+        //    $('#lblMontoFaltante').html(montoCancelado);
+        //}
+        mensajeModal("El monto cancelado no puede ser mayor al total de la venta");
+        $('#' + objeto.id).val(0);
+        return;
+
     }
 
     $('#lblMontoCancelado').html(montoCancelado);
+    $('#lblMontoFaltante').html(montoFaltante);
+}
+
+function eliminar() {
+
+    var _vca_tipo_doc;
+    if ($("#cmbFactura").is(':checked') == true) {
+        _vca_tipo_doc = 'Factura';
+    }
+    else {
+        _vca_tipo_doc = 'Boleta';
+    }
+
+    item = {
+        vca_id: $('#txtNumInterno').val(),
+        vca_folio: $('#txtFolio').val(),
+        vca_cli_rut: $('#txtRut').val(),
+        vca_fecha_docto: $('#txtFechaDocto').val(),
+        vca_suc_id: $('#cmbSucursal').val(),
+        vca_comentario: $('#txtComentario').val(),
+        vca_tipo_doc: _vca_tipo_doc,
+        vca_impuesto: 0,//$('#txtImpuesto').val(),
+        vca_total: $('#txtTotal').val(),
+        vca_est_id: 'A',
+        vca_estado_docto: $('#cmbEstado').val(),
+        vca_emp_rut: 'Empleado 1',
+        vca_totalDescuento: $('#txtDescuento').val(),
+        vca_porcDescuento: $('#txtPorcDescuento').val(),
+        lstVentaDetalle: GetProductFromTable(),
+        lstMedioPagoCH: GetMedioPagoCHFromHtml(),
+        objMedioPagoTR: GetMedioPagoTRFromHtml(),
+        objMedioPagoEF: GetMedioPagoEFFromHtml(),
+        objMedioPagoTC: GetMedioPagoTCFromHtml(),
+        objMedioPagoTD: GetMedioPagoTDFromHtml(),
+        objMedioPagoCS: GetMedioPagoCSFromHtml()
+    }
+    $.ajax({
+        type: "POST",
+        url: path_url + '/Delete',
+        data: $.toJSON({ objVenta: JSON.stringify(item) }),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (response) {
+
+            var data = $.parseJSON(response.d);
+            if (data == "") {
+                
+                window.location.reload();
+            }
+            else { mensajeModal("Error al eliminar Venta. contactese con su administrador.");}
+        },
+        error: function (response) {
+            alert(response.responseText);
+        }
+    });
+    return false;
 
 }

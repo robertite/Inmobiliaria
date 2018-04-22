@@ -50,7 +50,7 @@
                         <legend>Descarga de Informes</legend>
                         <div class="row">
                             <div class="col-lg-12">
-                                <select class="form-control form-control-lg" id="cmbInforme">
+                                <select class="form-control form-control-lg control_cmb" id="cmbInforme">
                                     <option value="0" selected="selected">SELECCIONAR...</option>
                                     <option value="1">CLIENTES</option>
                                     <option value="2">CREDITOS</option>
@@ -68,7 +68,7 @@
                                 <label for="txtFechaInicio">Fecha Inicio</label>
                                 <div class="input-group date datepicker" data-provide="datepicker">
 
-                                    <input type="text" id="txtFechaInicio" name="txtFechaInicio" class="form-control">
+                                    <input type="text" id="txtFechaInicio" name="txtFechaInicio" class="form-control control_txt">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -79,7 +79,7 @@
                                 <label for="txtFechaTermino">Fecha Termino</label>
                                 <div class="input-group date datepicker" data-provide="datepicker">
 
-                                    <input type="text" id="txtFechaTermino" name="txtFechaTermino" class="form-control">
+                                    <input type="text" id="txtFechaTermino" name="txtFechaTermino" class="form-control control_txt">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -91,10 +91,10 @@
                         <div class="row">
                             <div class="col-lg-12">
 
-                                <button type="button" class="btn btn-success" onclick="Descargar()">
+                                <button type="button" class="btn btn-success control_btn" onclick="Descargar()">
                                     <span class="glyphicon glyphicon-download"></span>Descargar 
                                 </button>
-                                <button type="reset" class="btn btn-success">
+                                <button type="reset" class="btn btn-success control_btn">
                                     <span class="glyphicon glyphicon-trash"></span>Limpiar 
                                 </button>
                             </div>
